@@ -187,8 +187,8 @@ This implementation plan breaks down the doodle canvas application into incremen
 - [ ] 8. Checkpoint - Ensure hook integration works
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 9. Implement Canvas component
-  - [ ] 9.1 Create Canvas component in components/Canvas.tsx
+- [-] 9. Implement Canvas component
+  - [-] 9.1 Create Canvas component in components/Canvas.tsx
     - Use useCanvas hook
     - Render two canvas elements (background and drawing layers)
     - Position canvases absolutely with background behind drawing
