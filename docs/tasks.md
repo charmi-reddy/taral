@@ -6,7 +6,7 @@ This implementation plan breaks down the doodle canvas application into incremen
 
 ## Tasks
 
-- [ ] 1. Set up Next.js project structure and core types
+- [x] 1. Set up Next.js project structure and core types
   - Initialize Next.js 14 project with TypeScript and Tailwind CSS
   - Create directory structure: app/, components/, hooks/, lib/
   - Define core TypeScript types in lib/types.ts (Point, Stroke, BrushType, BackgroundStyle, CanvasConfig, CanvasState)
@@ -14,25 +14,25 @@ This implementation plan breaks down the doodle canvas application into incremen
   - Configure test framework (Jest or Vitest)
   - _Requirements: All (foundation)_
 
-- [ ] 2. Implement canvas engine core functionality
-  - [ ] 2.1 Create CanvasEngine class in lib/canvas-engine.ts
+- [x] 2. Implement canvas engine core functionality
+  - [x] 2.1 Create CanvasEngine class in lib/canvas-engine.ts
     - Implement constructor with canvas element refs and DPR handling
     - Implement setupCanvas() method with high-DPI scaling
     - Implement clear() method to reset drawing layer
     - Add internal state for tracking current stroke
     - _Requirements: 1.1, 1.3, 10.1_
   
-  - [ ] 2.2 Write property test for high-DPI scaling
+  - [x] 2.2 Write property test for high-DPI scaling
     - **Property 2: High-DPI Scaling Correctness**
     - **Validates: Requirements 1.3**
   
-  - [ ] 2.3 Implement resize handling
+  - [x] 2.3 Implement resize handling
     - Add resize event listener in canvas hook
     - Implement canvas dimension adjustment on resize
     - Preserve existing strokes during resize
     - _Requirements: 1.2_
   
-  - [ ] 2.4 Write property test for responsive resizing
+  - [x] 2.4 Write property test for responsive resizing
     - **Property 1: Canvas Responsive Resizing**
     - **Validates: Requirements 1.2**
 
