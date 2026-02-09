@@ -120,15 +120,15 @@ This implementation plan breaks down the doodle canvas application into incremen
     - **Property 15: Background Style Rendering**
     - **Validates: Requirements 8.2**
 
-- [ ] 7. Implement useCanvas hook
-  - [ ] 7.1 Create useCanvas hook in hooks/useCanvas.ts
+- [x] 7. Implement useCanvas hook
+  - [x] 7.1 Create useCanvas hook in hooks/useCanvas.ts
     - Set up canvas refs for drawing and background layers
     - Initialize state for config (color, brushType, brushSize, backgroundStyle)
     - Initialize ref for drawing state (isDrawing, currentStroke, strokes)
     - Create CanvasEngine instance on mount
     - _Requirements: 1.4, 1.5_
   
-  - [ ] 7.2 Implement pointer event handlers
+  - [x] 7.2 Implement pointer event handlers
     - Implement handlePointerDown to start new stroke
     - Implement handlePointerMove to add points and render incrementally
     - Implement handlePointerUp to complete stroke
@@ -136,19 +136,19 @@ This implementation plan breaks down the doodle canvas application into incremen
     - Calculate velocity and apply snap-to-grid when appropriate
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 9.1, 9.2, 9.3_
   
-  - [ ] 7.3 Write property test for stroke lifecycle
+  - [x] 7.3 Write property test for stroke lifecycle
     - **Property 3: Stroke Lifecycle Completeness**
     - **Validates: Requirements 2.1, 2.2, 2.3**
   
-  - [ ] 7.4 Write property test for multi-device input
+  - [x] 7.4 Write property test for multi-device input
     - **Property 4: Multi-Device Input Support**
     - **Validates: Requirements 2.4**
   
-  - [ ] 7.5 Write property test for snap-to-grid activation
+  - [x] 7.5 Write property test for snap-to-grid activation
     - **Property 16: Snap-to-Grid Activation**
     - **Validates: Requirements 9.1**
   
-  - [ ] 7.6 Implement configuration setter methods
+  - [x] 7.6 Implement configuration setter methods
     - Implement setColor, setBrushType, setBrushSize, setBackgroundStyle
     - Update config state (triggers UI re-render)
     - Update ref state (used for next stroke)
@@ -156,29 +156,29 @@ This implementation plan breaks down the doodle canvas application into incremen
     - Validate and clamp brush size to valid range (1-50)
     - _Requirements: 6.2, 7.2, 8.2, 12.6_
   
-  - [ ] 7.7 Write property test for color change isolation
+  - [x] 7.7 Write property test for color change isolation
     - **Property 12: Color Change Isolation**
     - **Validates: Requirements 6.2, 6.3**
   
-  - [ ] 7.8 Write property test for brush size change isolation
+  - [x] 7.8 Write property test for brush size change isolation
     - **Property 14: Brush Size Change Isolation**
     - **Validates: Requirements 7.2, 7.3**
   
-  - [ ] 7.9 Implement clearCanvas method
+  - [x] 7.9 Implement clearCanvas method
     - Clear drawing layer
     - Reset stroke history
     - Preserve background style
     - _Requirements: 10.1, 10.2_
   
-  - [ ] 7.10 Write property test for clear canvas
+  - [x] 7.10 Write property test for clear canvas
     - **Property 19: Clear Canvas Removes Strokes**
     - **Validates: Requirements 10.1**
   
-  - [ ] 7.11 Write property test for clear preserves background
+  - [x] 7.11 Write property test for clear preserves background
     - **Property 20: Clear Preserves Background**
     - **Validates: Requirements 10.2**
   
-  - [ ] 7.12 Implement resize handling
+  - [x] 7.12 Implement resize handling
     - Add window resize listener
     - Call setupCanvas on resize
     - Redraw all strokes and background
