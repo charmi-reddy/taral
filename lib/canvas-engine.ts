@@ -1,4 +1,5 @@
 import type { Stroke, Point, BackgroundStyle } from './types';
+import { StrokeProcessor } from './stroke-processor';
 
 export class CanvasEngine {
   private drawingCtx: CanvasRenderingContext2D;
@@ -8,6 +9,7 @@ export class CanvasEngine {
   private dpr: number;
   private currentStroke: Point[] = [];
   private strokes: Stroke[] = [];
+  private rafId: number | null = null;
 
   constructor(
     drawingCanvas: HTMLCanvasElement,
@@ -78,9 +80,122 @@ export class CanvasEngine {
    */
   private redrawAllStrokes(): void {
     this.strokes.forEach(stroke => {
-      // This will be implemented when we add rendering methods
-      // For now, just a placeholder
+      this.renderStroke(stroke);
     });
+  }
+
+  /**
+   * Renders a stroke to the canvas
+   * Dispatches to appropriate rendering method based on brush type
+   * Uses requestAnimationFrame for smooth rendering
+   * 
+   * @param stroke - The stroke to render
+   */
+  renderStroke(stroke: Stroke): void {
+    // Cancel any pending render
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+    }
+
+    // Schedule render on next animation frame
+    this.rafId = requestAnimationFrame(() => {
+      if (stroke.brushType === 'pixel') {
+        this.renderPixelStroke(stroke.points, stroke.color, stroke.baseWidth);
+      } else {
+        this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
+      }
+      this.rafId = null;
+    });
+  }
+
+  /**
+   * Renders a smooth stroke using quadratic Bezier curves
+   * Used for ink, marker, and pencil brush types
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Stroke color
+   * @param baseWidth - Base stroke width
+   * @param brushType - Type of brush (affects velocity sensitivity)
+   */
+  private renderSmoothStroke(
+    points: Point[],
+    color: string,
+    baseWidth: number,
+    brushType: 'ink' | 'marker' | 'pencil'
+  ): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.lineJoin = 'round';
+
+    // For single segment, just draw a line
+    if (points.length === 2) {
+      const velocity = StrokeProcessor.calculateVelocity(points[0], points[1]);
+      const width = StrokeProcessor.calculateWidth(velocity, baseWidth, brushType);
+      
+      this.drawingCtx.lineWidth = width;
+      this.drawingCtx.beginPath();
+      this.drawingCtx.moveTo(points[0].x, points[0].y);
+      this.drawingCtx.lineTo(points[1].x, points[1].y);
+      this.drawingCtx.stroke();
+      return;
+    }
+
+    // Smooth the points using Bezier curves
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+
+    // Draw quadratic curves between points
+    for (let i = 1; i < points.length - 1; i++) {
+      const p0 = points[i];
+      const p1 = points[i + 1];
+
+      // Calculate velocity and width for this segment
+      const velocity = StrokeProcessor.calculateVelocity(p0, p1);
+      const width = StrokeProcessor.calculateWidth(velocity, baseWidth, brushType);
+      this.drawingCtx.lineWidth = width;
+
+      // Control point is current point
+      // End point is midpoint to next point
+      const midX = (p0.x + p1.x) / 2;
+      const midY = (p0.y + p1.y) / 2;
+
+      this.drawingCtx.quadraticCurveTo(p0.x, p0.y, midX, midY);
+    }
+
+    // Draw final segment to last point
+    const lastPoint = points[points.length - 1];
+    this.drawingCtx.lineTo(lastPoint.x, lastPoint.y);
+    this.drawingCtx.stroke();
+  }
+
+  /**
+   * Renders a pixel-perfect stroke using straight lines
+   * Used for pixel pen brush type
+   * No smoothing or velocity-based width variation
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Stroke color
+   * @param width - Fixed stroke width
+   */
+  private renderPixelStroke(points: Point[], color: string, width: number): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = width;
+    this.drawingCtx.lineCap = 'square';
+    this.drawingCtx.lineJoin = 'miter';
+
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+
+    // Draw straight lines between all points
+    for (let i = 1; i < points.length; i++) {
+      this.drawingCtx.lineTo(points[i].x, points[i].y);
+    }
+
+    this.drawingCtx.stroke();
   }
 
   /**

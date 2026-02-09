@@ -339,4 +339,192 @@ describe('CanvasEngine', () => {
       expect(engine.getStrokes()).toHaveLength(0);
     });
   });
+
+  describe('Property 6: Smooth Brush Stroke Smoothing', () => {
+    // Feature: doodle-canvas, Property 6: Smooth Brush Stroke Smoothing
+    // Validates: Requirements 3.1
+
+    it('should use quadraticCurveTo for smooth brushes', async () => {
+      const canvas1 = createMockCanvas(800, 600);
+      const canvas2 = createMockCanvas(800, 600);
+      const engine = new CanvasEngine(canvas1, canvas2);
+      const ctx = canvas1.getContext('2d')!;
+
+      const quadraticCurveSpy = vi.spyOn(ctx, 'quadraticCurveTo');
+
+      const stroke = {
+        points: [
+          { x: 10, y: 10, timestamp: 0 },
+          { x: 50, y: 50, timestamp: 10 },
+          { x: 90, y: 10, timestamp: 20 },
+        ],
+        color: '#ff0000',
+        brushType: 'ink' as const,
+        baseWidth: 5,
+      };
+
+      engine.renderStroke(stroke);
+
+      // Wait for requestAnimationFrame
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // Should have called quadraticCurveTo for smooth brushes
+      expect(quadraticCurveSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('Property 7: Pixel Pen No Smoothing', () => {
+    // Feature: doodle-canvas, Property 7: Pixel Pen No Smoothing
+    // Validates: Requirements 3.2
+
+    it('should use lineTo for pixel pen without curves', async () => {
+      const canvas1 = createMockCanvas(800, 600);
+      const canvas2 = createMockCanvas(800, 600);
+      const engine = new CanvasEngine(canvas1, canvas2);
+      const ctx = canvas1.getContext('2d')!;
+
+      const lineToSpy = vi.spyOn(ctx, 'lineTo');
+      const quadraticCurveSpy = vi.spyOn(ctx, 'quadraticCurveTo');
+
+      const stroke = {
+        points: [
+          { x: 10, y: 10, timestamp: 0 },
+          { x: 50, y: 50, timestamp: 10 },
+        ],
+        color: '#000000',
+        brushType: 'pixel' as const,
+        baseWidth: 5,
+      };
+
+      engine.renderStroke(stroke);
+
+      // Wait for requestAnimationFrame
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // Should use lineTo, not quadraticCurveTo
+      expect(lineToSpy).toHaveBeenCalled();
+      expect(quadraticCurveSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Property 11: Color Application', () => {
+    // Feature: doodle-canvas, Property 11: Color Application
+    // Validates: Requirements 6.1
+
+    it('should apply stroke color correctly', async () => {
+      const canvas1 = createMockCanvas(800, 600);
+      const canvas2 = createMockCanvas(800, 600);
+      const engine = new CanvasEngine(canvas1, canvas2);
+      const ctx = canvas1.getContext('2d')!;
+
+      const color = '#ff0000';
+      const stroke = {
+        points: [
+          { x: 10, y: 10, timestamp: 0 },
+          { x: 50, y: 50, timestamp: 10 },
+        ],
+        color,
+        brushType: 'ink' as const,
+        baseWidth: 5,
+      };
+
+      engine.renderStroke(stroke);
+
+      // Wait for requestAnimationFrame
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // strokeStyle should be set to the stroke color
+      expect(ctx.strokeStyle).toBe(color);
+    });
+  });
+
+  describe('Property 13: Brush Size Application', () => {
+    // Feature: doodle-canvas, Property 13: Brush Size Application
+    // Validates: Requirements 7.1
+
+    it('should use base width for pixel pen rendering', async () => {
+      const canvas1 = createMockCanvas(800, 600);
+      const canvas2 = createMockCanvas(800, 600);
+      const engine = new CanvasEngine(canvas1, canvas2);
+      const ctx = canvas1.getContext('2d')!;
+
+      const baseWidth = 10;
+      const stroke = {
+        points: [
+          { x: 10, y: 10, timestamp: 0 },
+          { x: 50, y: 50, timestamp: 10 },
+        ],
+        color: '#000000',
+        brushType: 'pixel' as const,
+        baseWidth,
+      };
+
+      engine.renderStroke(stroke);
+
+      // Wait for requestAnimationFrame
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // lineWidth should be set to baseWidth for pixel pen
+      expect(ctx.lineWidth).toBe(baseWidth);
+    });
+  });
+
+  describe('Rendering Methods', () => {
+    it('should render strokes with requestAnimationFrame', () => {
+      const engine = new CanvasEngine(drawingCanvas, backgroundCanvas);
+      const ctx = drawingCanvas.getContext('2d')!;
+      const strokeSpy = vi.spyOn(ctx, 'stroke');
+
+      const stroke = {
+        points: [
+          { x: 0, y: 0, timestamp: 0 },
+          { x: 100, y: 100, timestamp: 100 },
+        ],
+        color: '#ff0000',
+        brushType: 'ink' as const,
+        baseWidth: 5,
+      };
+
+      engine.renderStroke(stroke);
+
+      // Should not render immediately
+      expect(strokeSpy).not.toHaveBeenCalled();
+
+      // Wait for requestAnimationFrame
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          expect(strokeSpy).toHaveBeenCalled();
+          resolve();
+        }, 20);
+      });
+    });
+
+    it('should handle empty stroke points', () => {
+      const engine = new CanvasEngine(drawingCanvas, backgroundCanvas);
+
+      const stroke = {
+        points: [],
+        color: '#000000',
+        brushType: 'ink' as const,
+        baseWidth: 3,
+      };
+
+      // Should not throw
+      expect(() => engine.renderStroke(stroke)).not.toThrow();
+    });
+
+    it('should handle single point stroke', () => {
+      const engine = new CanvasEngine(drawingCanvas, backgroundCanvas);
+
+      const stroke = {
+        points: [{ x: 10, y: 10, timestamp: 0 }],
+        color: '#000000',
+        brushType: 'ink' as const,
+        baseWidth: 3,
+      };
+
+      // Should not throw
+      expect(() => engine.renderStroke(stroke)).not.toThrow();
+    });
+  });
 });

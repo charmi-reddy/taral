@@ -69,8 +69,8 @@ This implementation plan breaks down the doodle canvas application into incremen
     - **Property 18: No Snapping When Disabled**
     - **Validates: Requirements 9.3**
 
-- [ ] 4. Implement stroke rendering
-  - [ ] 4.1 Add rendering methods to CanvasEngine
+- [x] 4. Implement stroke rendering
+  - [x] 4.1 Add rendering methods to CanvasEngine
     - Implement renderStroke() dispatcher based on brush type
     - Implement renderSmoothStroke() using quadratic curves for ink/marker/pencil
     - Implement renderPixelStroke() using straight lines for pixel pen
@@ -78,19 +78,19 @@ This implementation plan breaks down the doodle canvas application into incremen
     - Apply color and width from stroke data
     - _Requirements: 3.1, 3.2, 6.1, 7.1, 11.1_
   
-  - [ ] 4.2 Write property test for smooth brush smoothing
+  - [x] 4.2 Write property test for smooth brush smoothing
     - **Property 6: Smooth Brush Stroke Smoothing**
     - **Validates: Requirements 3.1**
   
-  - [ ] 4.3 Write property test for pixel pen no smoothing
+  - [x] 4.3 Write property test for pixel pen no smoothing
     - **Property 7: Pixel Pen No Smoothing**
     - **Validates: Requirements 3.2**
   
-  - [ ] 4.4 Write property test for color application
+  - [x] 4.4 Write property test for color application
     - **Property 11: Color Application**
     - **Validates: Requirements 6.1**
   
-  - [ ] 4.5 Write property test for brush size application
+  - [x] 4.5 Write property test for brush size application
     - **Property 13: Brush Size Application**
     - **Validates: Requirements 7.1**
 
