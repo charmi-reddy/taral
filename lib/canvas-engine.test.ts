@@ -527,4 +527,61 @@ describe('CanvasEngine', () => {
       expect(() => engine.renderStroke(stroke)).not.toThrow();
     });
   });
+
+  describe('Property 15: Background Style Rendering', () => {
+    // Feature: doodle-canvas, Property 15: Background Style Rendering
+    // Validates: Requirements 8.2
+
+    it('should render plain background', () => {
+      const canvas1 = createMockCanvas(800, 600);
+      const canvas2 = createMockCanvas(800, 600);
+      const engine = new CanvasEngine(canvas1, canvas2);
+      const ctx = canvas2.getContext('2d')!;
+
+      const fillRectSpy = vi.spyOn(ctx, 'fillRect');
+
+      engine.updateBackground('plain');
+
+      expect(fillRectSpy).toHaveBeenCalled();
+    });
+
+    it('should render ruled background', () => {
+      const canvas1 = createMockCanvas(800, 600);
+      const canvas2 = createMockCanvas(800, 600);
+      const engine = new CanvasEngine(canvas1, canvas2);
+      const ctx = canvas2.getContext('2d')!;
+
+      const strokeSpy = vi.spyOn(ctx, 'stroke');
+
+      engine.updateBackground('ruled');
+
+      expect(strokeSpy).toHaveBeenCalled();
+    });
+
+    it('should render dotted background', () => {
+      const canvas1 = createMockCanvas(800, 600);
+      const canvas2 = createMockCanvas(800, 600);
+      const engine = new CanvasEngine(canvas1, canvas2);
+      const ctx = canvas2.getContext('2d')!;
+
+      const fillSpy = vi.spyOn(ctx, 'fill');
+
+      engine.updateBackground('dotted');
+
+      expect(fillSpy).toHaveBeenCalled();
+    });
+
+    it('should render grid background', () => {
+      const canvas1 = createMockCanvas(800, 600);
+      const canvas2 = createMockCanvas(800, 600);
+      const engine = new CanvasEngine(canvas1, canvas2);
+      const ctx = canvas2.getContext('2d')!;
+
+      const strokeSpy = vi.spyOn(ctx, 'stroke');
+
+      engine.updateBackground('grid');
+
+      expect(strokeSpy).toHaveBeenCalled();
+    });
+  });
 });

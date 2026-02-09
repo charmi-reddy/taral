@@ -94,11 +94,11 @@ This implementation plan breaks down the doodle canvas application into incremen
     - **Property 13: Brush Size Application**
     - **Validates: Requirements 7.1**
 
-- [ ] 5. Checkpoint - Ensure core rendering works
+- [x] 5. Checkpoint - Ensure core rendering works
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 6. Implement background rendering
-  - [ ] 6.1 Create BackgroundRenderer class in lib/background-renderer.ts
+- [x] 6. Implement background rendering
+  - [x] 6.1 Create BackgroundRenderer class in lib/background-renderer.ts
     - Implement renderPlain() for solid color background
     - Implement renderRuled() for horizontal ruled lines
     - Implement renderDotted() for dot grid pattern
@@ -106,17 +106,17 @@ This implementation plan breaks down the doodle canvas application into incremen
     - Add configurable spacing/size parameters
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
   
-  - [ ] 6.2 Write unit tests for background patterns
+  - [x] 6.2 Write unit tests for background patterns
     - Test each background style renders correctly
     - Test pattern spacing and dimensions
     - _Requirements: 8.3, 8.4, 8.5, 8.6_
   
-  - [ ] 6.3 Add updateBackground() method to CanvasEngine
+  - [x] 6.3 Add updateBackground() method to CanvasEngine
     - Call appropriate BackgroundRenderer method based on style
     - Render to background canvas layer
     - _Requirements: 8.2_
   
-  - [ ] 6.4 Write property test for background style rendering
+  - [x] 6.4 Write property test for background style rendering
     - **Property 15: Background Style Rendering**
     - **Validates: Requirements 8.2**
 

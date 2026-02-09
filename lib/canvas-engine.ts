@@ -1,5 +1,6 @@
 import type { Stroke, Point, BackgroundStyle } from './types';
 import { StrokeProcessor } from './stroke-processor';
+import { BackgroundRenderer } from './background-renderer';
 
 export class CanvasEngine {
   private drawingCtx: CanvasRenderingContext2D;
@@ -196,6 +197,16 @@ export class CanvasEngine {
     }
 
     this.drawingCtx.stroke();
+  }
+
+  /**
+   * Updates the background canvas with the specified style
+   * 
+   * @param style - Background style to render
+   */
+  updateBackground(style: BackgroundStyle): void {
+    const { width, height } = this.getLogicalDimensions();
+    BackgroundRenderer.render(this.backgroundCtx, width, height, style);
   }
 
   /**
