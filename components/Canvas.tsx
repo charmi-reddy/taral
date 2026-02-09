@@ -17,6 +17,7 @@ export default function Canvas() {
     setBrushSize,
     setBackgroundStyle,
     clearCanvas,
+    fillCanvas,
     config,
   } = useCanvas();
 
@@ -66,6 +67,7 @@ export default function Canvas() {
         onBackgroundChange={setBackgroundStyle}
         onThemeChange={setTheme}
         onClear={clearCanvas}
+        onFill={fillCanvas}
       />
     </div>
   );

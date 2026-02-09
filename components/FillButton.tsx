@@ -1,19 +1,19 @@
 import type { Theme } from './ThemeToggle';
 
-interface ClearButtonProps {
+interface FillButtonProps {
   onClick: () => void;
   theme: Theme;
 }
 
-export default function ClearButton({ onClick, theme }: ClearButtonProps) {
+export default function FillButton({ onClick, theme }: FillButtonProps) {
   const getButtonStyles = () => {
     switch (theme) {
       case 'dark':
-        return 'bg-red-600 hover:bg-red-700 text-white';
+        return 'bg-blue-600 hover:bg-blue-700 text-white';
       case 'purple':
-        return 'bg-red-500 hover:bg-red-600 text-white';
+        return 'bg-purple-600 hover:bg-purple-700 text-white';
       default:
-        return 'bg-red-500 hover:bg-red-600 text-white';
+        return 'bg-blue-500 hover:bg-blue-600 text-white';
     }
   };
 
@@ -22,7 +22,7 @@ export default function ClearButton({ onClick, theme }: ClearButtonProps) {
       onClick={onClick}
       className={`w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-bold transition shadow-md text-sm sm:text-base ${getButtonStyles()}`}
     >
-      🗑️ Clear
+      🪣 Fill
     </button>
   );
 }

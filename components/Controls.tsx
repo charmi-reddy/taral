@@ -4,6 +4,7 @@ import BrushSelector from './BrushSelector';
 import SizeSlider from './SizeSlider';
 import BackgroundSelector from './BackgroundSelector';
 import ClearButton from './ClearButton';
+import FillButton from './FillButton';
 import ThemeToggle, { Theme } from './ThemeToggle';
 
 interface ControlsProps {
@@ -15,6 +16,7 @@ interface ControlsProps {
   onBackgroundChange: (style: BackgroundStyle) => void;
   onThemeChange: (theme: Theme) => void;
   onClear: () => void;
+  onFill: () => void;
 }
 
 export default function Controls({
@@ -26,6 +28,7 @@ export default function Controls({
   onBackgroundChange,
   onThemeChange,
   onClear,
+  onFill,
 }: ControlsProps) {
   const getThemeStyles = () => {
     switch (theme) {
@@ -39,9 +42,9 @@ export default function Controls({
   };
 
   return (
-    <div className={`absolute top-4 left-4 rounded-xl shadow-2xl p-5 space-y-4 z-10 border-2 ${getThemeStyles()} min-w-[240px]`}>
-      <div className="border-b pb-3 mb-3" style={{ borderColor: theme === 'light' ? '#e5e7eb' : 'rgba(255,255,255,0.1)' }}>
-        <h2 className="text-lg font-bold mb-2">🎨 Drawing Tools</h2>
+    <div className={`absolute top-4 left-4 rounded-xl shadow-2xl p-4 sm:p-5 space-y-3 sm:space-y-4 z-10 border-2 ${getThemeStyles()} w-[90vw] sm:w-auto sm:min-w-[240px] max-w-[280px]`}>
+      <div className="border-b pb-2 sm:pb-3 mb-2 sm:mb-3" style={{ borderColor: theme === 'light' ? '#e5e7eb' : 'rgba(255,255,255,0.1)' }}>
+        <h2 className="text-base sm:text-lg font-bold mb-2">🎨 Drawing Tools</h2>
         <ThemeToggle theme={theme} onThemeChange={onThemeChange} />
       </div>
       
@@ -49,7 +52,15 @@ export default function Controls({
       <BrushSelector value={config.brushType} onChange={onBrushTypeChange} theme={theme} />
       <SizeSlider value={config.brushSize} onChange={onBrushSizeChange} theme={theme} />
       <BackgroundSelector value={config.backgroundStyle} onChange={onBackgroundChange} theme={theme} />
-      <ClearButton onClick={onClear} theme={theme} />
+      
+      <div className="flex gap-2">
+        <div className="flex-1">
+          <FillButton onClick={onFill} theme={theme} />
+        </div>
+        <div className="flex-1">
+          <ClearButton onClick={onClear} theme={theme} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -111,7 +111,7 @@ export class CanvasEngine {
 
   /**
    * Renders a smooth stroke using quadratic Bezier curves
-   * Used for ink, marker, and pencil brush types
+   * Used for ink, marker, pencil, and eraser brush types
    * 
    * @param points - Array of points in the stroke
    * @param color - Stroke color
@@ -122,7 +122,7 @@ export class CanvasEngine {
     points: Point[],
     color: string,
     baseWidth: number,
-    brushType: 'ink' | 'marker' | 'pencil'
+    brushType: 'ink' | 'marker' | 'pencil' | 'eraser'
   ): void {
     if (points.length < 2) return;
 
@@ -238,6 +238,21 @@ export class CanvasEngine {
     
     // Reset current stroke and stroke history
     this.currentStroke = [];
+    this.strokes = [];
+  }
+
+  /**
+   * Fills the entire canvas with a solid color
+   * 
+   * @param color - Fill color
+   */
+  fill(color: string): void {
+    const { width, height } = this.getLogicalDimensions();
+    
+    this.drawingCtx.fillStyle = color;
+    this.drawingCtx.fillRect(0, 0, width, height);
+    
+    // Clear stroke history since canvas is now filled
     this.strokes = [];
   }
 

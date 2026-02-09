@@ -1,6 +1,6 @@
 // Core type definitions for the doodle canvas application
 
-export type BrushType = 'ink' | 'marker' | 'pencil' | 'pixel';
+export type BrushType = 'ink' | 'marker' | 'pencil' | 'pixel' | 'eraser';
 
 export type BackgroundStyle = 'plain' | 'ruled' | 'dotted' | 'grid';
 

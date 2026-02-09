@@ -54,6 +54,7 @@ export class StrokeProcessor {
       marker: 0.1,   // Minimal response - consistent width
       pencil: 0.8,   // High response - varies significantly
       pixel: 0,      // No response - fixed width
+      eraser: 0.3,   // Light response - smooth erasing
     };
 
     const factor = sensitivity[brushType];

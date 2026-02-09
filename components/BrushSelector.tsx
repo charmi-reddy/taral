@@ -31,6 +31,7 @@ export default function BrushSelector({ value, onChange, theme }: BrushSelectorP
         <option value="marker">🖍️ Marker</option>
         <option value="pencil">✏️ Pencil</option>
         <option value="pixel">🎮 Pixel Pen</option>
+        <option value="eraser">🧹 Eraser</option>
       </select>
     </div>
   );

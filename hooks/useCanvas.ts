@@ -19,6 +19,7 @@ export interface UseCanvasReturn {
   setBrushSize: (size: number) => void;
   setBackgroundStyle: (style: BackgroundStyle) => void;
   clearCanvas: () => void;
+  fillCanvas: () => void;
   
   // Current state
   config: CanvasConfig;
@@ -135,10 +136,15 @@ export function useCanvas(): UseCanvasReturn {
     
     drawingStateRef.current.currentStroke.push(point);
     
+    // Use white color for eraser (matches background)
+    const strokeColor = configRef.current.brushType === 'eraser' 
+      ? '#ffffff' 
+      : configRef.current.color;
+    
     // Render the current stroke incrementally
     const stroke = {
       points: drawingStateRef.current.currentStroke,
-      color: configRef.current.color,
+      color: strokeColor,
       brushType: configRef.current.brushType,
       baseWidth: configRef.current.brushSize,
     };
@@ -164,10 +170,15 @@ export function useCanvas(): UseCanvasReturn {
     
     drawingStateRef.current.currentStroke.push(point);
     
+    // Use white color for eraser (matches background)
+    const strokeColor = configRef.current.brushType === 'eraser' 
+      ? '#ffffff' 
+      : configRef.current.color;
+    
     // Save completed stroke
     const stroke = {
       points: drawingStateRef.current.currentStroke,
-      color: configRef.current.color,
+      color: strokeColor,
       brushType: configRef.current.brushType,
       baseWidth: configRef.current.brushSize,
     };
@@ -212,6 +223,12 @@ export function useCanvas(): UseCanvasReturn {
     engineRef.current.updateBackground(configRef.current.backgroundStyle);
   };
   
+  const fillCanvas = () => {
+    if (!engineRef.current) return;
+    
+    engineRef.current.fill(configRef.current.color);
+  };
+  
   return {
     drawingCanvasRef,
     backgroundCanvasRef,
@@ -223,6 +240,7 @@ export function useCanvas(): UseCanvasReturn {
     setBrushSize,
     setBackgroundStyle,
     clearCanvas,
+    fillCanvas,
     config,
   };
 }
