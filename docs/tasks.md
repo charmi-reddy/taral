@@ -36,8 +36,8 @@ This implementation plan breaks down the doodle canvas application into incremen
     - **Property 1: Canvas Responsive Resizing**
     - **Validates: Requirements 1.2**
 
-- [ ] 3. Implement stroke processing and smoothing
-  - [ ] 3.1 Create StrokeProcessor class in lib/stroke-processor.ts
+- [x] 3. Implement stroke processing and smoothing
+  - [x] 3.1 Create StrokeProcessor class in lib/stroke-processor.ts
     - Implement calculateVelocity() for velocity calculation between points
     - Implement calculateWidth() with velocity-based width adjustment
     - Implement smoothPoints() using quadratic Bezier curve algorithm
@@ -45,27 +45,27 @@ This implementation plan breaks down the doodle canvas application into incremen
     - Add clear comments explaining Bezier math
     - _Requirements: 2.5, 3.1, 3.2, 3.3, 4.1, 4.2, 4.3, 4.4, 9.2_
   
-  - [ ] 3.2 Write property test for velocity calculation
+  - [x] 3.2 Write property test for velocity calculation
     - **Property 5: Velocity Calculation Consistency**
     - **Validates: Requirements 2.5**
   
-  - [ ] 3.3 Write property test for velocity-width relationship
+  - [x] 3.3 Write property test for velocity-width relationship
     - **Property 8: Velocity-Width Inverse Relationship**
     - **Validates: Requirements 4.1, 4.2, 4.3**
   
-  - [ ] 3.4 Write property test for stroke width bounds
+  - [x] 3.4 Write property test for stroke width bounds
     - **Property 9: Stroke Width Bounds**
     - **Validates: Requirements 4.4**
   
-  - [ ] 3.5 Write property test for pixel pen fixed width
+  - [x] 3.5 Write property test for pixel pen fixed width
     - **Property 10: Pixel Pen Fixed Width**
     - **Validates: Requirements 5.5**
   
-  - [ ] 3.6 Write property test for grid snapping
+  - [x] 3.6 Write property test for grid snapping
     - **Property 17: Grid Snapping Behavior**
     - **Validates: Requirements 9.2**
   
-  - [ ] 3.7 Write property test for no snapping when disabled
+  - [x] 3.7 Write property test for no snapping when disabled
     - **Property 18: No Snapping When Disabled**
     - **Validates: Requirements 9.3**
 
