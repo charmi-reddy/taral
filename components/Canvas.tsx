@@ -20,6 +20,7 @@ export default function Canvas() {
     redo,
     canUndo,
     canRedo,
+    isFillMode,
     config,
   } = useCanvas();
 
@@ -37,7 +38,7 @@ export default function Canvas() {
       {/* Drawing Canvas */}
       <canvas
         ref={drawingCanvasRef}
-        className="absolute top-0 left-0 w-full h-full cursor-crosshair"
+        className={`absolute top-0 left-0 w-full h-full ${isFillMode ? 'cursor-pointer' : 'cursor-crosshair'}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -58,6 +59,7 @@ export default function Canvas() {
         onRedo={redo}
         canUndo={canUndo}
         canRedo={canRedo}
+        isFillMode={isFillMode}
       />
     </div>
   );

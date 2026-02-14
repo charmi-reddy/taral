@@ -19,6 +19,7 @@ interface ControlsProps {
   onRedo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  isFillMode: boolean;
 }
 
 export default function Controls({
@@ -33,6 +34,7 @@ export default function Controls({
   onRedo,
   canUndo,
   canRedo,
+  isFillMode,
 }: ControlsProps) {
   const handleEraseClick = () => {
     if (config.brushType === 'eraser') {
@@ -90,7 +92,7 @@ export default function Controls({
       {/* Fill and Clear buttons */}
       <div className="flex gap-2">
         <div className="flex-1">
-          <FillButton onClick={onFill} />
+          <FillButton onClick={onFill} isActive={isFillMode} />
         </div>
         <div className="flex-1">
           <ClearButton onClick={onClear} />

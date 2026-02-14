@@ -24,6 +24,7 @@ export interface UseCanvasReturn {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  isFillMode: boolean;
   
   // Current state
   config: CanvasConfig;
@@ -54,6 +55,9 @@ export function useCanvas(): UseCanvasReturn {
   // Undo/redo state
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
+  
+  // Fill mode state
+  const [isFillMode, setIsFillMode] = useState(false);
   
   // Keep a ref copy of config for use in event handlers
   const configRef = useRef(config);
@@ -108,22 +112,31 @@ export function useCanvas(): UseCanvasReturn {
     };
   };
   
-  // Pointer down - start new stroke
+  // Pointer down - start new stroke or fill
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     e.preventDefault();
     
-    let point = getCanvasCoordinates(e);
+    const point = getCanvasCoordinates(e);
+    
+    // If in fill mode, flood fill at click point
+    if (isFillMode && engineRef.current) {
+      engineRef.current.floodFill(point.x, point.y, configRef.current.color);
+      setIsFillMode(false); // Exit fill mode after filling
+      updateUndoRedoState();
+      return;
+    }
     
     // Apply snap-to-grid if pixel pen on grid background
+    let snappedPoint = point;
     if (
       configRef.current.brushType === 'pixel' &&
       configRef.current.backgroundStyle === 'grid'
     ) {
-      point = StrokeProcessor.snapToGrid(point, 16); // Grid size is 16px
+      snappedPoint = StrokeProcessor.snapToGrid(point, 16); // Grid size is 16px
     }
     
     drawingStateRef.current.isDrawing = true;
-    drawingStateRef.current.currentStroke = [point];
+    drawingStateRef.current.currentStroke = [snappedPoint];
   };
   
   // Pointer move - add points and render
@@ -234,16 +247,8 @@ export function useCanvas(): UseCanvasReturn {
   };
   
   const fillCanvas = () => {
-    if (!engineRef.current || !drawingCanvasRef.current) return;
-    
-    // Get canvas center point for flood fill
-    const rect = drawingCanvasRef.current.getBoundingClientRect();
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    // Use flood fill at center - will fill enclosed area or whole canvas if not enclosed
-    engineRef.current.floodFill(centerX, centerY, configRef.current.color);
-    updateUndoRedoState();
+    // Toggle fill mode
+    setIsFillMode(prev => !prev);
   };
   
   const undo = () => {
@@ -276,6 +281,7 @@ export function useCanvas(): UseCanvasReturn {
     redo,
     canUndo,
     canRedo,
+    isFillMode,
     config,
   };
 }
