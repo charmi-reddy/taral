@@ -88,7 +88,7 @@ describe('StrokeProcessor', () => {
           fc.double({ min: 0.1, max: 5, noNaN: true }), // velocity1
           fc.double({ min: 0.1, max: 5, noNaN: true }), // velocity2
           fc.integer({ min: 1, max: 50 }), // baseWidth
-          fc.constantFrom<BrushType>('ink', 'marker', 'pencil'),
+          fc.constantFrom<BrushType>('ink'),
           (v1, v2, baseWidth, brushType) => {
             // Ensure v1 < v2
             const lowVelocity = Math.min(v1, v2);
@@ -128,7 +128,7 @@ describe('StrokeProcessor', () => {
         fc.property(
           fc.double({ min: 0, max: 10, noNaN: true }), // velocity
           fc.integer({ min: 1, max: 50 }), // baseWidth
-          fc.constantFrom<BrushType>('ink', 'marker', 'pencil'),
+          fc.constantFrom<BrushType>('ink'),
           (velocity, baseWidth, brushType) => {
             const width = StrokeProcessor.calculateWidth(
               velocity,
@@ -136,21 +136,9 @@ describe('StrokeProcessor', () => {
               brushType
             );
 
-            // Brush-specific bounds
-            let minWidth: number;
-            let maxWidth: number;
-            
-            if (brushType === 'pencil') {
-              minWidth = baseWidth * 0.2;
-              maxWidth = baseWidth * 2.5;
-            } else if (brushType === 'marker') {
-              minWidth = baseWidth * 0.8;
-              maxWidth = baseWidth * 1.2;
-            } else {
-              // ink
-              minWidth = baseWidth * 0.4;
-              maxWidth = baseWidth * 2.0;
-            }
+            // Ink: moderate variation (40% to 200%)
+            const minWidth = baseWidth * 0.4;
+            const maxWidth = baseWidth * 2.0;
 
             expect(width).toBeGreaterThanOrEqual(minWidth);
             expect(width).toBeLessThanOrEqual(maxWidth);
@@ -346,22 +334,13 @@ describe('StrokeProcessor', () => {
       const baseWidth = 10;
 
       const inkWidth = StrokeProcessor.calculateWidth(velocity, baseWidth, 'ink');
-      const markerWidth = StrokeProcessor.calculateWidth(velocity, baseWidth, 'marker');
-      const pencilWidth = StrokeProcessor.calculateWidth(velocity, baseWidth, 'pencil');
       const pixelWidth = StrokeProcessor.calculateWidth(velocity, baseWidth, 'pixel');
 
       // Pixel should always be base width
       expect(pixelWidth).toBe(baseWidth);
 
-      // Marker should be closest to base width (least sensitive)
-      expect(Math.abs(markerWidth - baseWidth)).toBeLessThan(
-        Math.abs(inkWidth - baseWidth)
-      );
-
-      // Pencil should be furthest from base width (most sensitive)
-      expect(Math.abs(pencilWidth - baseWidth)).toBeGreaterThan(
-        Math.abs(markerWidth - baseWidth)
-      );
+      // Ink should vary from base width (sensitive to velocity)
+      expect(Math.abs(inkWidth - baseWidth)).toBeGreaterThan(0);
     });
   });
 });

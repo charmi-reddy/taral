@@ -133,7 +133,7 @@ export class CanvasEngine {
     points: Point[],
     color: string,
     baseWidth: number,
-    brushType: 'ink' | 'marker' | 'pencil' | 'eraser'
+    brushType: 'ink' | 'eraser'
   ): void {
     if (points.length < 2) return;
 

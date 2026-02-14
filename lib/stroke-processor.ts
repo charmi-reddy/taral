@@ -50,9 +50,7 @@ export class StrokeProcessor {
     // Velocity sensitivity factors for each brush type
     // Higher value = more responsive to velocity changes
     const sensitivity: Record<BrushType, number> = {
-      ink: 1.2,      // High response - thin when fast, thick when slow (like real ink pen)
-      marker: 0.05,  // Very minimal response - consistent thick width
-      pencil: 2.0,   // Very high response - dramatic width variation
+      ink: 1.2,      // High response - thin when fast, thick when slow
       pixel: 0,      // No response - fixed width
       eraser: 0.3,   // Light response - smooth erasing
     };
@@ -69,19 +67,9 @@ export class StrokeProcessor {
     let minWidth: number;
     let maxWidth: number;
     
-    if (brushType === 'pencil') {
-      // Pencil: dramatic variation (20% to 250%)
-      minWidth = baseWidth * 0.2;
-      maxWidth = baseWidth * 2.5;
-    } else if (brushType === 'marker') {
-      // Marker: very consistent (80% to 120%)
-      minWidth = baseWidth * 0.8;
-      maxWidth = baseWidth * 1.2;
-    } else {
-      // Ink and others: moderate variation (40% to 200%)
-      minWidth = baseWidth * 0.4;
-      maxWidth = baseWidth * 2.0;
-    }
+    // Ink: moderate variation (40% to 200%)
+    minWidth = baseWidth * 0.4;
+    maxWidth = baseWidth * 2.0;
 
     return Math.max(minWidth, Math.min(maxWidth, width));
   }

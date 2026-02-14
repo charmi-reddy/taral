@@ -3,8 +3,8 @@ import type { BrushType, BackgroundStyle, Point, Stroke, CanvasConfig, CanvasSta
 
 describe('Type definitions', () => {
   it('should allow valid BrushType values', () => {
-    const brushTypes: BrushType[] = ['ink', 'marker', 'pencil', 'pixel'];
-    expect(brushTypes).toHaveLength(4);
+    const brushTypes: BrushType[] = ['ink', 'pixel', 'eraser'];
+    expect(brushTypes).toHaveLength(3);
   });
 
   it('should allow valid BackgroundStyle values', () => {
@@ -39,9 +39,11 @@ describe('Type definitions', () => {
   it('should create a valid CanvasConfig', () => {
     const config: CanvasConfig = {
       color: '#ff0000',
-      brushType: 'marker',
+      brushType: 'ink',
       brushSize: 5,
       backgroundStyle: 'dotted',
+      drawMode: 'freehand',
+      shapeType: 'circle',
     };
     expect(config.brushSize).toBe(5);
   });
@@ -56,6 +58,8 @@ describe('Type definitions', () => {
         brushType: 'ink',
         brushSize: 3,
         backgroundStyle: 'plain',
+        drawMode: 'freehand',
+        shapeType: 'circle',
       },
     };
     expect(state.isDrawing).toBe(false);
