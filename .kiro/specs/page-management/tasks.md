@@ -76,7 +76,7 @@ The implementation uses TypeScript with React and Next.js, with Vitest for unit 
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 5. Implement usePageManager React hook
-  - [ ] 5.1 Create usePageManager hook with state management
+  - [x] 5.1 Create usePageManager hook with state management
     - Set up React state for pages and activePageId
     - Implement loadPages effect on mount
     - Implement auto-save with 1-second debouncing

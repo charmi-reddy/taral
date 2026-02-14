@@ -210,7 +210,7 @@ function validatePage(page: any): boolean {
     if (!page.name || typeof page.name !== 'string') return false;
     if (!Array.isArray(page.strokes)) return false;
     if (!page.backgroundStyle || typeof page.backgroundStyle !== 'string') return false;
-    if (!page.thumbnail || typeof page.thumbnail !== 'string') return false;
+    if (typeof page.thumbnail !== 'string') return false; // Allow empty string
 
     // Validate timestamps
     if (typeof page.createdAt !== 'number' || page.createdAt <= 0) return false;
