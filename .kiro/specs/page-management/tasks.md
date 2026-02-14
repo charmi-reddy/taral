@@ -18,14 +18,14 @@ This implementation plan breaks down the Page Management System into incremental
   - **Validates: Requirements 1.5, 10.5**
 
 - [ ] 2. Implement Page Manager core CRUD operations
-  - [~] 2.1 Implement createPage function with default naming
+  - [x] 2.1 Implement createPage function with default naming
     - Generate unique ID for new pages
     - Initialize page with default values (empty strokes, plain background)
     - Assign sequential default name ("Untitled Page N")
     - Set creation and modification timestamps
     - _Requirements: 1.1, 2.1, 9.1, 10.2, 10.4, 10.5_
   
-  - [~] 2.2 Write property test for sequential default naming
+  - [x] 2.2 Write property test for sequential default naming
     - **Property 3: Sequential Default Naming**
     - **Validates: Requirements 1.1, 2.1**
   
