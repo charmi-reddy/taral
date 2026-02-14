@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import fc from 'fast-check';
-import { saveToLocalStorage, loadFromLocalStorage, clearLocalStorage } from './storage';
+import { saveToLocalStorage, loadFromLocalStorage } from './storage';
 import { PageStorage, Page, PAGE_CONSTANTS } from './types';
 import { generateUUID } from './uuid';
 
@@ -70,8 +70,8 @@ describe('Page Storage - Property Tests', () => {
         fc.array(
           fc.record({
             name: fc.string({ minLength: 1, maxLength: 100 }),
-            strokes: fc.constant([]), // Simplified for testing
-            backgroundStyle: fc.constantFrom('plain', 'grid', 'dots'),
+            strokes: fc.constant([]) as fc.Arbitrary<[]>, // Simplified for testing
+            backgroundStyle: fc.constantFrom('plain', 'ruled', 'dotted', 'grid'),
             thumbnail: fc.constant('data:image/jpeg;base64,test'),
             createdAt: fc.integer({ min: 1 }),
             lastModifiedAt: fc.integer({ min: 1 }),
