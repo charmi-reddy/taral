@@ -1,9 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useCanvas } from '@/hooks/useCanvas';
 import Controls from './Controls';
-import type { Theme } from './ThemeToggle';
 
 export default function Canvas() {
   const {
@@ -18,26 +16,16 @@ export default function Canvas() {
     setBackgroundStyle,
     clearCanvas,
     fillCanvas,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
     config,
   } = useCanvas();
 
-  const [theme, setTheme] = useState<Theme>('light');
-
-  const getBackgroundColor = () => {
-    switch (theme) {
-      case 'dark':
-        return '#1f2937'; // gray-800
-      case 'purple':
-        return '#581c87'; // purple-900
-      default:
-        return '#f3f4f6'; // gray-100
-    }
-  };
-
   return (
     <div 
-      className="relative w-full h-screen overflow-hidden"
-      style={{ backgroundColor: getBackgroundColor() }}
+      className="relative w-full h-screen overflow-hidden bg-gray-100"
     >
       {/* Background Canvas */}
       <canvas
@@ -60,14 +48,16 @@ export default function Canvas() {
       {/* Controls */}
       <Controls
         config={config}
-        theme={theme}
         onColorChange={setColor}
         onBrushTypeChange={setBrushType}
         onBrushSizeChange={setBrushSize}
         onBackgroundChange={setBackgroundStyle}
-        onThemeChange={setTheme}
         onClear={clearCanvas}
         onFill={fillCanvas}
+        onUndo={undo}
+        onRedo={redo}
+        canUndo={canUndo}
+        canRedo={canRedo}
       />
     </div>
   );

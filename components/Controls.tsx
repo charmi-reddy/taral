@@ -5,62 +5,98 @@ import SizeSlider from './SizeSlider';
 import BackgroundSelector from './BackgroundSelector';
 import ClearButton from './ClearButton';
 import FillButton from './FillButton';
-import ThemeToggle, { Theme } from './ThemeToggle';
+import EraseButton from './EraseButton';
 
 interface ControlsProps {
   config: CanvasConfig;
-  theme: Theme;
   onColorChange: (color: string) => void;
   onBrushTypeChange: (type: BrushType) => void;
   onBrushSizeChange: (size: number) => void;
   onBackgroundChange: (style: BackgroundStyle) => void;
-  onThemeChange: (theme: Theme) => void;
   onClear: () => void;
   onFill: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 }
 
 export default function Controls({
   config,
-  theme,
   onColorChange,
   onBrushTypeChange,
   onBrushSizeChange,
   onBackgroundChange,
-  onThemeChange,
   onClear,
   onFill,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo,
 }: ControlsProps) {
-  const getThemeStyles = () => {
-    switch (theme) {
-      case 'dark':
-        return 'bg-gray-900 text-white border-gray-700';
-      case 'purple':
-        return 'bg-purple-900 text-white border-purple-700';
-      default:
-        return 'bg-white text-gray-900 border-gray-200';
+  const handleEraseClick = () => {
+    if (config.brushType === 'eraser') {
+      // Switch back to ink if already erasing
+      onBrushTypeChange('ink');
+    } else {
+      // Switch to eraser
+      onBrushTypeChange('eraser');
     }
   };
 
   return (
-    <div className={`absolute top-4 left-4 rounded-xl shadow-2xl p-4 sm:p-5 space-y-3 sm:space-y-4 z-10 border-2 ${getThemeStyles()} w-[90vw] sm:w-auto sm:min-w-[240px] max-w-[280px]`}>
-      <div className="border-b pb-2 sm:pb-3 mb-2 sm:mb-3" style={{ borderColor: theme === 'light' ? '#e5e7eb' : 'rgba(255,255,255,0.1)' }}>
-        <h2 className="text-base sm:text-lg font-bold mb-2">🎨 Drawing Tools</h2>
-        <ThemeToggle theme={theme} onThemeChange={onThemeChange} />
+    <div className="absolute top-4 left-4 rounded-xl shadow-2xl p-4 sm:p-5 space-y-3 sm:space-y-4 z-10 border-2 bg-white text-gray-900 border-gray-200 w-[90vw] sm:w-auto sm:min-w-[240px] max-w-[280px]">
+      <div className="border-b border-gray-200 pb-2 sm:pb-3 mb-2 sm:mb-3">
+        <h2 className="text-base sm:text-lg font-bold">🎨 Drawing Tools</h2>
       </div>
       
-      <ColorPicker value={config.color} onChange={onColorChange} theme={theme} />
-      <BrushSelector value={config.brushType} onChange={onBrushTypeChange} theme={theme} />
-      <SizeSlider value={config.brushSize} onChange={onBrushSizeChange} theme={theme} />
-      <BackgroundSelector value={config.backgroundStyle} onChange={onBackgroundChange} theme={theme} />
+      {/* Undo/Redo buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={onUndo}
+          disabled={!canUndo}
+          className={`flex-1 px-3 py-2 rounded-lg font-bold transition text-sm ${
+            canUndo
+              ? 'bg-blue-500 hover:bg-blue-600 text-white'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          ↶ Undo
+        </button>
+        <button
+          onClick={onRedo}
+          disabled={!canRedo}
+          className={`flex-1 px-3 py-2 rounded-lg font-bold transition text-sm ${
+            canRedo
+              ? 'bg-blue-500 hover:bg-blue-600 text-white'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          ↷ Redo
+        </button>
+      </div>
       
+      <ColorPicker value={config.color} onChange={onColorChange} />
+      <BrushSelector value={config.brushType} onChange={onBrushTypeChange} />
+      <SizeSlider value={config.brushSize} onChange={onBrushSizeChange} />
+      <BackgroundSelector value={config.backgroundStyle} onChange={onBackgroundChange} />
+      
+      {/* Erase button */}
+      <EraseButton 
+        onClick={handleEraseClick} 
+        isActive={config.brushType === 'eraser'}
+      />
+      
+      {/* Fill and Clear buttons */}
       <div className="flex gap-2">
         <div className="flex-1">
-          <FillButton onClick={onFill} theme={theme} />
+          <FillButton onClick={onFill} />
         </div>
         <div className="flex-1">
-          <ClearButton onClick={onClear} theme={theme} />
+          <ClearButton onClick={onClear} />
         </div>
       </div>
     </div>
   );
 }
+

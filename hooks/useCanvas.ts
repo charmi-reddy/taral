@@ -20,6 +20,10 @@ export interface UseCanvasReturn {
   setBackgroundStyle: (style: BackgroundStyle) => void;
   clearCanvas: () => void;
   fillCanvas: () => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
   
   // Current state
   config: CanvasConfig;
@@ -46,6 +50,10 @@ export function useCanvas(): UseCanvasReturn {
     brushSize: 3,
     backgroundStyle: 'plain',
   });
+  
+  // Undo/redo state
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
   
   // Keep a ref copy of config for use in event handlers
   const configRef = useRef(config);
@@ -186,9 +194,20 @@ export function useCanvas(): UseCanvasReturn {
     engineRef.current.addStroke(stroke);
     engineRef.current.renderStroke(stroke);
     
+    // Update undo/redo state
+    updateUndoRedoState();
+    
     // Reset drawing state
     drawingStateRef.current.isDrawing = false;
     drawingStateRef.current.currentStroke = [];
+  };
+  
+  // Update undo/redo button states
+  const updateUndoRedoState = () => {
+    if (engineRef.current) {
+      setCanUndo(engineRef.current.canUndo());
+      setCanRedo(engineRef.current.canRedo());
+    }
   };
   
   // Configuration setters
@@ -221,12 +240,28 @@ export function useCanvas(): UseCanvasReturn {
     engineRef.current.clear();
     // Preserve and re-render background
     engineRef.current.updateBackground(configRef.current.backgroundStyle);
+    updateUndoRedoState();
   };
   
   const fillCanvas = () => {
     if (!engineRef.current) return;
     
     engineRef.current.fill(configRef.current.color);
+    updateUndoRedoState();
+  };
+  
+  const undo = () => {
+    if (!engineRef.current) return;
+    
+    engineRef.current.undo();
+    updateUndoRedoState();
+  };
+  
+  const redo = () => {
+    if (!engineRef.current) return;
+    
+    engineRef.current.redo();
+    updateUndoRedoState();
   };
   
   return {
@@ -241,6 +276,10 @@ export function useCanvas(): UseCanvasReturn {
     setBackgroundStyle,
     clearCanvas,
     fillCanvas,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
     config,
   };
 }

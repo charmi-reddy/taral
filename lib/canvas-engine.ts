@@ -10,6 +10,7 @@ export class CanvasEngine {
   private dpr: number;
   private currentStroke: Point[] = [];
   private strokes: Stroke[] = [];
+  private undoneStrokes: Stroke[] = [];
   private rafId: number | null = null;
 
   constructor(
@@ -214,6 +215,15 @@ export class CanvasEngine {
    */
   addStroke(stroke: Stroke): void {
     this.strokes.push(stroke);
+    // Clear redo stack when new stroke is added
+    this.undoneStrokes = [];
+  }
+
+  /**
+   * Sets the strokes array (used for undo/redo)
+   */
+  setStrokes(strokes: Stroke[]): void {
+    this.strokes = strokes;
   }
 
   /**
@@ -224,21 +234,75 @@ export class CanvasEngine {
   }
 
   /**
-   * Clears the drawing layer, removing all strokes
+   * Undo the last stroke
    */
-  clear(): void {
+  undo(): boolean {
+    if (this.strokes.length === 0) return false;
+    
+    const lastStroke = this.strokes.pop();
+    if (lastStroke) {
+      this.undoneStrokes.push(lastStroke);
+    }
+    
+    // Redraw canvas with remaining strokes
+    this.clearDrawingLayer();
+    this.redrawAllStrokes();
+    
+    return true;
+  }
+
+  /**
+   * Redo the last undone stroke
+   */
+  redo(): boolean {
+    if (this.undoneStrokes.length === 0) return false;
+    
+    const stroke = this.undoneStrokes.pop();
+    if (stroke) {
+      this.strokes.push(stroke);
+      this.renderStroke(stroke);
+    }
+    
+    return true;
+  }
+
+  /**
+   * Check if undo is available
+   */
+  canUndo(): boolean {
+    return this.strokes.length > 0;
+  }
+
+  /**
+   * Check if redo is available
+   */
+  canRedo(): boolean {
+    return this.undoneStrokes.length > 0;
+  }
+
+  /**
+   * Clears only the drawing layer without resetting stroke history
+   */
+  private clearDrawingLayer(): void {
     const width = this.drawingCanvas.width;
     const height = this.drawingCanvas.height;
     
-    // Clear at physical pixel resolution
     this.drawingCtx.save();
     this.drawingCtx.setTransform(1, 0, 0, 1, 0, 0);
     this.drawingCtx.clearRect(0, 0, width, height);
     this.drawingCtx.restore();
+  }
+
+  /**
+   * Clears the drawing layer, removing all strokes
+   */
+  clear(): void {
+    this.clearDrawingLayer();
     
     // Reset current stroke and stroke history
     this.currentStroke = [];
     this.strokes = [];
+    this.undoneStrokes = [];
   }
 
   /**
