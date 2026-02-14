@@ -4,10 +4,6 @@ export type BrushType = 'ink' | 'pixel' | 'eraser';
 
 export type BackgroundStyle = 'plain' | 'ruled' | 'dotted' | 'grid';
 
-export type ShapeType = 'circle' | 'rectangle' | 'star' | 'triangle' | 'line' | 'arrow';
-
-export type DrawMode = 'freehand' | 'shape';
-
 export interface Point {
   x: number;
   y: number;
@@ -27,8 +23,6 @@ export interface CanvasConfig {
   brushType: BrushType;
   brushSize: number;
   backgroundStyle: BackgroundStyle;
-  drawMode: DrawMode;
-  shapeType: ShapeType;
 }
 
 export interface CanvasState {

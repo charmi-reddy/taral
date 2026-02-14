@@ -42,8 +42,6 @@ describe('Type definitions', () => {
       brushType: 'ink',
       brushSize: 5,
       backgroundStyle: 'dotted',
-      drawMode: 'freehand',
-      shapeType: 'circle',
     };
     expect(config.brushSize).toBe(5);
   });
@@ -58,8 +56,6 @@ describe('Type definitions', () => {
         brushType: 'ink',
         brushSize: 3,
         backgroundStyle: 'plain',
-        drawMode: 'freehand',
-        shapeType: 'circle',
       },
     };
     expect(state.isDrawing).toBe(false);
