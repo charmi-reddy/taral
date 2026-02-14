@@ -137,7 +137,17 @@ export class CanvasEngine {
   ): void {
     if (points.length < 2) return;
 
-    this.drawingCtx.strokeStyle = color;
+    // Save context state
+    this.drawingCtx.save();
+
+    // Use destination-out for eraser to actually remove pixels
+    if (brushType === 'eraser') {
+      this.drawingCtx.globalCompositeOperation = 'destination-out';
+      this.drawingCtx.strokeStyle = 'rgba(0,0,0,1)'; // Color doesn't matter for destination-out
+    } else {
+      this.drawingCtx.strokeStyle = color;
+    }
+    
     this.drawingCtx.lineCap = 'round';
     this.drawingCtx.lineJoin = 'round';
 
@@ -151,6 +161,9 @@ export class CanvasEngine {
       this.drawingCtx.moveTo(points[0].x, points[0].y);
       this.drawingCtx.lineTo(points[1].x, points[1].y);
       this.drawingCtx.stroke();
+      
+      // Restore context state
+      this.drawingCtx.restore();
       return;
     }
 
@@ -180,6 +193,9 @@ export class CanvasEngine {
     const lastPoint = points[points.length - 1];
     this.drawingCtx.lineTo(lastPoint.x, lastPoint.y);
     this.drawingCtx.stroke();
+    
+    // Restore context state
+    this.drawingCtx.restore();
   }
 
   /**

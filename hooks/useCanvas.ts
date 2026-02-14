@@ -144,15 +144,10 @@ export function useCanvas(): UseCanvasReturn {
     
     drawingStateRef.current.currentStroke.push(point);
     
-    // Use white color for eraser (matches background)
-    const strokeColor = configRef.current.brushType === 'eraser' 
-      ? '#ffffff' 
-      : configRef.current.color;
-    
     // Render the current stroke incrementally
     const stroke = {
       points: drawingStateRef.current.currentStroke,
-      color: strokeColor,
+      color: configRef.current.color,
       brushType: configRef.current.brushType,
       baseWidth: configRef.current.brushSize,
     };
@@ -178,15 +173,10 @@ export function useCanvas(): UseCanvasReturn {
     
     drawingStateRef.current.currentStroke.push(point);
     
-    // Use white color for eraser (matches background)
-    const strokeColor = configRef.current.brushType === 'eraser' 
-      ? '#ffffff' 
-      : configRef.current.color;
-    
     // Save completed stroke
     const stroke = {
       points: drawingStateRef.current.currentStroke,
-      color: strokeColor,
+      color: configRef.current.color,
       brushType: configRef.current.brushType,
       baseWidth: configRef.current.brushSize,
     };

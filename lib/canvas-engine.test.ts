@@ -428,13 +428,24 @@ describe('CanvasEngine', () => {
         baseWidth: 5,
       };
 
+      // Spy on stroke method to verify color is applied
+      const strokeSpy = vi.spyOn(ctx, 'stroke');
+      let capturedStrokeStyle: string | undefined;
+      
+      // Capture strokeStyle when stroke is called
+      strokeSpy.mockImplementation(function(this: CanvasRenderingContext2D) {
+        capturedStrokeStyle = this.strokeStyle as string;
+      });
+
       engine.renderStroke(stroke);
 
       // Wait for requestAnimationFrame
       await new Promise(resolve => setTimeout(resolve, 50));
 
-      // strokeStyle should be set to the stroke color
-      expect(ctx.strokeStyle).toBe(color);
+      // strokeStyle should have been set to the stroke color during rendering
+      expect(capturedStrokeStyle).toBe(color);
+      
+      strokeSpy.mockRestore();
     });
   });
 
