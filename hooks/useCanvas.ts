@@ -234,9 +234,15 @@ export function useCanvas(): UseCanvasReturn {
   };
   
   const fillCanvas = () => {
-    if (!engineRef.current) return;
+    if (!engineRef.current || !drawingCanvasRef.current) return;
     
-    engineRef.current.fill(configRef.current.color);
+    // Get canvas center point for flood fill
+    const rect = drawingCanvasRef.current.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    // Use flood fill at center - will fill enclosed area or whole canvas if not enclosed
+    engineRef.current.floodFill(centerX, centerY, configRef.current.color);
     updateUndoRedoState();
   };
   

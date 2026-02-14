@@ -349,6 +349,101 @@ export class CanvasEngine {
   }
 
   /**
+   * Flood fill at a specific point
+   * Fills an enclosed area with the specified color
+   * Falls back to full canvas fill if area is too large (not enclosed)
+   * 
+   * @param x - X coordinate (logical pixels)
+   * @param y - Y coordinate (logical pixels)
+   * @param fillColor - Color to fill with
+   */
+  floodFill(x: number, y: number, fillColor: string): void {
+    const { width, height } = this.getLogicalDimensions();
+    
+    // Convert logical coordinates to physical pixels
+    const physicalX = Math.floor(x * this.dpr);
+    const physicalY = Math.floor(y * this.dpr);
+    const physicalWidth = this.drawingCanvas.width;
+    const physicalHeight = this.drawingCanvas.height;
+    
+    // Get image data
+    const imageData = this.drawingCtx.getImageData(0, 0, physicalWidth, physicalHeight);
+    const pixels = imageData.data;
+    
+    // Get target color at click point
+    const startPos = (physicalY * physicalWidth + physicalX) * 4;
+    const targetR = pixels[startPos];
+    const targetG = pixels[startPos + 1];
+    const targetB = pixels[startPos + 2];
+    const targetA = pixels[startPos + 3];
+    
+    // Parse fill color
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d')!;
+    tempCtx.fillStyle = fillColor;
+    tempCtx.fillRect(0, 0, 1, 1);
+    const fillData = tempCtx.getImageData(0, 0, 1, 1).data;
+    const fillR = fillData[0];
+    const fillG = fillData[1];
+    const fillB = fillData[2];
+    const fillA = 255;
+    
+    // If clicking on same color, do nothing
+    if (targetR === fillR && targetG === fillG && targetB === fillB && targetA === fillA) {
+      return;
+    }
+    
+    // Flood fill algorithm with stack
+    const stack: [number, number][] = [[physicalX, physicalY]];
+    const visited = new Set<number>();
+    let pixelsFilled = 0;
+    const maxPixels = physicalWidth * physicalHeight * 0.5; // If filling more than 50%, fill whole canvas
+    
+    const matchesTarget = (pos: number): boolean => {
+      return pixels[pos] === targetR &&
+             pixels[pos + 1] === targetG &&
+             pixels[pos + 2] === targetB &&
+             pixels[pos + 3] === targetA;
+    };
+    
+    while (stack.length > 0 && pixelsFilled < maxPixels) {
+      const [px, py] = stack.pop()!;
+      
+      // Check bounds
+      if (px < 0 || px >= physicalWidth || py < 0 || py >= physicalHeight) continue;
+      
+      const pos = (py * physicalWidth + px) * 4;
+      const key = py * physicalWidth + px;
+      
+      // Skip if already visited or doesn't match target color
+      if (visited.has(key) || !matchesTarget(pos)) continue;
+      
+      visited.add(key);
+      pixelsFilled++;
+      
+      // Fill this pixel
+      pixels[pos] = fillR;
+      pixels[pos + 1] = fillG;
+      pixels[pos + 2] = fillB;
+      pixels[pos + 3] = fillA;
+      
+      // Add neighbors to stack
+      stack.push([px + 1, py]);
+      stack.push([px - 1, py]);
+      stack.push([px, py + 1]);
+      stack.push([px, py - 1]);
+    }
+    
+    // If we filled too many pixels, it's not enclosed - fill whole canvas instead
+    if (pixelsFilled >= maxPixels) {
+      this.fill(fillColor);
+    } else {
+      // Put the modified image data back
+      this.drawingCtx.putImageData(imageData, 0, 0);
+    }
+  }
+
+  /**
    * Gets the device pixel ratio used for scaling
    */
   getDevicePixelRatio(): number {
