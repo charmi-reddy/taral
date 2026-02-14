@@ -82,7 +82,7 @@ export class CanvasEngine {
    */
   private redrawAllStrokes(): void {
     this.strokes.forEach(stroke => {
-      this.renderStroke(stroke);
+      this.renderStrokeImmediate(stroke);
     });
   }
 
@@ -101,13 +101,23 @@ export class CanvasEngine {
 
     // Schedule render on next animation frame
     this.rafId = requestAnimationFrame(() => {
-      if (stroke.brushType === 'pixel') {
-        this.renderPixelStroke(stroke.points, stroke.color, stroke.baseWidth);
-      } else {
-        this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
-      }
+      this.renderStrokeImmediate(stroke);
       this.rafId = null;
     });
+  }
+
+  /**
+   * Renders a stroke immediately without RAF
+   * Used for redrawing multiple strokes
+   * 
+   * @param stroke - The stroke to render
+   */
+  private renderStrokeImmediate(stroke: Stroke): void {
+    if (stroke.brushType === 'pixel') {
+      this.renderPixelStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else {
+      this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
+    }
   }
 
   /**
