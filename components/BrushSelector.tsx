@@ -17,7 +17,7 @@ export default function BrushSelector({ value, onChange }: BrushSelectorProps) {
         <option value="ink">Ink Pen</option>
         <option value="marker">Marker</option>
         <option value="pencil">Pencil</option>
-        <option value="pixel">Pixel Pen</option>
+        <option value="pixel">Pixel Pen (Grid bg)</option>
         <option value="eraser">Eraser</option>
       </select>
     </div>
