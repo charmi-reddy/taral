@@ -14,10 +14,10 @@ export default function BackgroundSelector({ value, onChange }: BackgroundSelect
         onChange={(e) => onChange(e.target.value as BackgroundStyle)}
         className="w-full px-3 py-2 rounded-lg font-medium bg-white text-gray-900 border-gray-300"
       >
-        <option value="plain">📄 Plain</option>
-        <option value="ruled">📝 Ruled</option>
-        <option value="dotted">⚫ Dotted</option>
-        <option value="grid">🎨 Grid</option>
+        <option value="plain">Plain</option>
+        <option value="ruled">Ruled</option>
+        <option value="dotted">Dotted</option>
+        <option value="grid">Grid</option>
       </select>
     </div>
   );
