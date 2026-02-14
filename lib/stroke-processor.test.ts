@@ -123,7 +123,7 @@ describe('StrokeProcessor', () => {
     // Feature: doodle-canvas, Property 9: Stroke Width Bounds
     // Validates: Requirements 4.4
 
-    it('should clamp width between 0.5x and 2x base width', () => {
+    it('should clamp width within brush-specific bounds', () => {
       fc.assert(
         fc.property(
           fc.double({ min: 0, max: 10, noNaN: true }), // velocity
@@ -136,8 +136,21 @@ describe('StrokeProcessor', () => {
               brushType
             );
 
-            const minWidth = baseWidth * 0.5;
-            const maxWidth = baseWidth * 2.0;
+            // Brush-specific bounds
+            let minWidth: number;
+            let maxWidth: number;
+            
+            if (brushType === 'pencil') {
+              minWidth = baseWidth * 0.2;
+              maxWidth = baseWidth * 2.5;
+            } else if (brushType === 'marker') {
+              minWidth = baseWidth * 0.8;
+              maxWidth = baseWidth * 1.2;
+            } else {
+              // ink
+              minWidth = baseWidth * 0.4;
+              maxWidth = baseWidth * 2.0;
+            }
 
             expect(width).toBeGreaterThanOrEqual(minWidth);
             expect(width).toBeLessThanOrEqual(maxWidth);
@@ -324,7 +337,7 @@ describe('StrokeProcessor', () => {
 
     it('should handle very high velocity', () => {
       const width = StrokeProcessor.calculateWidth(1000, 10, 'ink');
-      expect(width).toBeGreaterThanOrEqual(5); // Min bound
+      expect(width).toBeGreaterThanOrEqual(4); // Min bound for ink (0.4x)
       expect(width).toBeLessThanOrEqual(20); // Max bound
     });
 

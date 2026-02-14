@@ -145,10 +145,30 @@ export class CanvasEngine {
       this.drawingCtx.globalCompositeOperation = 'destination-out';
       this.drawingCtx.strokeStyle = 'rgba(0,0,0,1)'; // Color doesn't matter for destination-out
     } else {
-      this.drawingCtx.strokeStyle = color;
+      // Apply brush-specific visual properties
+      switch (brushType) {
+        case 'marker':
+          // Marker: semi-transparent, bold, consistent
+          this.drawingCtx.globalAlpha = 0.6;
+          this.drawingCtx.strokeStyle = color;
+          this.drawingCtx.lineCap = 'round';
+          break;
+        case 'pencil':
+          // Pencil: slightly transparent, textured feel
+          this.drawingCtx.globalAlpha = 0.7;
+          this.drawingCtx.strokeStyle = color;
+          this.drawingCtx.lineCap = 'round';
+          break;
+        case 'ink':
+        default:
+          // Ink: solid, clean, precise
+          this.drawingCtx.globalAlpha = 1.0;
+          this.drawingCtx.strokeStyle = color;
+          this.drawingCtx.lineCap = 'round';
+          break;
+      }
     }
     
-    this.drawingCtx.lineCap = 'round';
     this.drawingCtx.lineJoin = 'round';
 
     // For single segment, just draw a line
