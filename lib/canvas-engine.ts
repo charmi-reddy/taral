@@ -113,6 +113,13 @@ export class CanvasEngine {
    * @param stroke - The stroke to render
    */
   private renderStrokeImmediate(stroke: Stroke): void {
+    // Check if this is an image data stroke (from fill operation)
+    const strokeWithImageData = stroke as Stroke & { imageData?: ImageData };
+    if (strokeWithImageData.imageData) {
+      this.drawingCtx.putImageData(strokeWithImageData.imageData, 0, 0);
+      return;
+    }
+    
     if (stroke.brushType === 'pixel') {
       this.renderPixelStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
@@ -246,6 +253,32 @@ export class CanvasEngine {
     // Clear redo stack when new stroke is added
     this.undoneStrokes = [];
   }
+  
+  /**
+   * Saves current canvas state as an image data stroke
+   * Used before fill operations to enable undo
+   */
+  private saveCanvasState(): void {
+    const imageData = this.drawingCtx.getImageData(
+      0, 
+      0, 
+      this.drawingCanvas.width, 
+      this.drawingCanvas.height
+    );
+    
+    // Create a special stroke that stores the canvas state
+    const canvasStateStroke: Stroke & { imageData?: ImageData } = {
+      points: [],
+      color: '',
+      brushType: 'ink',
+      baseWidth: 0,
+      imageData: imageData,
+    };
+    
+    this.strokes.push(canvasStateStroke as Stroke);
+    // Clear redo stack when new action is performed
+    this.undoneStrokes = [];
+  }
 
   /**
    * Sets the strokes array (used for undo/redo)
@@ -288,7 +321,14 @@ export class CanvasEngine {
     const stroke = this.undoneStrokes.pop();
     if (stroke) {
       this.strokes.push(stroke);
-      this.renderStroke(stroke);
+      
+      // Check if this is an image data stroke (from fill operation)
+      const strokeWithImageData = stroke as Stroke & { imageData?: ImageData };
+      if (strokeWithImageData.imageData) {
+        this.drawingCtx.putImageData(strokeWithImageData.imageData, 0, 0);
+      } else {
+        this.renderStroke(stroke);
+      }
     }
     
     return true;
@@ -339,13 +379,13 @@ export class CanvasEngine {
    * @param color - Fill color
    */
   fill(color: string): void {
+    // Save canvas state before filling to enable undo
+    this.saveCanvasState();
+    
     const { width, height } = this.getLogicalDimensions();
     
     this.drawingCtx.fillStyle = color;
     this.drawingCtx.fillRect(0, 0, width, height);
-    
-    // Clear stroke history since canvas is now filled
-    this.strokes = [];
   }
 
   /**
@@ -393,6 +433,9 @@ export class CanvasEngine {
       return;
     }
     
+    // Save canvas state before filling to enable undo
+    this.saveCanvasState();
+    
     // Flood fill algorithm with stack
     const stack: [number, number][] = [[physicalX, physicalY]];
     const visited = new Set<number>();
@@ -436,7 +479,11 @@ export class CanvasEngine {
     
     // If we filled too many pixels, it's not enclosed - fill whole canvas instead
     if (pixelsFilled >= maxPixels) {
-      this.fill(fillColor);
+      // Note: fill() already calls saveCanvasState(), but we already called it above
+      // Remove the duplicate by directly filling without calling fill()
+      const { width, height } = this.getLogicalDimensions();
+      this.drawingCtx.fillStyle = fillColor;
+      this.drawingCtx.fillRect(0, 0, width, height);
     } else {
       // Put the modified image data back
       this.drawingCtx.putImageData(imageData, 0, 0);
