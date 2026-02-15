@@ -172,19 +172,19 @@ export default function Canvas({
           {/* Background Canvas */}
           <canvas
             ref={backgroundCanvasRef}
-            className="absolute top-0 left-0 w-full h-full"
-            style={{ touchAction: 'none' }}
+            className="absolute top-0 left-0"
+            style={{ touchAction: 'none', width: '100%', height: '100%' }}
           />
           
           {/* Drawing Canvas */}
           <canvas
             ref={drawingCanvasRef}
-            className={`absolute top-0 left-0 w-full h-full ${isFillMode ? 'cursor-pointer' : 'cursor-crosshair'}`}
+            className={`absolute top-0 left-0 ${isFillMode ? 'cursor-pointer' : 'cursor-crosshair'}`}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
-            style={{ touchAction: 'none', pointerEvents: isResizing ? 'none' : 'auto' }}
+            style={{ touchAction: 'none', pointerEvents: isResizing ? 'none' : 'auto', width: '100%', height: '100%' }}
           />
         </div>
       </div>
