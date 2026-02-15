@@ -191,33 +191,39 @@ export default function Canvas({
             ref={drawingCanvasRef}
             className={`absolute top-0 left-0 w-full h-full ${isFillMode ? 'cursor-pointer' : 'cursor-crosshair'}`}
             onPointerDown={(e) => {
+              e.preventDefault();
               const rect = e.currentTarget.getBoundingClientRect();
               const scaleX = e.currentTarget.width / rect.width;
               const scaleY = e.currentTarget.height / rect.height;
               const adjustedEvent = {
                 ...e,
+                preventDefault: () => {},
                 clientX: (e.clientX - rect.left) * scaleX + rect.left,
                 clientY: (e.clientY - rect.top) * scaleY + rect.top,
               } as React.PointerEvent<HTMLCanvasElement>;
               handlePointerDown(adjustedEvent);
             }}
             onPointerMove={(e) => {
+              e.preventDefault();
               const rect = e.currentTarget.getBoundingClientRect();
               const scaleX = e.currentTarget.width / rect.width;
               const scaleY = e.currentTarget.height / rect.height;
               const adjustedEvent = {
                 ...e,
+                preventDefault: () => {},
                 clientX: (e.clientX - rect.left) * scaleX + rect.left,
                 clientY: (e.clientY - rect.top) * scaleY + rect.top,
               } as React.PointerEvent<HTMLCanvasElement>;
               handlePointerMove(adjustedEvent);
             }}
             onPointerUp={(e) => {
+              e.preventDefault();
               const rect = e.currentTarget.getBoundingClientRect();
               const scaleX = e.currentTarget.width / rect.width;
               const scaleY = e.currentTarget.height / rect.height;
               const adjustedEvent = {
                 ...e,
+                preventDefault: () => {},
                 clientX: (e.clientX - rect.left) * scaleX + rect.left,
                 clientY: (e.clientY - rect.top) * scaleY + rect.top,
               } as React.PointerEvent<HTMLCanvasElement>;
