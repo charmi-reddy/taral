@@ -104,16 +104,17 @@ export default function HomeView({
   };
   
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header with branding */}
-        <div className="flex justify-center mb-6 sm:mb-8">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-pacifico)' }}>
+        <div className="flex justify-center mb-8 sm:mb-12">
+          <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent drop-shadow-sm" style={{ fontFamily: 'var(--font-pacifico)' }}>
             Taral - Doodle it!
           </h1>
         </div>
         
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center gap-3">
+          <span className="text-3xl">🎨</span>
           My Doodles
         </h2>
         
@@ -122,11 +123,13 @@ export default function HomeView({
           {/* New Page button */}
           <button
             onClick={onNewPage}
-            className="aspect-[3/2] rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition flex flex-col items-center justify-center gap-2 group"
+            className="aspect-[3/2] rounded-xl border-2 border-dashed border-purple-300 hover:border-purple-500 bg-white hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 transition-all duration-300 flex flex-col items-center justify-center gap-3 group shadow-sm hover:shadow-xl"
           >
-            <div className="text-4xl text-gray-400 group-hover:text-blue-500 transition">+</div>
-            <div className="text-sm font-medium text-gray-600 group-hover:text-blue-600 transition">
-              New Page
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              +
+            </div>
+            <div className="text-base font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              New Doodle
             </div>
           </button>
           
@@ -135,19 +138,19 @@ export default function HomeView({
             <div
               key={page.id}
               onClick={() => onPageSelect(page.id)}
-              className="aspect-[3/2] rounded-lg border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition cursor-pointer bg-white overflow-hidden group relative"
+              className="aspect-[3/2] rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:shadow-2xl transition-all duration-300 cursor-pointer bg-white overflow-hidden group relative transform hover:-translate-y-1"
             >
               {/* Thumbnail */}
               {page.thumbnail && (
                 <img
                   src={page.thumbnail}
                   alt={page.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               )}
               
               {/* Overlay with page info */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900/80 via-gray-900/50 to-transparent p-4">
                 <div className="text-white">
                   {editingPageId === page.id ? (
                     <div onClick={(e) => e.stopPropagation()}>
@@ -158,17 +161,17 @@ export default function HomeView({
                         onKeyDown={(e) => handleKeyDown(e, page.id)}
                         onBlur={() => saveEdit(page.id)}
                         autoFocus
-                        className="w-full px-2 py-1 text-sm font-medium text-gray-900 bg-white rounded border border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 text-sm font-medium text-gray-900 bg-white rounded-lg border-2 border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg"
                         maxLength={100}
                       />
                     </div>
                   ) : (
                     <>
-                      <div className="font-medium text-sm truncate flex items-center gap-2">
+                      <div className="font-semibold text-sm truncate flex items-center gap-2">
                         <span className="flex-1 truncate">{page.name}</span>
                         <button
                           onClick={(e) => startEditing(e, page.id, page.name)}
-                          className="opacity-0 group-hover:opacity-100 transition flex-shrink-0 w-6 h-6 rounded hover:bg-white/20 flex items-center justify-center"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0 w-7 h-7 rounded-lg hover:bg-white/20 flex items-center justify-center backdrop-blur-sm"
                           aria-label="Rename page"
                           title="Rename"
                         >
@@ -177,7 +180,7 @@ export default function HomeView({
                           </svg>
                         </button>
                       </div>
-                      <div className="text-xs text-gray-300">{formatDate(page.lastModifiedAt)}</div>
+                      <div className="text-xs text-gray-200 mt-1">{formatDate(page.lastModifiedAt)}</div>
                     </>
                   )}
                 </div>
@@ -186,7 +189,7 @@ export default function HomeView({
               {/* Delete button */}
               <button
                 onClick={(e) => handleDelete(e, page.id)}
-                className="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 text-white opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
+                className="absolute top-3 right-3 w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center shadow-lg font-bold text-xl hover:scale-110"
                 aria-label="Delete page"
               >
                 ×
@@ -197,8 +200,10 @@ export default function HomeView({
         
         {/* Empty state */}
         {sortedPages.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            <p className="text-lg">No pages yet. Create your first doodle!</p>
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">✨</div>
+            <p className="text-xl text-gray-600 font-medium">No doodles yet!</p>
+            <p className="text-gray-500 mt-2">Click the "New Doodle" button to start creating</p>
           </div>
         )}
       </div>
