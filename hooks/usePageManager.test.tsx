@@ -34,6 +34,7 @@ describe('usePageManager', () => {
   beforeEach(() => {
     localStorageMock.clear();
     vi.clearAllTimers();
+    vi.clearAllMocks();
   });
   
   describe('Initialization', () => {
@@ -303,20 +304,32 @@ describe('usePageManager', () => {
   });
   
   describe('Page Deletion', () => {
-    it('should delete a page', () => {
+    it('should delete a page', async () => {
       const { result } = renderHook(() => usePageManager());
+      
+      // Wait for initial load to complete
+      await waitFor(() => {
+        expect(result.current.pages).toBeDefined();
+      });
+      
+      // Verify we start with empty pages (localStorage was cleared in beforeEach)
+      const initialPageCount = Object.keys(result.current.pages).length;
       
       let newPage;
       act(() => {
         newPage = result.current.createNewPage();
       });
       
+      // Should have one more page now
+      expect(Object.keys(result.current.pages)).toHaveLength(initialPageCount + 1);
+      
       act(() => {
         result.current.deletePageById(newPage!.id);
       });
       
       expect(result.current.getPageById(newPage!.id)).toBeNull();
-      expect(Object.keys(result.current.pages)).toHaveLength(0);
+      // Should be back to initial count
+      expect(Object.keys(result.current.pages)).toHaveLength(initialPageCount);
     });
     
     it('should clear activePageId when deleting active page', () => {

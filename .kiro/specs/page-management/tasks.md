@@ -117,7 +117,7 @@ The implementation uses TypeScript with React and Next.js, with Vitest for unit 
     - _Requirements: 5.4_
 
 - [ ] 7. Implement view navigation state management
-  - [ ] 7.1 Create useViewNavigation hook
+  - [x] 7.1 Create useViewNavigation hook
     - Set up ViewState with currentView, previousView, activePageId
     - Implement navigateToHome function
     - Implement navigateToDrawing function
@@ -136,7 +136,7 @@ The implementation uses TypeScript with React and Next.js, with Vitest for unit 
     - **Property 14: Active Page Restoration**
     - **Validates: Requirements 6.4**
 
-- [ ] 8. Checkpoint - Ensure state management hooks work correctly
+- [x] 8. Checkpoint - Ensure state management hooks work correctly
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 9. Create Home View component

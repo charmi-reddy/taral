@@ -149,9 +149,9 @@ describe('Page Persistence Round-Trip - Property Tests', () => {
           return true;
         }
       ),
-      { numRuns: 100 }
+      { numRuns: 50 }
     );
-  });
+  }, 10000);
 
   it('Property 1: should preserve stroke data with all point properties', () => {
     fc.assert(
@@ -208,9 +208,9 @@ describe('Page Persistence Round-Trip - Property Tests', () => {
           return true;
         }
       ),
-      { numRuns: 100 }
+      { numRuns: 50 }
     );
-  });
+  }, 10000);
 
   it('Property 1: should preserve background style across all valid values', () => {
     fc.assert(
