@@ -50,7 +50,7 @@ describe('createPage', () => {
     const page = createPage();
     
     expect(page.backgroundStyle).toBe(PAGE_CONSTANTS.DEFAULT_BACKGROUND);
-    expect(page.backgroundStyle).toBe('plain');
+    expect(page.backgroundStyle).toBe('grid');
   });
 
   it('should initialize page with empty thumbnail', () => {

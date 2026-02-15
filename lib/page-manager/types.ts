@@ -51,7 +51,7 @@ export interface ViewState {
  */
 export const PAGE_CONSTANTS = {
   DEFAULT_PAGE_NAME: 'Untitled Page',
-  DEFAULT_BACKGROUND: 'plain' as BackgroundStyle,
+  DEFAULT_BACKGROUND: 'grid' as BackgroundStyle,
   THUMBNAIL_WIDTH: 300,
   THUMBNAIL_HEIGHT: 200,
   MAX_PAGE_NAME_LENGTH: 100,

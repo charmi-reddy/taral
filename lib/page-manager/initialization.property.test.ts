@@ -64,7 +64,7 @@ describe('New Page Initialization - Property Tests', () => {
    * Property 23: New Page Initialization
    * 
    * For any new page created via the New Page button, the page should be
-   * initialized with default settings: plain white background, empty strokes
+   * initialized with default settings: grid background, empty strokes
    * array, and a default name.
    * 
    * **Validates: Requirements 10.2, 10.4**
@@ -97,13 +97,13 @@ describe('New Page Initialization - Property Tests', () => {
     );
   });
 
-  it('Property 23: should initialize with plain background style', () => {
+  it('Property 23: should initialize with grid background style', () => {
     fc.assert(
       fc.property(
         fc.constant(null),
         () => {
           const page = createPage();
-          return page.backgroundStyle === 'plain';
+          return page.backgroundStyle === 'grid';
         }
       ),
       { numRuns: 100 }
@@ -222,7 +222,7 @@ describe('New Page Initialization - Property Tests', () => {
           const newPage = createPage(existingPages);
           
           // Should still have default settings regardless of existing pages
-          return newPage.backgroundStyle === 'plain' && 
+          return newPage.backgroundStyle === 'grid' && 
                  newPage.strokes.length === 0;
         }
       ),
