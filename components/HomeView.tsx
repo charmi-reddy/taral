@@ -20,6 +20,7 @@ export default function HomeView({
 }: HomeViewProps) {
   const [editingPageId, setEditingPageId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>('');
+  const [deleteConfirmPageId, setDeleteConfirmPageId] = useState<string | null>(null);
   
   // Sort pages by last modified date (most recent first)
   const sortedPages = [...pages].sort((a, b) => b.lastModifiedAt - a.lastModifiedAt);
@@ -58,10 +59,18 @@ export default function HomeView({
   
   const handleDelete = (e: React.MouseEvent, pageId: string) => {
     e.stopPropagation();
-    
-    if (confirm('Are you sure you want to delete this page? This action cannot be undone.')) {
-      onDeletePage(pageId);
+    setDeleteConfirmPageId(pageId);
+  };
+  
+  const confirmDelete = () => {
+    if (deleteConfirmPageId) {
+      onDeletePage(deleteConfirmPageId);
+      setDeleteConfirmPageId(null);
     }
+  };
+  
+  const cancelDelete = () => {
+    setDeleteConfirmPageId(null);
   };
   
   const startEditing = (e: React.MouseEvent, pageId: string, currentName: string) => {
@@ -207,6 +216,43 @@ export default function HomeView({
           </div>
         )}
       </div>
+      
+      {/* Glassmorphism Delete Confirmation Modal */}
+      {deleteConfirmPageId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={cancelDelete}
+          />
+          
+          {/* Modal */}
+          <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 max-w-md w-full animate-scaleIn">
+            <div className="text-center">
+              <div className="text-5xl mb-4">🗑️</div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Delete Doodle?</h3>
+              <p className="text-gray-600 mb-8">
+                Are you sure you want to delete this doodle? This action cannot be undone.
+              </p>
+              
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={cancelDelete}
+                  className="px-6 py-3 rounded-xl bg-gray-200/80 hover:bg-gray-300/80 text-gray-700 font-semibold transition-all duration-200 backdrop-blur-sm border border-gray-300/50 hover:scale-105"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold transition-all duration-200 shadow-lg hover:scale-105"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
