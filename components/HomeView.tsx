@@ -18,7 +18,7 @@ export default function HomeView({
   onRenamePage,
 }: HomeViewProps) {
   // Sort pages by last modified date (most recent first)
-  const sortedPages = [...pages].sort((a, b) => b.lastModified - a.lastModified);
+  const sortedPages = [...pages].sort((a, b) => b.lastModifiedAt - a.lastModifiedAt);
   
   // Format timestamp as human-readable date
   const formatDate = (timestamp: number): string => {
@@ -100,7 +100,7 @@ export default function HomeView({
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
                 <div className="text-white">
                   <div className="font-medium text-sm truncate">{page.name}</div>
-                  <div className="text-xs text-gray-300">{formatDate(page.lastModified)}</div>
+                  <div className="text-xs text-gray-300">{formatDate(page.lastModifiedAt)}</div>
                 </div>
               </div>
               
