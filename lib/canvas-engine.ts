@@ -387,6 +387,9 @@ export class CanvasEngine {
     
     this.drawingCtx.fillStyle = color;
     this.drawingCtx.fillRect(0, 0, width, height);
+    
+    // Save the filled state so subsequent operations can undo to this state
+    this.saveCanvasState();
   }
 
   /**
@@ -489,6 +492,9 @@ export class CanvasEngine {
       // Put the modified image data back
       this.drawingCtx.putImageData(imageData, 0, 0);
     }
+    
+    // Save the filled state so subsequent operations can undo to this state
+    this.saveCanvasState();
   }
 
   /**
