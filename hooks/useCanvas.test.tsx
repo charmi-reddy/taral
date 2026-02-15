@@ -45,9 +45,9 @@ describe('useCanvas', () => {
       
       expect(result.current.config).toEqual({
         color: '#000000',
-        brushType: 'ink',
+        brushType: 'pixel',
         brushSize: 3,
-        backgroundStyle: 'plain',
+        backgroundStyle: 'grid',
       });
     });
 
@@ -180,20 +180,20 @@ describe('useCanvas', () => {
     it('should enable snap-to-grid only for pixel pen on grid background', () => {
       const { result } = renderHook(() => useCanvas());
       
-      // Not pixel pen, not grid
-      expect(result.current.config.brushType).toBe('ink');
-      expect(result.current.config.backgroundStyle).toBe('plain');
+      // Default is pixel pen and grid (snap-to-grid active)
+      expect(result.current.config.brushType).toBe('pixel');
+      expect(result.current.config.backgroundStyle).toBe('grid');
       
-      // Set to pixel pen but not grid
+      // Set to ink pen (snap-to-grid should not be active)
+      act(() => {
+        result.current.setBrushType('ink');
+      });
+      expect(result.current.config.brushType).toBe('ink');
+      expect(result.current.config.backgroundStyle).toBe('grid');
+      
+      // Set back to pixel pen with grid background (snap-to-grid active again)
       act(() => {
         result.current.setBrushType('pixel');
-      });
-      expect(result.current.config.brushType).toBe('pixel');
-      expect(result.current.config.backgroundStyle).toBe('plain');
-      
-      // Set to grid background with pixel pen
-      act(() => {
-        result.current.setBackgroundStyle('grid');
       });
       expect(result.current.config.brushType).toBe('pixel');
       expect(result.current.config.backgroundStyle).toBe('grid');

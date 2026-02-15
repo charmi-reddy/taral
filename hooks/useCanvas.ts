@@ -59,9 +59,9 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
   // Configuration state (triggers re-renders for UI)
   const [config, setConfig] = useState<CanvasConfig>({
     color: '#000000',
-    brushType: 'ink',
+    brushType: 'pixel',
     brushSize: 3,
-    backgroundStyle: initialBackground || 'plain',
+    backgroundStyle: initialBackground || 'grid',
   });
   
   // Undo/redo state
