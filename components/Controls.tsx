@@ -49,7 +49,7 @@ export default function Controls({
   };
 
   return (
-    <div className="absolute top-4 left-4 rounded-xl shadow-2xl p-4 sm:p-5 space-y-3 sm:space-y-4 z-10 border-2 bg-white text-gray-900 border-gray-200 w-[90vw] sm:w-auto sm:min-w-[240px] max-w-[280px]">
+    <div className="absolute top-4 left-4 rounded-xl shadow-2xl p-4 sm:p-5 space-y-3 sm:space-y-4 z-30 border-2 bg-white text-gray-900 border-gray-200 w-[90vw] sm:w-auto sm:min-w-[240px] max-w-[280px]">
       {/* Home button */}
       {onHomeClick && (
         <button

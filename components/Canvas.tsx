@@ -51,8 +51,8 @@ export default function Canvas({
       className="relative w-full h-screen overflow-hidden bg-gray-100"
     >
       {/* Header with branding */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pt-6">
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 drop-shadow-lg" style={{ fontFamily: 'var(--font-pacifico)' }}>
+      <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pt-6 pointer-events-none">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 drop-shadow-lg pointer-events-auto" style={{ fontFamily: 'var(--font-pacifico)' }}>
           Taral - Doodle it!
         </h1>
       </div>
