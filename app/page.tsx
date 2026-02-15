@@ -19,6 +19,7 @@ export default function Home() {
     updatePageName,
     deletePageById,
     setActivePageId,
+    saveNow,
   } = usePageManager();
   
   const { viewState, navigateToHome, navigateToDrawing } = useViewNavigation();
@@ -98,6 +99,11 @@ export default function Home() {
     }, 100);
   }, [activePageId, updatePageData]);
   
+  // Handle manual save
+  const handleSave = useCallback(() => {
+    saveNow();
+  }, [saveNow]);
+  
   // Sync view navigation activePageId with page manager activePageId
   useEffect(() => {
     if (viewState.activePageId && viewState.activePageId !== activePageId) {
@@ -127,6 +133,7 @@ export default function Home() {
       onHomeClick={handleHomeClick}
       onStrokeComplete={handleStrokeComplete}
       onBackgroundChange={handleBackgroundChange}
+      onSave={handleSave}
     />
   );
 }

@@ -22,6 +22,7 @@ interface ControlsProps {
   canRedo: boolean;
   isFillMode: boolean;
   onHomeClick?: () => void;
+  onSave?: () => void;
 }
 
 export default function Controls({
@@ -38,8 +39,10 @@ export default function Controls({
   canRedo,
   isFillMode,
   onHomeClick,
+  onSave,
 }: ControlsProps) {
   const [isMinimized, setIsMinimized] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
   
   const handleEraseClick = () => {
     if (config.brushType === 'eraser') {
@@ -48,6 +51,14 @@ export default function Controls({
     } else {
       // Switch to eraser
       onBrushTypeChange('eraser');
+    }
+  };
+  
+  const handleSaveClick = () => {
+    if (onSave) {
+      onSave();
+      setShowSaved(true);
+      setTimeout(() => setShowSaved(false), 2000);
     }
   };
 
@@ -72,6 +83,17 @@ export default function Controls({
             >
               <span>🏠</span>
               <span>Home</span>
+            </button>
+          )}
+          
+          {/* Save button */}
+          {onSave && (
+            <button
+              onClick={handleSaveClick}
+              className="w-full px-3 py-2 rounded-lg font-bold transition text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white flex items-center justify-center gap-2 shadow-md"
+            >
+              <span>{showSaved ? '✓' : '💾'}</span>
+              <span>{showSaved ? 'Saved!' : 'Save Progress'}</span>
             </button>
           )}
           

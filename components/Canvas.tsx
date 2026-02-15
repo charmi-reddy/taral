@@ -11,6 +11,7 @@ interface CanvasProps {
   onHomeClick?: () => void;
   onStrokeComplete?: (strokes: Stroke[]) => void;
   onBackgroundChange?: (background: BackgroundStyle) => void;
+  onSave?: () => void;
 }
 
 export default function Canvas({
@@ -20,6 +21,7 @@ export default function Canvas({
   onHomeClick,
   onStrokeComplete,
   onBackgroundChange,
+  onSave,
 }: CanvasProps) {
   const {
     drawingCanvasRef,
@@ -90,6 +92,7 @@ export default function Canvas({
         canRedo={canRedo}
         isFillMode={isFillMode}
         onHomeClick={onHomeClick}
+        onSave={onSave}
       />
     </div>
   );
