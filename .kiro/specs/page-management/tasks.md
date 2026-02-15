@@ -99,7 +99,7 @@ The implementation uses TypeScript with React and Next.js, with Vitest for unit 
     - **Validates: Requirements 2.3, 2.5**
 
 - [ ] 6. Implement thumbnail generation utility
-  - [ ] 6.1 Create generateThumbnail function
+  - [x] 6.1 Create generateThumbnail function
     - Create off-screen canvas for thumbnail rendering
     - Draw background layer to off-screen canvas
     - Draw drawing layer to off-screen canvas

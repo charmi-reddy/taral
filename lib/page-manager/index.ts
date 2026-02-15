@@ -6,3 +6,4 @@ export * from './types';
 export * from './uuid';
 export * from './storage';
 export * from './page-manager';
+export * from './thumbnail';
