@@ -190,6 +190,118 @@ describe('usePageManager', () => {
     });
   });
   
+  describe('Page Name Updates', () => {
+    it('should update page name with valid name', () => {
+      const { result } = renderHook(() => usePageManager());
+      
+      let newPage;
+      act(() => {
+        newPage = result.current.createNewPage('Old Name');
+      });
+      
+      let success;
+      act(() => {
+        success = result.current.updatePageName(newPage!.id, 'New Name');
+      });
+      
+      expect(success).toBe(true);
+      const updated = result.current.getPageById(newPage!.id);
+      expect(updated!.name).toBe('New Name');
+    });
+    
+    it('should reject empty name', () => {
+      const { result } = renderHook(() => usePageManager());
+      
+      let newPage;
+      act(() => {
+        newPage = result.current.createNewPage('Original Name');
+      });
+      
+      let success;
+      act(() => {
+        success = result.current.updatePageName(newPage!.id, '');
+      });
+      
+      expect(success).toBe(false);
+      const updated = result.current.getPageById(newPage!.id);
+      expect(updated!.name).toBe('Original Name');
+    });
+    
+    it('should reject whitespace-only name', () => {
+      const { result } = renderHook(() => usePageManager());
+      
+      let newPage;
+      act(() => {
+        newPage = result.current.createNewPage('Original Name');
+      });
+      
+      let success;
+      act(() => {
+        success = result.current.updatePageName(newPage!.id, '   ');
+      });
+      
+      expect(success).toBe(false);
+      const updated = result.current.getPageById(newPage!.id);
+      expect(updated!.name).toBe('Original Name');
+    });
+    
+    it('should reject name exceeding 100 characters', () => {
+      const { result } = renderHook(() => usePageManager());
+      
+      let newPage;
+      act(() => {
+        newPage = result.current.createNewPage('Original Name');
+      });
+      
+      const longName = 'a'.repeat(101);
+      let success;
+      act(() => {
+        success = result.current.updatePageName(newPage!.id, longName);
+      });
+      
+      expect(success).toBe(false);
+      const updated = result.current.getPageById(newPage!.id);
+      expect(updated!.name).toBe('Original Name');
+    });
+    
+    it('should accept name with exactly 100 characters', () => {
+      const { result } = renderHook(() => usePageManager());
+      
+      let newPage;
+      act(() => {
+        newPage = result.current.createNewPage('Original Name');
+      });
+      
+      const maxLengthName = 'a'.repeat(100);
+      let success;
+      act(() => {
+        success = result.current.updatePageName(newPage!.id, maxLengthName);
+      });
+      
+      expect(success).toBe(true);
+      const updated = result.current.getPageById(newPage!.id);
+      expect(updated!.name).toBe(maxLengthName);
+    });
+    
+    it('should accept name with leading/trailing spaces if not all whitespace', () => {
+      const { result } = renderHook(() => usePageManager());
+      
+      let newPage;
+      act(() => {
+        newPage = result.current.createNewPage('Original Name');
+      });
+      
+      let success;
+      act(() => {
+        success = result.current.updatePageName(newPage!.id, '  Valid Name  ');
+      });
+      
+      expect(success).toBe(true);
+      const updated = result.current.getPageById(newPage!.id);
+      expect(updated!.name).toBe('  Valid Name  ');
+    });
+  });
+  
   describe('Page Deletion', () => {
     it('should delete a page', () => {
       const { result } = renderHook(() => usePageManager());

@@ -29,6 +29,7 @@ export interface UsePageManagerReturn {
   getPageById: (id: string) => Page | null;
   getAllPageMetadata: () => PageMetadata[];
   updatePageData: (id: string, updates: Partial<Omit<Page, 'id' | 'createdAt'>>) => void;
+  updatePageName: (id: string, newName: string) => boolean;
   deletePageById: (id: string) => void;
   
   // Active page management
@@ -156,6 +157,40 @@ export function usePageManager(): UsePageManagerReturn {
   }, []);
   
   /**
+   * Update a page name with validation
+   * Validates that the name is not empty/whitespace-only and within 100 character limit
+   * Returns true if update was successful, false if validation failed
+   */
+  const updatePageName = useCallback((id: string, newName: string): boolean => {
+    // Validate: reject empty or whitespace-only names
+    if (!newName || newName.trim().length === 0) {
+      return false;
+    }
+    
+    // Validate: enforce 100-character limit
+    if (newName.length > PAGE_CONSTANTS.MAX_PAGE_NAME_LENGTH) {
+      return false;
+    }
+    
+    // Update the page name
+    setPages(prev => updatePage(prev, id, { name: newName }));
+    
+    // Persist changes immediately (clear debounce and save now)
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+      saveTimeoutRef.current = null;
+    }
+    
+    // Trigger immediate save by calling persistToStorage in next tick
+    // This ensures the state update has been applied
+    Promise.resolve().then(() => {
+      persistToStorage();
+    });
+    
+    return true;
+  }, [persistToStorage]);
+  
+  /**
    * Delete a page
    */
   const deletePageById = useCallback((id: string): void => {
@@ -207,6 +242,7 @@ export function usePageManager(): UsePageManagerReturn {
     getPageById,
     getAllPageMetadata,
     updatePageData,
+    updatePageName,
     deletePageById,
     
     // Active page management
