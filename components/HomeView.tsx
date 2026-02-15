@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { PageMetadata } from '@/lib/page-manager/types';
 
 interface HomeViewProps {
@@ -17,6 +18,9 @@ export default function HomeView({
   onDeletePage,
   onRenamePage,
 }: HomeViewProps) {
+  const [editingPageId, setEditingPageId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState<string>('');
+  
   // Sort pages by last modified date (most recent first)
   const sortedPages = [...pages].sort((a, b) => b.lastModifiedAt - a.lastModifiedAt);
   
@@ -60,6 +64,45 @@ export default function HomeView({
     }
   };
   
+  const startEditing = (e: React.MouseEvent, pageId: string, currentName: string) => {
+    e.stopPropagation();
+    setEditingPageId(pageId);
+    setEditingName(currentName);
+  };
+  
+  const cancelEditing = () => {
+    setEditingPageId(null);
+    setEditingName('');
+  };
+  
+  const saveEdit = (pageId: string) => {
+    const trimmedName = editingName.trim();
+    
+    // Validate name
+    if (trimmedName.length === 0) {
+      alert('Page name cannot be empty');
+      return;
+    }
+    
+    if (trimmedName.length > 100) {
+      alert('Page name cannot exceed 100 characters');
+      return;
+    }
+    
+    onRenamePage(pageId, editingName);
+    cancelEditing();
+  };
+  
+  const handleKeyDown = (e: React.KeyboardEvent, pageId: string) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveEdit(pageId);
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelEditing();
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
@@ -99,8 +142,37 @@ export default function HomeView({
               {/* Overlay with page info */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
                 <div className="text-white">
-                  <div className="font-medium text-sm truncate">{page.name}</div>
-                  <div className="text-xs text-gray-300">{formatDate(page.lastModifiedAt)}</div>
+                  {editingPageId === page.id ? (
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="text"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, page.id)}
+                        onBlur={() => saveEdit(page.id)}
+                        autoFocus
+                        className="w-full px-2 py-1 text-sm font-medium text-gray-900 bg-white rounded border border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        maxLength={100}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <div className="font-medium text-sm truncate flex items-center gap-2">
+                        <span className="flex-1 truncate">{page.name}</span>
+                        <button
+                          onClick={(e) => startEditing(e, page.id, page.name)}
+                          className="opacity-0 group-hover:opacity-100 transition flex-shrink-0 w-6 h-6 rounded hover:bg-white/20 flex items-center justify-center"
+                          aria-label="Rename page"
+                          title="Rename"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="text-xs text-gray-300">{formatDate(page.lastModifiedAt)}</div>
+                    </>
+                  )}
                 </div>
               </div>
               

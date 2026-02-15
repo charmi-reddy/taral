@@ -220,8 +220,8 @@ The implementation uses TypeScript with React and Next.js, with Vitest for unit 
     - Test that active page reference is cleared when active page is deleted
     - _Requirements: 7.5_
 
-- [ ] 11. Add page name editing in Home View
-  - [ ] 11.1 Add inline editing for page names
+- [x] 11. Add page name editing in Home View
+  - [x] 11.1 Add inline editing for page names
     - Add edit button/icon to page cards
     - Show input field when editing
     - Validate input (non-empty, ≤100 chars)
