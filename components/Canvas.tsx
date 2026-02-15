@@ -54,14 +54,9 @@ export default function Canvas({
     >
       {/* Header with branding */}
       <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pt-6 pointer-events-none">
-        <div className="flex items-center gap-3 pointer-events-auto">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 flex items-center justify-center shadow-lg transform -rotate-12">
-            <span className="text-2xl sm:text-3xl">✨</span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 drop-shadow-lg" style={{ fontFamily: 'var(--font-pacifico)' }}>
-            Taral - Doodle it!
-          </h1>
-        </div>
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 drop-shadow-lg pointer-events-auto" style={{ fontFamily: 'var(--font-pacifico)' }}>
+          Taral - Doodle it!
+        </h1>
       </div>
       
       {/* Background Canvas */}
