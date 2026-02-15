@@ -2,8 +2,25 @@
 
 import { useCanvas } from '@/hooks/useCanvas';
 import Controls from './Controls';
+import type { Stroke, BackgroundStyle } from '@/lib/types';
 
-export default function Canvas() {
+interface CanvasProps {
+  pageId?: string;
+  initialStrokes?: Stroke[];
+  initialBackground?: BackgroundStyle;
+  onHomeClick?: () => void;
+  onStrokeComplete?: (strokes: Stroke[]) => void;
+  onBackgroundChange?: (background: BackgroundStyle) => void;
+}
+
+export default function Canvas({
+  pageId,
+  initialStrokes,
+  initialBackground,
+  onHomeClick,
+  onStrokeComplete,
+  onBackgroundChange,
+}: CanvasProps) {
   const {
     drawingCanvasRef,
     backgroundCanvasRef,
@@ -22,7 +39,12 @@ export default function Canvas() {
     canRedo,
     isFillMode,
     config,
-  } = useCanvas();
+  } = useCanvas({
+    initialStrokes,
+    initialBackground,
+    onStrokeComplete,
+    onBackgroundChange,
+  });
 
   return (
     <div 
@@ -60,6 +82,7 @@ export default function Canvas() {
         canUndo={canUndo}
         canRedo={canRedo}
         isFillMode={isFillMode}
+        onHomeClick={onHomeClick}
       />
     </div>
   );

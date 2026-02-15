@@ -1,7 +1,14 @@
 import { useRef, useEffect, useState, RefObject } from 'react';
 import { CanvasEngine } from '@/lib/canvas-engine';
 import { StrokeProcessor } from '@/lib/stroke-processor';
-import type { CanvasConfig, Point, BrushType, BackgroundStyle } from '@/lib/types';
+import type { CanvasConfig, Point, BrushType, BackgroundStyle, Stroke } from '@/lib/types';
+
+export interface UseCanvasOptions {
+  initialStrokes?: Stroke[];
+  initialBackground?: BackgroundStyle;
+  onStrokeComplete?: (strokes: Stroke[]) => void;
+  onBackgroundChange?: (background: BackgroundStyle) => void;
+}
 
 export interface UseCanvasReturn {
   // Refs for canvas elements
@@ -28,9 +35,14 @@ export interface UseCanvasReturn {
   
   // Current state
   config: CanvasConfig;
+  
+  // State getters
+  getStrokes: () => Stroke[];
+  getBackgroundStyle: () => BackgroundStyle;
 }
 
-export function useCanvas(): UseCanvasReturn {
+export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
+  const { initialStrokes, initialBackground, onStrokeComplete, onBackgroundChange } = options;
   // Canvas refs
   const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -49,7 +61,7 @@ export function useCanvas(): UseCanvasReturn {
     color: '#000000',
     brushType: 'ink',
     brushSize: 3,
-    backgroundStyle: 'plain',
+    backgroundStyle: initialBackground || 'plain',
   });
   
   // Undo/redo state
@@ -77,6 +89,15 @@ export function useCanvas(): UseCanvasReturn {
       
       // Render initial background
       engineRef.current.updateBackground(config.backgroundStyle);
+      
+      // Load initial strokes if provided
+      if (initialStrokes && initialStrokes.length > 0) {
+        initialStrokes.forEach(stroke => {
+          engineRef.current?.addStroke(stroke);
+          engineRef.current?.renderStroke(stroke);
+        });
+        updateUndoRedoState();
+      }
     } catch (error) {
       console.error('Failed to initialize canvas engine:', error);
     }
@@ -200,6 +221,11 @@ export function useCanvas(): UseCanvasReturn {
     // Update undo/redo state
     updateUndoRedoState();
     
+    // Notify parent of stroke completion
+    if (onStrokeComplete) {
+      onStrokeComplete(engineRef.current.getStrokes());
+    }
+    
     // Reset drawing state
     drawingStateRef.current.isDrawing = false;
     drawingStateRef.current.currentStroke = [];
@@ -235,6 +261,11 @@ export function useCanvas(): UseCanvasReturn {
     if (engineRef.current) {
       engineRef.current.updateBackground(backgroundStyle);
     }
+    
+    // Notify parent of background change
+    if (onBackgroundChange) {
+      onBackgroundChange(backgroundStyle);
+    }
   };
   
   const clearCanvas = () => {
@@ -244,6 +275,11 @@ export function useCanvas(): UseCanvasReturn {
     // Preserve and re-render background
     engineRef.current.updateBackground(configRef.current.backgroundStyle);
     updateUndoRedoState();
+    
+    // Notify parent of stroke change
+    if (onStrokeComplete) {
+      onStrokeComplete([]);
+    }
   };
   
   const fillCanvas = () => {
@@ -256,6 +292,11 @@ export function useCanvas(): UseCanvasReturn {
     
     engineRef.current.undo();
     updateUndoRedoState();
+    
+    // Notify parent of stroke change
+    if (onStrokeComplete) {
+      onStrokeComplete(engineRef.current.getStrokes());
+    }
   };
   
   const redo = () => {
@@ -263,6 +304,22 @@ export function useCanvas(): UseCanvasReturn {
     
     engineRef.current.redo();
     updateUndoRedoState();
+    
+    // Notify parent of stroke change
+    if (onStrokeComplete) {
+      onStrokeComplete(engineRef.current.getStrokes());
+    }
+  };
+  
+  // Get current strokes
+  const getStrokes = (): Stroke[] => {
+    if (!engineRef.current) return [];
+    return engineRef.current.getStrokes();
+  };
+  
+  // Get current background style
+  const getBackgroundStyle = (): BackgroundStyle => {
+    return configRef.current.backgroundStyle;
   };
   
   return {
@@ -283,5 +340,7 @@ export function useCanvas(): UseCanvasReturn {
     canRedo,
     isFillMode,
     config,
+    getStrokes,
+    getBackgroundStyle,
   };
 }

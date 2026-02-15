@@ -20,6 +20,7 @@ interface ControlsProps {
   canUndo: boolean;
   canRedo: boolean;
   isFillMode: boolean;
+  onHomeClick?: () => void;
 }
 
 export default function Controls({
@@ -35,6 +36,7 @@ export default function Controls({
   canUndo,
   canRedo,
   isFillMode,
+  onHomeClick,
 }: ControlsProps) {
   const handleEraseClick = () => {
     if (config.brushType === 'eraser') {
@@ -48,6 +50,17 @@ export default function Controls({
 
   return (
     <div className="absolute top-4 left-4 rounded-xl shadow-2xl p-4 sm:p-5 space-y-3 sm:space-y-4 z-10 border-2 bg-white text-gray-900 border-gray-200 w-[90vw] sm:w-auto sm:min-w-[240px] max-w-[280px]">
+      {/* Home button */}
+      {onHomeClick && (
+        <button
+          onClick={onHomeClick}
+          className="w-full px-3 py-2 rounded-lg font-bold transition text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center gap-2"
+        >
+          <span>🏠</span>
+          <span>Home</span>
+        </button>
+      )}
+      
       <div className="border-b border-gray-200 pb-2 sm:pb-3 mb-2 sm:mb-3">
         <h2 className="text-base sm:text-lg font-bold">🎨 Drawing Tools</h2>
       </div>
