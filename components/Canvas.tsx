@@ -192,40 +192,50 @@ export default function Canvas({
             className={`absolute top-0 left-0 w-full h-full ${isFillMode ? 'cursor-pointer' : 'cursor-crosshair'}`}
             onPointerDown={(e) => {
               e.preventDefault();
-              const rect = e.currentTarget.getBoundingClientRect();
-              const scaleX = e.currentTarget.width / rect.width;
-              const scaleY = e.currentTarget.height / rect.height;
+              const canvas = e.currentTarget;
+              const rect = canvas.getBoundingClientRect();
+              // Calculate the actual canvas coordinates accounting for zoom
+              const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+              const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+              
               const adjustedEvent = {
                 ...e,
                 preventDefault: () => {},
-                clientX: (e.clientX - rect.left) * scaleX + rect.left,
-                clientY: (e.clientY - rect.top) * scaleY + rect.top,
+                currentTarget: canvas,
+                clientX: x + rect.left,
+                clientY: y + rect.top,
               } as React.PointerEvent<HTMLCanvasElement>;
               handlePointerDown(adjustedEvent);
             }}
             onPointerMove={(e) => {
               e.preventDefault();
-              const rect = e.currentTarget.getBoundingClientRect();
-              const scaleX = e.currentTarget.width / rect.width;
-              const scaleY = e.currentTarget.height / rect.height;
+              const canvas = e.currentTarget;
+              const rect = canvas.getBoundingClientRect();
+              const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+              const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+              
               const adjustedEvent = {
                 ...e,
                 preventDefault: () => {},
-                clientX: (e.clientX - rect.left) * scaleX + rect.left,
-                clientY: (e.clientY - rect.top) * scaleY + rect.top,
+                currentTarget: canvas,
+                clientX: x + rect.left,
+                clientY: y + rect.top,
               } as React.PointerEvent<HTMLCanvasElement>;
               handlePointerMove(adjustedEvent);
             }}
             onPointerUp={(e) => {
               e.preventDefault();
-              const rect = e.currentTarget.getBoundingClientRect();
-              const scaleX = e.currentTarget.width / rect.width;
-              const scaleY = e.currentTarget.height / rect.height;
+              const canvas = e.currentTarget;
+              const rect = canvas.getBoundingClientRect();
+              const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+              const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+              
               const adjustedEvent = {
                 ...e,
                 preventDefault: () => {},
-                clientX: (e.clientX - rect.left) * scaleX + rect.left,
-                clientY: (e.clientY - rect.top) * scaleY + rect.top,
+                currentTarget: canvas,
+                clientX: x + rect.left,
+                clientY: y + rect.top,
               } as React.PointerEvent<HTMLCanvasElement>;
               handlePointerUp(adjustedEvent);
             }}
