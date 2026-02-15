@@ -61,7 +61,7 @@ describe('usePageManager', () => {
       expect(newPage).toBeDefined();
       expect(newPage!.name).toBe('Untitled Page 1');
       expect(newPage!.strokes).toEqual([]);
-      expect(newPage!.backgroundStyle).toBe('plain');
+      expect(newPage!.backgroundStyle).toBe('grid');
       expect(newPage!.thumbnail).toBe(''); // Empty initially
       expect(result.current.pages[newPage!.id]).toEqual(newPage);
     });
