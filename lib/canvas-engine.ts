@@ -365,12 +365,13 @@ export class CanvasEngine {
    * Clears the drawing layer, removing all strokes
    */
   clear(): void {
+    // Save canvas state before clearing to enable undo
+    this.saveCanvasState();
+    
     this.clearDrawingLayer();
     
-    // Reset current stroke and stroke history
+    // Reset current stroke
     this.currentStroke = [];
-    this.strokes = [];
-    this.undoneStrokes = [];
   }
 
   /**

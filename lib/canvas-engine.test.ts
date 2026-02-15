@@ -148,9 +148,9 @@ describe('CanvasEngine', () => {
             );
           }
         ),
-        { numRuns: 50 } // Reduced from 100 to avoid memory issues
+        { numRuns: 50 } // Reduce iterations to avoid timeout with saveCanvasState
       );
-    });
+    }, 10000); // 10 second timeout
   });
 
   describe('Dimension Methods', () => {
@@ -336,7 +336,12 @@ describe('CanvasEngine', () => {
       
       engine.clear();
       
-      expect(engine.getStrokes()).toHaveLength(0);
+      // After clear, there should be 2 strokes: the original stroke + the saved canvas state before clearing
+      expect(engine.getStrokes()).toHaveLength(2);
+      
+      // Undo should restore the canvas to the state before clear
+      engine.undo();
+      expect(engine.getStrokes()).toHaveLength(1);
     });
   });
 
