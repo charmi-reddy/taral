@@ -12,6 +12,9 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        pacifico: ["var(--font-pacifico)"],
+      },
     },
   },
   plugins: [],

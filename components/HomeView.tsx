@@ -106,9 +106,16 @@ export default function HomeView({
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">
+        {/* Header with branding */}
+        <div className="flex justify-center mb-6 sm:mb-8">
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-800" style={{ fontFamily: 'var(--font-pacifico)' }}>
+            Taral - Doodle it!
+          </h1>
+        </div>
+        
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
           My Doodles
-        </h1>
+        </h2>
         
         {/* Grid layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
