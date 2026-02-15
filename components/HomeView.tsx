@@ -122,9 +122,18 @@ export default function HomeView({
           </h1>
         </div>
         
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center gap-3">
-          <span className="text-3xl">🎨</span>
-          My Doodles
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 relative inline-block">
+          <span className="relative z-10 flex items-center gap-3">
+            <span className="text-3xl">🎨</span>
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
+              My Doodles
+            </span>
+          </span>
+          {/* Decorative underline */}
+          <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 rounded-full transform -rotate-1"></div>
+          {/* Decorative dots */}
+          <div className="absolute -top-2 -right-4 w-3 h-3 bg-pink-400 rounded-full animate-pulse"></div>
+          <div className="absolute -bottom-3 -left-2 w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         </h2>
         
         {/* Grid layout */}
@@ -132,12 +141,19 @@ export default function HomeView({
           {/* New Page button */}
           <button
             onClick={onNewPage}
-            className="aspect-[3/2] rounded-xl border-2 border-dashed border-purple-300 hover:border-purple-500 bg-white hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 transition-all duration-300 flex flex-col items-center justify-center gap-3 group shadow-sm hover:shadow-xl"
+            className="aspect-[3/2] rounded-3xl border-3 border-dashed border-purple-400 hover:border-purple-600 bg-gradient-to-br from-white via-purple-50 to-pink-50 hover:from-purple-100 hover:via-pink-100 hover:to-orange-100 transition-all duration-300 flex flex-col items-center justify-center gap-3 group shadow-lg hover:shadow-2xl relative overflow-hidden"
           >
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            {/* Animated background pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-4 left-4 w-8 h-8 border-2 border-purple-400 rounded-full"></div>
+              <div className="absolute bottom-6 right-6 w-6 h-6 border-2 border-pink-400 rotate-45"></div>
+              <div className="absolute top-1/2 right-8 w-4 h-4 bg-orange-400 rounded-full"></div>
+            </div>
+            
+            <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 flex items-center justify-center text-white text-4xl font-bold group-hover:scale-110 group-hover:rotate-90 transition-all duration-500 shadow-xl">
               +
             </div>
-            <div className="text-base font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <div className="text-lg font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent">
               New Doodle
             </div>
           </button>
@@ -147,19 +163,26 @@ export default function HomeView({
             <div
               key={page.id}
               onClick={() => onPageSelect(page.id)}
-              className="aspect-[3/2] rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:shadow-2xl transition-all duration-300 cursor-pointer bg-white overflow-hidden group relative transform hover:-translate-y-1"
+              className="aspect-[3/2] rounded-3xl border-3 border-transparent bg-gradient-to-br from-white via-gray-50 to-gray-100 hover:from-purple-50 hover:via-pink-50 hover:to-orange-50 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden group relative transform hover:-translate-y-2 hover:rotate-1"
             >
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-bl-full"></div>
+              
               {/* Thumbnail */}
               {page.thumbnail && (
-                <img
-                  src={page.thumbnail}
-                  alt={page.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                <div className="relative w-full h-full">
+                  <img
+                    src={page.thumbnail}
+                    alt={page.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
               )}
               
               {/* Overlay with page info */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900/80 via-gray-900/50 to-transparent p-4">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900/90 via-gray-900/70 to-transparent p-4 backdrop-blur-sm">
                 <div className="text-white">
                   {editingPageId === page.id ? (
                     <div onClick={(e) => e.stopPropagation()}>
@@ -170,17 +193,17 @@ export default function HomeView({
                         onKeyDown={(e) => handleKeyDown(e, page.id)}
                         onBlur={() => saveEdit(page.id)}
                         autoFocus
-                        className="w-full px-3 py-2 text-sm font-medium text-gray-900 bg-white rounded-lg border-2 border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg"
+                        className="w-full px-3 py-2 text-sm font-semibold text-gray-900 bg-white rounded-xl border-2 border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg"
                         maxLength={100}
                       />
                     </div>
                   ) : (
                     <>
-                      <div className="font-semibold text-sm truncate flex items-center gap-2">
-                        <span className="flex-1 truncate">{page.name}</span>
+                      <div className="font-bold text-base truncate flex items-center gap-2">
+                        <span className="flex-1 truncate drop-shadow-md">{page.name}</span>
                         <button
                           onClick={(e) => startEditing(e, page.id, page.name)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0 w-7 h-7 rounded-lg hover:bg-white/20 flex items-center justify-center backdrop-blur-sm"
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-200 flex-shrink-0 w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center backdrop-blur-md border border-white/30"
                           aria-label="Rename page"
                           title="Rename"
                         >
@@ -189,7 +212,10 @@ export default function HomeView({
                           </svg>
                         </button>
                       </div>
-                      <div className="text-xs text-gray-200 mt-1">{formatDate(page.lastModifiedAt)}</div>
+                      <div className="text-xs text-gray-300 mt-1 flex items-center gap-1">
+                        <span>🕐</span>
+                        <span>{formatDate(page.lastModifiedAt)}</span>
+                      </div>
                     </>
                   )}
                 </div>
@@ -198,7 +224,7 @@ export default function HomeView({
               {/* Delete button */}
               <button
                 onClick={(e) => handleDelete(e, page.id)}
-                className="absolute top-3 right-3 w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center shadow-lg font-bold text-xl hover:scale-110"
+                className="absolute top-3 right-3 w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center shadow-xl font-bold text-xl hover:scale-110 border-2 border-white/50"
                 aria-label="Delete page"
               >
                 ×
