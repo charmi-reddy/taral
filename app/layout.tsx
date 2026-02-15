@@ -20,7 +20,7 @@ const pacifico = Pacifico({
 });
 
 export const metadata: Metadata = {
-  title: "Taral - Doodle it! ✨",
+  title: "Taral - Doodle it!",
   description: "Create beautiful doodles and sketches with Taral",
 };
 
