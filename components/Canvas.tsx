@@ -190,9 +190,39 @@ export default function Canvas({
           <canvas
             ref={drawingCanvasRef}
             className={`absolute top-0 left-0 w-full h-full ${isFillMode ? 'cursor-pointer' : 'cursor-crosshair'}`}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
+            onPointerDown={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const scaleX = e.currentTarget.width / rect.width;
+              const scaleY = e.currentTarget.height / rect.height;
+              const adjustedEvent = {
+                ...e,
+                clientX: (e.clientX - rect.left) * scaleX + rect.left,
+                clientY: (e.clientY - rect.top) * scaleY + rect.top,
+              } as React.PointerEvent<HTMLCanvasElement>;
+              handlePointerDown(adjustedEvent);
+            }}
+            onPointerMove={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const scaleX = e.currentTarget.width / rect.width;
+              const scaleY = e.currentTarget.height / rect.height;
+              const adjustedEvent = {
+                ...e,
+                clientX: (e.clientX - rect.left) * scaleX + rect.left,
+                clientY: (e.clientY - rect.top) * scaleY + rect.top,
+              } as React.PointerEvent<HTMLCanvasElement>;
+              handlePointerMove(adjustedEvent);
+            }}
+            onPointerUp={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const scaleX = e.currentTarget.width / rect.width;
+              const scaleY = e.currentTarget.height / rect.height;
+              const adjustedEvent = {
+                ...e,
+                clientX: (e.clientX - rect.left) * scaleX + rect.left,
+                clientY: (e.clientY - rect.top) * scaleY + rect.top,
+              } as React.PointerEvent<HTMLCanvasElement>;
+              handlePointerUp(adjustedEvent);
+            }}
             onPointerLeave={handlePointerUp}
             style={{ touchAction: 'none' }}
           />
