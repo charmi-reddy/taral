@@ -113,79 +113,101 @@ export default function HomeView({
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       {/* Grid background pattern */}
-      <div className="absolute inset-0 opacity-20" style={{
+      <div className="absolute inset-0 opacity-30" style={{
         backgroundImage: `
-          linear-gradient(to right, #e0e7ff 1px, transparent 1px),
-          linear-gradient(to bottom, #e0e7ff 1px, transparent 1px)
+          linear-gradient(to right, #9ca3af 1px, transparent 1px),
+          linear-gradient(to bottom, #9ca3af 1px, transparent 1px)
         `,
-        backgroundSize: '40px 40px'
+        backgroundSize: '30px 30px'
       }}></div>
       
       {/* Decorative doodles scattered around */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Flower doodles */}
-        <svg className="absolute top-20 left-10 w-16 h-16 text-pink-300 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '0s' }}>
-          <circle cx="50" cy="50" r="15" fill="currentColor"/>
-          <circle cx="35" cy="35" r="12" fill="currentColor"/>
-          <circle cx="65" cy="35" r="12" fill="currentColor"/>
-          <circle cx="35" cy="65" r="12" fill="currentColor"/>
-          <circle cx="65" cy="65" r="12" fill="currentColor"/>
-          <circle cx="50" cy="50" r="8" fill="#fbbf24"/>
+        <svg className="absolute top-20 left-10 w-20 h-20 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '0s' }}>
+          <circle cx="50" cy="50" r="12" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="35" cy="35" r="10" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="65" cy="35" r="10" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="35" cy="65" r="10" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="65" cy="65" r="10" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="50" cy="50" r="5" fill="currentColor"/>
+          <line x1="50" y1="50" x2="50" y2="85" stroke="currentColor" strokeWidth="2.5"/>
         </svg>
         
-        <svg className="absolute top-40 right-20 w-14 h-14 text-purple-300 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '1s' }}>
-          <circle cx="50" cy="50" r="12" fill="currentColor"/>
-          <circle cx="38" cy="38" r="10" fill="currentColor"/>
-          <circle cx="62" cy="38" r="10" fill="currentColor"/>
-          <circle cx="38" cy="62" r="10" fill="currentColor"/>
-          <circle cx="62" cy="62" r="10" fill="currentColor"/>
-          <circle cx="50" cy="50" r="6" fill="#fbbf24"/>
+        <svg className="absolute top-40 right-20 w-18 h-18 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '1s' }}>
+          <circle cx="50" cy="45" r="10" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="38" cy="35" r="8" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="62" cy="35" r="8" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="38" cy="55" r="8" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="62" cy="55" r="8" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="50" cy="45" r="4" fill="currentColor"/>
+          <line x1="50" y1="45" x2="50" y2="80" stroke="currentColor" strokeWidth="2.5"/>
         </svg>
         
         {/* Tree doodle */}
-        <svg className="absolute bottom-32 left-20 w-20 h-20 text-green-400 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '0.5s' }}>
-          <rect x="45" y="60" width="10" height="30" fill="#92400e"/>
-          <circle cx="50" cy="45" r="20" fill="currentColor"/>
-          <circle cx="35" cy="35" r="15" fill="currentColor"/>
-          <circle cx="65" cy="35" r="15" fill="currentColor"/>
+        <svg className="absolute bottom-32 left-20 w-24 h-24 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '0.5s' }}>
+          <rect x="45" y="60" width="10" height="30" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="50" cy="45" r="18" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="35" cy="35" r="13" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="65" cy="35" r="13" fill="none" stroke="currentColor" strokeWidth="2.5"/>
         </svg>
         
         {/* Dress doodle */}
-        <svg className="absolute top-60 right-32 w-16 h-16 text-pink-400 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '1.5s' }}>
-          <path d="M 40 20 L 35 35 L 30 80 L 70 80 L 65 35 L 60 20 L 55 25 L 50 20 L 45 25 Z" fill="currentColor" stroke="currentColor" strokeWidth="2"/>
-          <circle cx="50" cy="15" r="8" fill="currentColor"/>
+        <svg className="absolute top-60 right-32 w-20 h-20 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '1.5s' }}>
+          <path d="M 40 25 L 35 35 L 30 80 L 70 80 L 65 35 L 60 25 L 55 30 L 50 25 L 45 30 Z" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <circle cx="50" cy="18" r="7" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="35" y1="45" x2="65" y2="45" stroke="currentColor" strokeWidth="2"/>
         </svg>
         
         {/* Star doodles */}
-        <svg className="absolute top-1/3 left-1/4 w-12 h-12 text-yellow-300 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '2s' }}>
-          <path d="M 50 10 L 60 40 L 90 40 L 65 60 L 75 90 L 50 70 L 25 90 L 35 60 L 10 40 L 40 40 Z" fill="currentColor"/>
+        <svg className="absolute top-1/3 left-1/4 w-16 h-16 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '2s' }}>
+          <path d="M 50 15 L 58 42 L 85 42 L 63 58 L 71 85 L 50 69 L 29 85 L 37 58 L 15 42 L 42 42 Z" fill="none" stroke="currentColor" strokeWidth="2.5"/>
         </svg>
         
-        <svg className="absolute bottom-40 right-1/4 w-10 h-10 text-orange-300 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '2.5s' }}>
-          <path d="M 50 10 L 60 40 L 90 40 L 65 60 L 75 90 L 50 70 L 25 90 L 35 60 L 10 40 L 40 40 Z" fill="currentColor"/>
+        <svg className="absolute bottom-40 right-1/4 w-14 h-14 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '2.5s' }}>
+          <path d="M 50 20 L 56 43 L 80 43 L 61 57 L 67 80 L 50 66 L 33 80 L 39 57 L 20 43 L 44 43 Z" fill="none" stroke="currentColor" strokeWidth="2.5"/>
         </svg>
         
         {/* Heart doodle */}
-        <svg className="absolute top-1/2 right-10 w-14 h-14 text-red-300 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '3s' }}>
-          <path d="M 50 85 C 50 85, 20 60, 20 40 C 20 25, 30 20, 40 25 C 45 27, 50 32, 50 32 C 50 32, 55 27, 60 25 C 70 20, 80 25, 80 40 C 80 60, 50 85, 50 85 Z" fill="currentColor"/>
+        <svg className="absolute top-1/2 right-10 w-18 h-18 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '3s' }}>
+          <path d="M 50 85 C 50 85, 20 60, 20 40 C 20 25, 30 20, 40 25 C 45 27, 50 35, 50 35 C 50 35, 55 27, 60 25 C 70 20, 80 25, 80 40 C 80 60, 50 85, 50 85 Z" fill="none" stroke="currentColor" strokeWidth="2.5"/>
         </svg>
         
         {/* Cloud doodle */}
-        <svg className="absolute top-1/4 right-1/3 w-16 h-16 text-blue-300 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '1.2s' }}>
-          <ellipse cx="50" cy="50" rx="25" ry="15" fill="currentColor"/>
-          <circle cx="35" cy="50" r="15" fill="currentColor"/>
-          <circle cx="65" cy="50" r="15" fill="currentColor"/>
+        <svg className="absolute top-1/4 right-1/3 w-20 h-20 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '1.2s' }}>
+          <path d="M 25 55 Q 25 40, 35 40 Q 35 30, 50 30 Q 65 30, 65 40 Q 75 40, 75 55 Q 75 65, 65 65 L 35 65 Q 25 65, 25 55 Z" fill="none" stroke="currentColor" strokeWidth="2.5"/>
         </svg>
         
         {/* Butterfly doodle */}
-        <svg className="absolute bottom-1/4 left-1/3 w-14 h-14 text-purple-400 opacity-40 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '0.8s' }}>
-          <ellipse cx="35" cy="40" rx="15" ry="20" fill="currentColor"/>
-          <ellipse cx="65" cy="40" rx="15" ry="20" fill="currentColor"/>
-          <ellipse cx="35" cy="65" rx="12" ry="15" fill="currentColor"/>
-          <ellipse cx="65" cy="65" rx="12" ry="15" fill="currentColor"/>
-          <rect x="48" y="30" width="4" height="50" fill="#6b21a8"/>
+        <svg className="absolute bottom-1/4 left-1/3 w-18 h-18 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '0.8s' }}>
+          <ellipse cx="35" cy="40" rx="13" ry="18" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <ellipse cx="65" cy="40" rx="13" ry="18" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <ellipse cx="35" cy="65" rx="10" ry="13" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <ellipse cx="65" cy="65" rx="10" ry="13" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="50" y1="30" x2="50" y2="75" stroke="currentColor" strokeWidth="3"/>
+          <circle cx="50" cy="28" r="4" fill="currentColor"/>
+        </svg>
+        
+        {/* Music note */}
+        <svg className="absolute top-1/2 left-1/4 w-16 h-16 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '1.8s' }}>
+          <ellipse cx="35" cy="75" rx="12" ry="8" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="47" y1="75" x2="47" y2="30" stroke="currentColor" strokeWidth="3"/>
+          <path d="M 47 30 Q 60 25, 70 30 L 70 45 Q 60 40, 47 45 Z" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+        </svg>
+        
+        {/* Sun doodle */}
+        <svg className="absolute bottom-1/3 right-1/4 w-18 h-18 text-gray-800 opacity-60 animate-float" viewBox="0 0 100 100" style={{ animationDelay: '2.2s' }}>
+          <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="50" y1="20" x2="50" y2="30" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="50" y1="70" x2="50" y2="80" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="20" y1="50" x2="30" y2="50" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="70" y1="50" x2="80" y2="50" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="30" y1="30" x2="37" y2="37" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="63" y1="63" x2="70" y2="70" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="70" y1="30" x2="63" y2="37" stroke="currentColor" strokeWidth="2.5"/>
+          <line x1="37" y1="63" x2="30" y2="70" stroke="currentColor" strokeWidth="2.5"/>
         </svg>
       </div>
       
