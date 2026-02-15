@@ -32,6 +32,10 @@ body {
   .animate-scaleIn {
     animation: scaleIn 0.3s ease-out;
   }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
 }
 
 @keyframes fadeIn {
@@ -51,5 +55,20 @@ body {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-2deg);
+  }
+  75% {
+    transform: translateY(-15px) rotate(1deg);
   }
 }
