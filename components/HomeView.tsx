@@ -117,9 +117,14 @@ export default function HomeView({
       <div className="max-w-7xl mx-auto">
         {/* Header with branding */}
         <div className="flex justify-center mb-8 sm:mb-12">
-          <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent drop-shadow-sm" style={{ fontFamily: 'var(--font-pacifico)' }}>
-            Taral - Doodle it!
-          </h1>
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 flex items-center justify-center shadow-xl transform -rotate-12 hover:rotate-0 transition-transform duration-300">
+              <span className="text-4xl sm:text-5xl">✨</span>
+            </div>
+            <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent drop-shadow-sm" style={{ fontFamily: 'var(--font-pacifico)' }}>
+              Taral - Doodle it!
+            </h1>
+          </div>
         </div>
         
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center gap-3">
