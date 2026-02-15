@@ -59,6 +59,21 @@ export default function Home() {
     if (!activePageId) return;
     
     updatePageData(activePageId, { strokes });
+    
+    // Generate thumbnail after a short delay to ensure canvas is rendered
+    setTimeout(() => {
+      const backgroundCanvas = document.querySelector('canvas:nth-of-type(1)') as HTMLCanvasElement;
+      const drawingCanvas = document.querySelector('canvas:nth-of-type(2)') as HTMLCanvasElement;
+      
+      if (backgroundCanvas && drawingCanvas) {
+        try {
+          const thumbnail = generateThumbnail(backgroundCanvas, drawingCanvas);
+          updatePageData(activePageId, { thumbnail });
+        } catch (error) {
+          console.error('Failed to generate thumbnail:', error);
+        }
+      }
+    }, 100);
   }, [activePageId, updatePageData]);
   
   // Handle background change
@@ -66,6 +81,21 @@ export default function Home() {
     if (!activePageId) return;
     
     updatePageData(activePageId, { backgroundStyle });
+    
+    // Generate thumbnail after background change
+    setTimeout(() => {
+      const backgroundCanvas = document.querySelector('canvas:nth-of-type(1)') as HTMLCanvasElement;
+      const drawingCanvas = document.querySelector('canvas:nth-of-type(2)') as HTMLCanvasElement;
+      
+      if (backgroundCanvas && drawingCanvas) {
+        try {
+          const thumbnail = generateThumbnail(backgroundCanvas, drawingCanvas);
+          updatePageData(activePageId, { thumbnail });
+        } catch (error) {
+          console.error('Failed to generate thumbnail:', error);
+        }
+      }
+    }, 100);
   }, [activePageId, updatePageData]);
   
   // Sync view navigation activePageId with page manager activePageId
