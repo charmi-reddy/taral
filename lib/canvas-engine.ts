@@ -148,6 +148,8 @@ export class CanvasEngine {
       this.renderDotsStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'stitch') {
       this.renderStitchStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'fire') {
+      this.renderFireStroke(stroke.points, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -1007,6 +1009,72 @@ export class CanvasEngine {
         );
         this.drawingCtx.stroke();
       }
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a fire effect with flickering flames
+   * Creates orange-red-yellow gradient particles rising upward
+   * 
+   * @param points - Array of points in the stroke
+   * @param size - Flame size
+   */
+  private renderFireStroke(points: Point[], size: number): void {
+    if (points.length === 0) return;
+
+    this.drawingCtx.save();
+    
+    // Draw multiple flame particles
+    const particleCount = Math.max(15, Math.floor(points.length / 2));
+    
+    for (let i = 0; i < particleCount; i++) {
+      const point = points[Math.floor(Math.random() * points.length)];
+      
+      // Random upward offset for rising flames
+      const offsetX = (Math.random() - 0.5) * size * 2;
+      const offsetY = -Math.random() * size * 3; // Negative for upward
+      
+      // Fire colors: yellow -> orange -> red
+      const colorChoice = Math.random();
+      let color;
+      if (colorChoice < 0.3) {
+        color = `rgba(255, 255, ${Math.floor(Math.random() * 100)}, ${0.6 + Math.random() * 0.4})`;
+      } else if (colorChoice < 0.7) {
+        color = `rgba(255, ${Math.floor(100 + Math.random() * 100)}, 0, ${0.5 + Math.random() * 0.4})`;
+      } else {
+        color = `rgba(255, ${Math.floor(Math.random() * 50)}, 0, ${0.4 + Math.random() * 0.3})`;
+      }
+      
+      this.drawingCtx.fillStyle = color;
+      
+      // Random flame particle size
+      const particleSize = Math.random() * size * 0.8 + size * 0.3;
+      
+      // Draw flame particle (teardrop shape)
+      const x = point.x + offsetX;
+      const y = point.y + offsetY;
+      
+      this.drawingCtx.beginPath();
+      this.drawingCtx.moveTo(x, y - particleSize);
+      this.drawingCtx.quadraticCurveTo(
+        x + particleSize * 0.5,
+        y - particleSize * 0.5,
+        x,
+        y
+      );
+      this.drawingCtx.quadraticCurveTo(
+        x - particleSize * 0.5,
+        y - particleSize * 0.5,
+        x,
+        y - particleSize
+      );
+      this.drawingCtx.fill();
+      
+      // Add glow
+      this.drawingCtx.shadowBlur = size;
+      this.drawingCtx.shadowColor = 'rgba(255, 150, 0, 0.8)';
     }
 
     this.drawingCtx.restore();
