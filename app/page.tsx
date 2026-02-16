@@ -3,12 +3,16 @@
 import { useEffect, useCallback } from 'react';
 import Canvas from '@/components/Canvas';
 import HomeView from '@/components/HomeView';
+import ThemeProvider from '@/components/ThemeProvider';
+import ModeToggleSwitch from '@/components/ModeToggleSwitch';
 import { usePageManager } from '@/hooks/usePageManager';
 import { useViewNavigation } from '@/hooks/useViewNavigation';
+import { useModeToggle } from '@/hooks/useModeToggle';
 import { generateThumbnail } from '@/lib/page-manager/thumbnail';
 import type { Stroke, BackgroundStyle } from '@/lib/types';
 
 export default function Home() {
+  const { mode, isTransitioning, toggleMode } = useModeToggle();
   const {
     pages,
     activePageId,
@@ -124,27 +128,37 @@ export default function Home() {
   // Render based on current view
   if (viewState.currentView === 'home') {
     return (
-      <HomeView
-        pages={getAllPageMetadata()}
-        onPageSelect={handlePageSelect}
-        onNewPage={handleNewPage}
-        onDeletePage={handleDeletePage}
-        onRenamePage={handleRenamePage}
-        onGetPageData={handleGetPageData}
-      />
+      <ThemeProvider mode={mode}>
+        <div className="fixed top-4 right-4 z-50">
+          <ModeToggleSwitch mode={mode} onToggle={toggleMode} disabled={isTransitioning} />
+        </div>
+        <HomeView
+          pages={getAllPageMetadata()}
+          onPageSelect={handlePageSelect}
+          onNewPage={handleNewPage}
+          onDeletePage={handleDeletePage}
+          onRenamePage={handleRenamePage}
+          onGetPageData={handleGetPageData}
+        />
+      </ThemeProvider>
     );
   }
   
   // Drawing view
   return (
-    <Canvas
-      pageId={activePageId || undefined}
-      initialStrokes={activePage?.strokes}
-      initialBackground={activePage?.backgroundStyle}
-      onHomeClick={handleHomeClick}
-      onStrokeComplete={handleStrokeComplete}
-      onBackgroundChange={handleBackgroundChange}
-      onSave={handleSave}
-    />
+    <ThemeProvider mode={mode}>
+      <div className="fixed top-4 right-4 z-50">
+        <ModeToggleSwitch mode={mode} onToggle={toggleMode} disabled={isTransitioning} />
+      </div>
+      <Canvas
+        pageId={activePageId || undefined}
+        initialStrokes={activePage?.strokes}
+        initialBackground={activePage?.backgroundStyle}
+        onHomeClick={handleHomeClick}
+        onStrokeComplete={handleStrokeComplete}
+        onBackgroundChange={handleBackgroundChange}
+        onSave={handleSave}
+      />
+    </ThemeProvider>
   );
 }
