@@ -35,8 +35,7 @@ export default function HomeView({
     setShowPersonalityModal(true);
     setIsAnalyzing(true);
     
-    // Simulate async analysis (in case we want to add delay for UX)
-    setTimeout(() => {
+    try {
       const analyzer = new PersonalityAnalyzer();
       
       // Get page data
@@ -61,12 +60,19 @@ export default function HomeView({
       
       console.log('Analyzing doodle with', doodle.strokes.length, 'strokes');
       
-      // Analyze single doodle
-      const result = analyzer.analyzeDoodle(doodle);
+      // Analyze single doodle (now properly awaiting async call)
+      const result = await analyzer.analyzeDoodle(doodle);
       console.log('Analysis result:', result);
       setAnalysisResult(result);
       setIsAnalyzing(false);
-    }, 500);
+    } catch (error) {
+      console.error('Error during analysis:', error);
+      setAnalysisResult({
+        success: false,
+        error: "Failed to analyze doodle"
+      });
+      setIsAnalyzing(false);
+    }
   };
   
   // Sort pages by last modified date (most recent first)

@@ -11,7 +11,7 @@ export class PersonalityAnalyzer {
     this.insightGenerator = new InsightGenerator();
   }
 
-  analyzeDoodle(doodleData: DoodleData): AnalysisResult {
+  async analyzeDoodle(doodleData: DoodleData): Promise<AnalysisResult> {
     console.log('Analyzing doodle:', doodleData);
     console.log('Strokes count:', doodleData.strokes?.length);
     console.log('First stroke points:', doodleData.strokes?.[0]?.points?.length);
@@ -27,7 +27,7 @@ export class PersonalityAnalyzer {
     try {
       const metrics = this.metricsCalculator.calculateMetrics(doodleData);
       console.log('Metrics calculated:', metrics);
-      const insights = this.insightGenerator.generateInsights(metrics);
+      const insights = await this.insightGenerator.generateInsights(metrics);
       console.log('Insights generated:', insights);
       const personalityType = this.insightGenerator.determinePersonalityType(insights);
       console.log('Personality type:', personalityType);
@@ -47,7 +47,7 @@ export class PersonalityAnalyzer {
     }
   }
 
-  analyzeOverallProfile(doodles: DoodleData[]): AnalysisResult {
+  async analyzeOverallProfile(doodles: DoodleData[]): Promise<AnalysisResult> {
     if (doodles.length === 0) {
       return {
         success: false,

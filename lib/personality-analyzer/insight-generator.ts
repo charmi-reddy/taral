@@ -152,14 +152,40 @@ export class InsightGenerator {
     },
   ];
 
-  generateInsights(metrics: DrawingMetrics): PersonalityInsight[] {
-    // Return just ONE random quote
+  async generateInsights(metrics: DrawingMetrics): Promise<PersonalityInsight[]> {
+    // Try to get LLM-generated quote first
+    try {
+      const response = await fetch('/api/generate-quote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ metrics }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.quote) {
+          console.log('Using LLM-generated quote');
+          return [{
+            text: data.quote,
+            category: "personality",
+            metric: "totalStrokes"
+          }];
+        }
+      }
+    } catch (error) {
+      console.log('LLM quote generation failed, using local quotes');
+    }
+
+    // Fallback to random local quote
     const randomQuote = getRandomQuote();
+    console.log('Using local random quote');
     
     return [{
       text: randomQuote,
       category: "personality",
-      metric: "totalStrokes" // Generic metric
+      metric: "totalStrokes"
     }];
   }
 
