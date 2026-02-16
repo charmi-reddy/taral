@@ -124,8 +124,8 @@ export class CanvasEngine {
       this.renderPixelStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'spray') {
       this.renderSprayStroke(stroke.points, stroke.color, stroke.baseWidth);
-    } else if (stroke.brushType === 'marker') {
-      this.renderMarkerStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'pencil') {
+      this.renderPencilStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -277,25 +277,24 @@ export class CanvasEngine {
   }
 
   /**
-   * Renders a marker/highlighter effect
-   * Creates semi-transparent, flat strokes that blend when overlapping
+   * Renders a pencil effect with texture
+   * Creates grainy, textured strokes like graphite pencil
    * 
    * @param points - Array of points in the stroke
-   * @param color - Marker color
-   * @param width - Marker width
+   * @param color - Pencil color
+   * @param width - Pencil width (respects user size setting)
    */
-  private renderMarkerStroke(points: Point[], color: string, width: number): void {
+  private renderPencilStroke(points: Point[], color: string, width: number): void {
     if (points.length < 2) return;
 
-    // Save context state
     this.drawingCtx.save();
-
-    // Semi-transparent for highlighter effect
-    this.drawingCtx.globalAlpha = 0.4;
+    
+    // Main stroke with slight transparency
+    this.drawingCtx.globalAlpha = 0.7;
     this.drawingCtx.strokeStyle = color;
-    this.drawingCtx.lineWidth = width * 2; // Wider than normal pen
-    this.drawingCtx.lineCap = 'square'; // Flat ends like a marker
-    this.drawingCtx.lineJoin = 'miter';
+    this.drawingCtx.lineWidth = width;
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.lineJoin = 'round';
 
     this.drawingCtx.beginPath();
     this.drawingCtx.moveTo(points[0].x, points[0].y);
@@ -309,12 +308,31 @@ export class CanvasEngine {
       this.drawingCtx.quadraticCurveTo(p0.x, p0.y, midX, midY);
     }
 
-    // Draw final segment
     const lastPoint = points[points.length - 1];
     this.drawingCtx.lineTo(lastPoint.x, lastPoint.y);
     this.drawingCtx.stroke();
 
-    // Restore context state
+    // Add texture with small random dots along the stroke
+    this.drawingCtx.globalAlpha = 0.3;
+    this.drawingCtx.fillStyle = color;
+    
+    const texturePoints = Math.floor(points.length / 3); // Texture density
+    for (let i = 0; i < texturePoints; i++) {
+      const point = points[Math.floor(Math.random() * points.length)];
+      const offsetX = (Math.random() - 0.5) * width;
+      const offsetY = (Math.random() - 0.5) * width;
+      
+      this.drawingCtx.beginPath();
+      this.drawingCtx.arc(
+        point.x + offsetX,
+        point.y + offsetY,
+        Math.random() * 0.8,
+        0,
+        Math.PI * 2
+      );
+      this.drawingCtx.fill();
+    }
+
     this.drawingCtx.restore();
   }
 
