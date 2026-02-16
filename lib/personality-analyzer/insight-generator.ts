@@ -1,4 +1,5 @@
 import type { DrawingMetrics, PersonalityInsight, PersonalityType } from './types';
+import { getRandomQuote } from './quotes';
 
 export class InsightGenerator {
   private readonly insightRules: Array<{
@@ -152,34 +153,14 @@ export class InsightGenerator {
   ];
 
   generateInsights(metrics: DrawingMetrics): PersonalityInsight[] {
-    const insights: PersonalityInsight[] = [];
-
-    for (const rule of this.insightRules) {
-      if (rule.condition(metrics)) {
-        insights.push(rule.insight);
-      }
-    }
-
-    // Ensure at least 3 insights
-    if (insights.length < 3) {
-      // Add generic insights based on available data
-      if (metrics.totalStrokes > 10) {
-        insights.push({
-          text: "You really went for it! This doodle has layers upon layers",
-          category: "creativity",
-          metric: "totalStrokes"
-        });
-      }
-      if (metrics.totalPoints > 100) {
-        insights.push({
-          text: "Wow, you didn't skip a single pixel. Dedication level: MAX",
-          category: "detail",
-          metric: "totalPoints"
-        });
-      }
-    }
-
-    return insights.slice(0, 6); // Return max 6 insights
+    // Return just ONE random quote
+    const randomQuote = getRandomQuote();
+    
+    return [{
+      text: randomQuote,
+      category: "personality",
+      metric: "totalStrokes" // Generic metric
+    }];
   }
 
   determinePersonalityType(insights: PersonalityInsight[]): PersonalityType {

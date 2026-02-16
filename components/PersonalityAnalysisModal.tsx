@@ -81,22 +81,13 @@ export default function PersonalityAnalysisModal({
               </div>
             )}
 
-            {/* Insights */}
+            {/* Single Quote Display */}
             {analysisResult.insights && analysisResult.insights.length > 0 && (
               <div className="mb-6">
-                <h4 className="text-xl font-bold text-gray-800 mb-4">Personality Insights</h4>
-                <div className="space-y-3">
-                  {analysisResult.insights.map((insight, i) => (
-                    <div
-                      key={i}
-                      className="bg-gray-50 rounded-xl p-4 border-l-4 border-purple-500"
-                    >
-                      <p className="text-gray-800">{insight.text}</p>
-                      <span className="text-xs text-gray-500 mt-1 inline-block capitalize">
-                        {insight.category}
-                      </span>
-                    </div>
-                  ))}
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-200">
+                  <p className="text-xl text-gray-800 font-medium text-center leading-relaxed">
+                    "{analysisResult.insights[0].text}"
+                  </p>
                 </div>
               </div>
             )}
