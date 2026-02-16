@@ -12,7 +12,12 @@ export class PersonalityAnalyzer {
   }
 
   analyzeDoodle(doodleData: DoodleData): AnalysisResult {
+    console.log('Analyzing doodle:', doodleData);
+    console.log('Strokes count:', doodleData.strokes?.length);
+    console.log('First stroke points:', doodleData.strokes?.[0]?.points?.length);
+    
     if (!this.validateData(doodleData)) {
+      console.log('Validation failed');
       return {
         success: false,
         error: "Insufficient drawing data - need at least 2 points per stroke"
@@ -21,8 +26,11 @@ export class PersonalityAnalyzer {
 
     try {
       const metrics = this.metricsCalculator.calculateMetrics(doodleData);
+      console.log('Metrics calculated:', metrics);
       const insights = this.insightGenerator.generateInsights(metrics);
+      console.log('Insights generated:', insights);
       const personalityType = this.insightGenerator.determinePersonalityType(insights);
+      console.log('Personality type:', personalityType);
 
       return {
         success: true,
@@ -31,6 +39,7 @@ export class PersonalityAnalyzer {
         personalityType,
       };
     } catch (error) {
+      console.error('Analysis error:', error);
       return {
         success: false,
         error: "Failed to analyze doodle: " + (error instanceof Error ? error.message : String(error))

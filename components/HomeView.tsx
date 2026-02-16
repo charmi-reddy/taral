@@ -31,6 +31,7 @@ export default function HomeView({
   
   // Analyze personality when modal opens
   const handleAnalyzeClick = async (pageId: string) => {
+    console.log('Analyze clicked for page:', pageId);
     setShowPersonalityModal(true);
     setIsAnalyzing(true);
     
@@ -40,8 +41,10 @@ export default function HomeView({
       
       // Get page data
       const pageData = onGetPageData ? onGetPageData(pageId) : null;
+      console.log('Page data retrieved:', pageData);
       
       if (!pageData || !pageData.strokes) {
+        console.log('No page data or strokes');
         setAnalysisResult({
           success: false,
           error: "No drawing data available for this doodle"
@@ -56,8 +59,11 @@ export default function HomeView({
         strokes: pageData.strokes,
       };
       
+      console.log('Analyzing doodle with', doodle.strokes.length, 'strokes');
+      
       // Analyze single doodle
       const result = analyzer.analyzeDoodle(doodle);
+      console.log('Analysis result:', result);
       setAnalysisResult(result);
       setIsAnalyzing(false);
     }, 500);
