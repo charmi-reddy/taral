@@ -142,6 +142,8 @@ export class CanvasEngine {
       this.renderChainStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'wave') {
       this.renderWaveStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'lightning') {
+      this.renderLightningStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -797,6 +799,86 @@ export class CanvasEngine {
         }
       }
       
+      this.drawingCtx.stroke();
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a lightning bolt effect with jagged edges
+   * Creates electric, zigzag patterns
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Lightning color
+   * @param size - Bolt thickness
+   */
+  private renderLightningStroke(points: Point[], color: string, size: number): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.save();
+    
+    // Draw outer glow
+    this.drawingCtx.shadowBlur = size * 3;
+    this.drawingCtx.shadowColor = color;
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = size * 0.8;
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.lineJoin = 'miter';
+    this.drawingCtx.globalAlpha = 0.6;
+    
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+    
+    // Create jagged lightning path
+    for (let i = 1; i < points.length; i++) {
+      const p0 = points[i - 1];
+      const p1 = points[i];
+      
+      // Add random jitter for lightning effect
+      const jitterX = (Math.random() - 0.5) * size * 2;
+      const jitterY = (Math.random() - 0.5) * size * 2;
+      
+      this.drawingCtx.lineTo(p1.x + jitterX, p1.y + jitterY);
+    }
+    
+    this.drawingCtx.stroke();
+    
+    // Draw bright core
+    this.drawingCtx.shadowBlur = size * 2;
+    this.drawingCtx.strokeStyle = '#ffffff';
+    this.drawingCtx.lineWidth = size * 0.3;
+    this.drawingCtx.globalAlpha = 1;
+    
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+    
+    for (let i = 1; i < points.length; i++) {
+      const p1 = points[i];
+      const jitterX = (Math.random() - 0.5) * size;
+      const jitterY = (Math.random() - 0.5) * size;
+      this.drawingCtx.lineTo(p1.x + jitterX, p1.y + jitterY);
+    }
+    
+    this.drawingCtx.stroke();
+    
+    // Add random branches
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = size * 0.4;
+    this.drawingCtx.globalAlpha = 0.5;
+    
+    const branchCount = Math.floor(points.length / 10);
+    for (let i = 0; i < branchCount; i++) {
+      const branchStart = points[Math.floor(Math.random() * points.length)];
+      const branchLength = size * 3;
+      const angle = Math.random() * Math.PI * 2;
+      
+      this.drawingCtx.beginPath();
+      this.drawingCtx.moveTo(branchStart.x, branchStart.y);
+      this.drawingCtx.lineTo(
+        branchStart.x + Math.cos(angle) * branchLength,
+        branchStart.y + Math.sin(angle) * branchLength
+      );
       this.drawingCtx.stroke();
     }
 
