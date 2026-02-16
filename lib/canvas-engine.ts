@@ -132,6 +132,8 @@ export class CanvasEngine {
       this.renderGlitterStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'watercolor') {
       this.renderWatercolorStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'neon') {
+      this.renderNeonStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -506,6 +508,71 @@ export class CanvasEngine {
       );
       this.drawingCtx.fill();
     }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a neon glow effect
+   * Creates bright glowing lines with multiple shadow layers
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Neon color
+   * @param size - Brush size
+   */
+  private renderNeonStroke(points: Point[], color: string, size: number): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.save();
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.lineJoin = 'round';
+    
+    // Draw outer glow layers
+    const glowLayers = 3;
+    for (let i = glowLayers; i > 0; i--) {
+      this.drawingCtx.shadowBlur = size * i * 2;
+      this.drawingCtx.shadowColor = color;
+      this.drawingCtx.strokeStyle = color;
+      this.drawingCtx.lineWidth = size * (1 + i * 0.3);
+      this.drawingCtx.globalAlpha = 0.2;
+      
+      this.drawingCtx.beginPath();
+      this.drawingCtx.moveTo(points[0].x, points[0].y);
+      
+      for (let j = 1; j < points.length - 1; j++) {
+        const p0 = points[j];
+        const p1 = points[j + 1];
+        const midX = (p0.x + p1.x) / 2;
+        const midY = (p0.y + p1.y) / 2;
+        this.drawingCtx.quadraticCurveTo(p0.x, p0.y, midX, midY);
+      }
+      
+      const lastPoint = points[points.length - 1];
+      this.drawingCtx.lineTo(lastPoint.x, lastPoint.y);
+      this.drawingCtx.stroke();
+    }
+    
+    // Draw bright core
+    this.drawingCtx.shadowBlur = size * 2;
+    this.drawingCtx.shadowColor = color;
+    this.drawingCtx.strokeStyle = '#ffffff';
+    this.drawingCtx.lineWidth = size * 0.3;
+    this.drawingCtx.globalAlpha = 1;
+    
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+    
+    for (let i = 1; i < points.length - 1; i++) {
+      const p0 = points[i];
+      const p1 = points[i + 1];
+      const midX = (p0.x + p1.x) / 2;
+      const midY = (p0.y + p1.y) / 2;
+      this.drawingCtx.quadraticCurveTo(p0.x, p0.y, midX, midY);
+    }
+    
+    const lastPoint = points[points.length - 1];
+    this.drawingCtx.lineTo(lastPoint.x, lastPoint.y);
+    this.drawingCtx.stroke();
 
     this.drawingCtx.restore();
   }
