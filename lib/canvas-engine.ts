@@ -150,6 +150,8 @@ export class CanvasEngine {
       this.renderStitchStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'fire') {
       this.renderFireStroke(stroke.points, stroke.baseWidth);
+    } else if (stroke.brushType === 'ice') {
+      this.renderIceStroke(stroke.points, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -1075,6 +1077,100 @@ export class CanvasEngine {
       // Add glow
       this.drawingCtx.shadowBlur = size;
       this.drawingCtx.shadowColor = 'rgba(255, 150, 0, 0.8)';
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders an ice crystal effect with frost patterns
+   * Creates blue-white crystalline structures
+   * 
+   * @param points - Array of points in the stroke
+   * @param size - Crystal size
+   */
+  private renderIceStroke(points: Point[], size: number): void {
+    if (points.length === 0) return;
+
+    this.drawingCtx.save();
+    
+    // Draw base icy stroke
+    this.drawingCtx.strokeStyle = 'rgba(150, 200, 255, 0.4)';
+    this.drawingCtx.lineWidth = size * 0.8;
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.shadowBlur = size;
+    this.drawingCtx.shadowColor = 'rgba(150, 200, 255, 0.6)';
+    
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      this.drawingCtx.lineTo(points[i].x, points[i].y);
+    }
+    this.drawingCtx.stroke();
+    
+    // Draw ice crystals at intervals
+    const crystalSpacing = size * 2.5;
+    let distance = 0;
+    
+    for (let i = 1; i < points.length; i++) {
+      const p0 = points[i - 1];
+      const p1 = points[i];
+      const dx = p1.x - p0.x;
+      const dy = p1.y - p0.y;
+      const segmentLength = Math.sqrt(dx * dx + dy * dy);
+      
+      distance += segmentLength;
+      
+      if (distance >= crystalSpacing) {
+        distance = 0;
+        
+        // Draw snowflake crystal
+        this.drawingCtx.strokeStyle = 'rgba(200, 230, 255, 0.8)';
+        this.drawingCtx.lineWidth = 1.5;
+        this.drawingCtx.shadowBlur = size * 0.5;
+        
+        const crystalSize = size * 0.7;
+        const branches = 6;
+        
+        for (let b = 0; b < branches; b++) {
+          const angle = (b * Math.PI * 2) / branches;
+          
+          // Main branch
+          this.drawingCtx.beginPath();
+          this.drawingCtx.moveTo(p1.x, p1.y);
+          this.drawingCtx.lineTo(
+            p1.x + Math.cos(angle) * crystalSize,
+            p1.y + Math.sin(angle) * crystalSize
+          );
+          this.drawingCtx.stroke();
+          
+          // Side branches
+          const sideBranchSize = crystalSize * 0.4;
+          const sideBranchAngle = Math.PI / 6;
+          
+          this.drawingCtx.beginPath();
+          this.drawingCtx.moveTo(
+            p1.x + Math.cos(angle) * crystalSize * 0.6,
+            p1.y + Math.sin(angle) * crystalSize * 0.6
+          );
+          this.drawingCtx.lineTo(
+            p1.x + Math.cos(angle + sideBranchAngle) * (crystalSize * 0.6 + sideBranchSize),
+            p1.y + Math.sin(angle + sideBranchAngle) * (crystalSize * 0.6 + sideBranchSize)
+          );
+          this.drawingCtx.stroke();
+          
+          this.drawingCtx.beginPath();
+          this.drawingCtx.moveTo(
+            p1.x + Math.cos(angle) * crystalSize * 0.6,
+            p1.y + Math.sin(angle) * crystalSize * 0.6
+          );
+          this.drawingCtx.lineTo(
+            p1.x + Math.cos(angle - sideBranchAngle) * (crystalSize * 0.6 + sideBranchSize),
+            p1.y + Math.sin(angle - sideBranchAngle) * (crystalSize * 0.6 + sideBranchSize)
+          );
+          this.drawingCtx.stroke();
+        }
+      }
     }
 
     this.drawingCtx.restore();
