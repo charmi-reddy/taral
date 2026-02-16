@@ -122,6 +122,8 @@ export class CanvasEngine {
     
     if (stroke.brushType === 'pixel') {
       this.renderPixelStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'spray') {
+      this.renderSprayStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -233,6 +235,43 @@ export class CanvasEngine {
     }
 
     this.drawingCtx.stroke();
+  }
+
+  /**
+   * Renders a spray paint effect
+   * Creates random dots around each point for a spray can effect
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Spray color
+   * @param size - Spray radius
+   */
+  private renderSprayStroke(points: Point[], color: string, size: number): void {
+    if (points.length === 0) return;
+
+    this.drawingCtx.fillStyle = color;
+    
+    // Spray density - more dots for larger sizes
+    const density = Math.max(5, Math.floor(size / 2));
+    const radius = size * 2;
+
+    for (const point of points) {
+      // Create random spray dots around each point
+      for (let i = 0; i < density; i++) {
+        // Random angle and distance from center
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * radius;
+        
+        const x = point.x + Math.cos(angle) * distance;
+        const y = point.y + Math.sin(angle) * distance;
+        
+        // Random dot size for more natural spray effect
+        const dotSize = Math.random() * 1.5 + 0.5;
+        
+        this.drawingCtx.beginPath();
+        this.drawingCtx.arc(x, y, dotSize, 0, Math.PI * 2);
+        this.drawingCtx.fill();
+      }
+    }
   }
 
   /**

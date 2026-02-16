@@ -22,6 +22,7 @@ export default function BrushSelector({ value, onChange, disabled }: BrushSelect
       >
         <option value="ink">✒️ Ink Pen</option>
         <option value="pixel">🎮 Pixel Pen</option>
+        <option value="spray">🎨 Spray Paint</option>
         <option value="eraser">🧹 Eraser</option>
       </select>
     </div>
