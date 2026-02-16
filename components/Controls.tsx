@@ -6,7 +6,6 @@ import SizeSlider from './SizeSlider';
 import BackgroundSelector from './BackgroundSelector';
 import ClearButton from './ClearButton';
 import FillButton from './FillButton';
-import EraseButton from './EraseButton';
 
 interface ControlsProps {
   config: CanvasConfig;
@@ -43,16 +42,6 @@ export default function Controls({
 }: ControlsProps) {
   const [isMinimized, setIsMinimized] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
-  
-  const handleEraseClick = () => {
-    if (config.brushType === 'eraser') {
-      // Switch back to ink if already erasing
-      onBrushTypeChange('ink');
-    } else {
-      // Switch to eraser
-      onBrushTypeChange('eraser');
-    }
-  };
   
   const handleSaveClick = () => {
     if (onSave) {
@@ -131,12 +120,6 @@ export default function Controls({
           <BrushSelector value={config.brushType} onChange={onBrushTypeChange} />
           <SizeSlider value={config.brushSize} onChange={onBrushSizeChange} />
           <BackgroundSelector value={config.backgroundStyle} onChange={onBackgroundChange} />
-          
-          {/* Erase button */}
-          <EraseButton 
-            onClick={handleEraseClick} 
-            isActive={config.brushType === 'eraser'}
-          />
           
           {/* Fill and Clear buttons */}
           <div className="flex gap-2">
