@@ -77,7 +77,7 @@ export default function Canvas({
         style={{ 
           touchAction: 'none',
           cursor: isFillMode 
-            ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><g fill=\'%23000\' stroke=\'%23fff\' stroke-width=\'1\'><path d=\'M16 4 L12 8 L12 12 L10 12 L10 16 L8 16 L8 20 L24 20 L24 16 L22 16 L22 12 L20 12 L20 8 Z\'/><rect x=\'6\' y=\'22\' width=\'20\' height=\'4\' rx=\'1\'/><circle cx=\'16\' cy=\'14\' r=\'2\' fill=\'%234ade80\'/></g></svg>") 16 28, auto'
+            ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'28\' height=\'28\' viewBox=\'0 0 28 28\'><defs><linearGradient id=\'g\' x1=\'0%25\' y1=\'0%25\' x2=\'0%25\' y2=\'100%25\'><stop offset=\'0%25\' style=\'stop-color:%23a855f7\'/><stop offset=\'100%25\' style=\'stop-color:%23ec4899\'/></linearGradient></defs><g><circle cx=\'14\' cy=\'8\' r=\'6\' fill=\'url(%23g)\' stroke=\'%23fff\' stroke-width=\'1.5\'/><path d=\'M 14 14 Q 10 16, 10 20 L 10 24 L 18 24 L 18 20 Q 18 16, 14 14 Z\' fill=\'url(%23g)\' stroke=\'%23fff\' stroke-width=\'1.5\'/><circle cx=\'14\' cy=\'8\' r=\'2\' fill=\'%23fff\' opacity=\'0.6\'/></g></svg>") 14 24, auto'
             : 'crosshair'
         }}
       />

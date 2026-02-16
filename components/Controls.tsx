@@ -117,7 +117,7 @@ export default function Controls({
           </div>
           
           <ColorPicker value={config.color} onChange={onColorChange} />
-          <BrushSelector value={config.brushType} onChange={onBrushTypeChange} />
+          <BrushSelector value={config.brushType} onChange={onBrushTypeChange} disabled={isFillMode} />
           <SizeSlider value={config.brushSize} onChange={onBrushSizeChange} />
           <BackgroundSelector value={config.backgroundStyle} onChange={onBackgroundChange} />
           

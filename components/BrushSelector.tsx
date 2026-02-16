@@ -3,16 +3,22 @@ import type { BrushType } from '@/lib/types';
 interface BrushSelectorProps {
   value: BrushType;
   onChange: (type: BrushType) => void;
+  disabled?: boolean;
 }
 
-export default function BrushSelector({ value, onChange }: BrushSelectorProps) {
+export default function BrushSelector({ value, onChange, disabled }: BrushSelectorProps) {
   return (
     <div>
       <label className="block text-sm font-semibold mb-2">Brush Type</label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as BrushType)}
-        className="w-full px-3 py-2 rounded-lg font-medium bg-white text-gray-900 border-2 border-gray-300 hover:border-gray-400 focus:border-blue-500 focus:outline-none transition"
+        disabled={disabled}
+        className={`w-full px-3 py-2 rounded-lg font-medium border-2 transition ${
+          disabled 
+            ? 'bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed' 
+            : 'bg-white text-gray-900 border-gray-300 hover:border-gray-400 focus:border-blue-500 focus:outline-none'
+        }`}
       >
         <option value="ink">✒️ Ink Pen</option>
         <option value="pixel">🎮 Pixel Pen</option>
