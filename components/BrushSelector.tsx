@@ -34,6 +34,7 @@ export default function BrushSelector({ value, onChange, disabled }: BrushSelect
         <option value="wave">🌊 Wave</option>
         <option value="lightning">⚡ Lightning</option>
         <option value="dots">⚫ Dots</option>
+        <option value="stitch">🧵 Stitch</option>
         <option value="eraser">🧹 Eraser</option>
       </select>
     </div>

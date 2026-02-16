@@ -146,6 +146,8 @@ export class CanvasEngine {
       this.renderLightningStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'dots') {
       this.renderDotsStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'stitch') {
+      this.renderStitchStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -926,6 +928,84 @@ export class CanvasEngine {
         this.drawingCtx.beginPath();
         this.drawingCtx.arc(p1.x, p1.y, size / 2, 0, Math.PI * 2);
         this.drawingCtx.fill();
+      }
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a stitched pattern like sewing
+   * Creates dashed lines with cross-stitches
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Stitch color
+   * @param size - Stitch size
+   */
+  private renderStitchStroke(points: Point[], color: string, size: number): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.save();
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = size * 0.2;
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.globalAlpha = 0.8;
+    
+    // Draw base dashed line
+    this.drawingCtx.setLineDash([size * 1.5, size * 0.8]);
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+    
+    for (let i = 1; i < points.length; i++) {
+      this.drawingCtx.lineTo(points[i].x, points[i].y);
+    }
+    
+    this.drawingCtx.stroke();
+    this.drawingCtx.setLineDash([]);
+    
+    // Draw cross-stitches at intervals
+    const stitchSpacing = size * 2;
+    let distance = 0;
+    
+    for (let i = 1; i < points.length; i++) {
+      const p0 = points[i - 1];
+      const p1 = points[i];
+      const dx = p1.x - p0.x;
+      const dy = p1.y - p0.y;
+      const segmentLength = Math.sqrt(dx * dx + dy * dy);
+      
+      distance += segmentLength;
+      
+      if (distance >= stitchSpacing) {
+        distance = 0;
+        
+        // Calculate perpendicular direction for cross
+        const angle = Math.atan2(dy, dx);
+        const perpAngle = angle + Math.PI / 2;
+        const crossSize = size * 0.6;
+        
+        // Draw X stitch
+        this.drawingCtx.beginPath();
+        this.drawingCtx.moveTo(
+          p1.x - Math.cos(perpAngle) * crossSize,
+          p1.y - Math.sin(perpAngle) * crossSize
+        );
+        this.drawingCtx.lineTo(
+          p1.x + Math.cos(perpAngle) * crossSize,
+          p1.y + Math.sin(perpAngle) * crossSize
+        );
+        this.drawingCtx.stroke();
+        
+        this.drawingCtx.beginPath();
+        this.drawingCtx.moveTo(
+          p1.x - Math.cos(angle) * crossSize,
+          p1.y - Math.sin(angle) * crossSize
+        );
+        this.drawingCtx.lineTo(
+          p1.x + Math.cos(angle) * crossSize,
+          p1.y + Math.sin(angle) * crossSize
+        );
+        this.drawingCtx.stroke();
       }
     }
 
