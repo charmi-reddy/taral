@@ -126,6 +126,8 @@ export class CanvasEngine {
       this.renderSprayStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'pencil') {
       this.renderPencilStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'rainbow') {
+      this.renderRainbowStroke(stroke.points, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -331,6 +333,39 @@ export class CanvasEngine {
         Math.PI * 2
       );
       this.drawingCtx.fill();
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a rainbow gradient effect
+   * Creates a multi-colored trail that cycles through rainbow colors
+   * 
+   * @param points - Array of points in the stroke
+   * @param width - Stroke width
+   */
+  private renderRainbowStroke(points: Point[], width: number): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.save();
+    this.drawingCtx.lineWidth = width;
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.lineJoin = 'round';
+
+    // Draw segments with different colors
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[i];
+      const p1 = points[i + 1];
+      
+      // Calculate hue based on position in stroke (0-360 degrees)
+      const hue = (i / points.length) * 360;
+      this.drawingCtx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+      
+      this.drawingCtx.beginPath();
+      this.drawingCtx.moveTo(p0.x, p0.y);
+      this.drawingCtx.lineTo(p1.x, p1.y);
+      this.drawingCtx.stroke();
     }
 
     this.drawingCtx.restore();
