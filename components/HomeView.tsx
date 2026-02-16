@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { PageMetadata } from '@/lib/page-manager/types';
+import PersonalityAnalysisModal from './PersonalityAnalysisModal';
+import { PersonalityAnalyzer, DoodleData, AnalysisResult } from '@/lib/personality-analyzer';
 
 interface HomeViewProps {
   pages: PageMetadata[];
@@ -21,6 +23,31 @@ export default function HomeView({
   const [editingPageId, setEditingPageId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>('');
   const [deleteConfirmPageId, setDeleteConfirmPageId] = useState<string | null>(null);
+  const [showPersonalityModal, setShowPersonalityModal] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
+  // Analyze personality when modal opens
+  const handleAnalyzeClick = async () => {
+    setShowPersonalityModal(true);
+    setIsAnalyzing(true);
+    
+    // Simulate async analysis (in case we want to add delay for UX)
+    setTimeout(() => {
+      const analyzer = new PersonalityAnalyzer();
+      
+      // Convert pages to DoodleData format
+      const doodles: DoodleData[] = pages.map(page => ({
+        id: page.id,
+        strokes: page.strokes || [],
+      }));
+      
+      // Analyze overall profile
+      const result = analyzer.analyzeOverallProfile(doodles);
+      setAnalysisResult(result);
+      setIsAnalyzing(false);
+    }, 500);
+  };
   
   // Sort pages by last modified date (most recent first)
   const sortedPages = [...pages].sort((a, b) => b.lastModifiedAt - a.lastModifiedAt);
@@ -232,6 +259,19 @@ export default function HomeView({
           <div className="absolute -bottom-3 -left-2 w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         </h2>
         
+        {/* Analyze Personality Button */}
+        {pages.length > 0 && (
+          <div className="mb-6">
+            <button
+              onClick={handleAnalyzeClick}
+              className="px-6 py-3 rounded-xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+            >
+              <span>✨</span>
+              <span>Analyze My Doodle Personality</span>
+            </button>
+          </div>
+        )}
+        
         {/* Grid layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {/* New Page button */}
@@ -373,6 +413,14 @@ export default function HomeView({
           </div>
         </div>
       )}
+      
+      {/* Personality Analysis Modal */}
+      <PersonalityAnalysisModal
+        isOpen={showPersonalityModal}
+        onClose={() => setShowPersonalityModal(false)}
+        analysisResult={analysisResult}
+        isLoading={isAnalyzing}
+      />
     </div>
   );
 }
