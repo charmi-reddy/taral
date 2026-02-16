@@ -28,6 +28,7 @@ export default function BrushSelector({ value, onChange, disabled }: BrushSelect
         <option value="glitter">✨ Glitter</option>
         <option value="watercolor">💧 Watercolor</option>
         <option value="neon">💡 Neon</option>
+        <option value="geometric">📐 Geometric</option>
         <option value="eraser">🧹 Eraser</option>
       </select>
     </div>

@@ -134,6 +134,8 @@ export class CanvasEngine {
       this.renderWatercolorStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'neon') {
       this.renderNeonStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'geometric') {
+      this.renderGeometricStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -573,6 +575,58 @@ export class CanvasEngine {
     const lastPoint = points[points.length - 1];
     this.drawingCtx.lineTo(lastPoint.x, lastPoint.y);
     this.drawingCtx.stroke();
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders geometric shapes along the stroke path
+   * Creates patterns of circles, squares, and triangles
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Shape color
+   * @param size - Shape size
+   */
+  private renderGeometricStroke(points: Point[], color: string, size: number): void {
+    if (points.length === 0) return;
+
+    this.drawingCtx.save();
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.fillStyle = color;
+    this.drawingCtx.lineWidth = 2;
+    this.drawingCtx.globalAlpha = 0.7;
+    
+    // Draw shapes at intervals along the stroke
+    const interval = Math.max(3, Math.floor(size / 2));
+    const shapes = ['circle', 'square', 'triangle'];
+    
+    for (let i = 0; i < points.length; i += interval) {
+      const point = points[i];
+      const shapeType = shapes[i % shapes.length];
+      const shapeSize = size * 0.8;
+      
+      this.drawingCtx.beginPath();
+      
+      if (shapeType === 'circle') {
+        this.drawingCtx.arc(point.x, point.y, shapeSize / 2, 0, Math.PI * 2);
+        this.drawingCtx.stroke();
+      } else if (shapeType === 'square') {
+        this.drawingCtx.rect(
+          point.x - shapeSize / 2,
+          point.y - shapeSize / 2,
+          shapeSize,
+          shapeSize
+        );
+        this.drawingCtx.stroke();
+      } else if (shapeType === 'triangle') {
+        const height = shapeSize * 0.866; // equilateral triangle height
+        this.drawingCtx.moveTo(point.x, point.y - height / 2);
+        this.drawingCtx.lineTo(point.x - shapeSize / 2, point.y + height / 2);
+        this.drawingCtx.lineTo(point.x + shapeSize / 2, point.y + height / 2);
+        this.drawingCtx.closePath();
+        this.drawingCtx.stroke();
+      }
+    }
 
     this.drawingCtx.restore();
   }
