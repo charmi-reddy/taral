@@ -136,6 +136,8 @@ export class CanvasEngine {
       this.renderNeonStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'geometric') {
       this.renderGeometricStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'star') {
+      this.renderStarStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -626,6 +628,59 @@ export class CanvasEngine {
         this.drawingCtx.closePath();
         this.drawingCtx.stroke();
       }
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders stars along the stroke path
+   * Creates a trail of five-pointed stars
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Star color
+   * @param size - Star size
+   */
+  private renderStarStroke(points: Point[], color: string, size: number): void {
+    if (points.length === 0) return;
+
+    this.drawingCtx.save();
+    this.drawingCtx.fillStyle = color;
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = 1.5;
+    this.drawingCtx.globalAlpha = 0.8;
+    
+    // Draw stars at intervals
+    const interval = Math.max(3, Math.floor(size / 3));
+    
+    for (let i = 0; i < points.length; i += interval) {
+      const point = points[i];
+      const starSize = size * 0.6;
+      const rotation = (i / points.length) * Math.PI * 2; // Rotate stars along path
+      
+      this.drawingCtx.save();
+      this.drawingCtx.translate(point.x, point.y);
+      this.drawingCtx.rotate(rotation);
+      
+      // Draw 5-pointed star
+      this.drawingCtx.beginPath();
+      for (let j = 0; j < 5; j++) {
+        const angle = (j * 4 * Math.PI) / 5 - Math.PI / 2;
+        const radius = j % 2 === 0 ? starSize : starSize * 0.4;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        
+        if (j === 0) {
+          this.drawingCtx.moveTo(x, y);
+        } else {
+          this.drawingCtx.lineTo(x, y);
+        }
+      }
+      this.drawingCtx.closePath();
+      this.drawingCtx.fill();
+      this.drawingCtx.stroke();
+      
+      this.drawingCtx.restore();
     }
 
     this.drawingCtx.restore();
