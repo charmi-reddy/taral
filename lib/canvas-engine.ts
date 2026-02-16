@@ -130,6 +130,8 @@ export class CanvasEngine {
       this.renderRainbowStroke(stroke.points, stroke.baseWidth);
     } else if (stroke.brushType === 'glitter') {
       this.renderGlitterStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'watercolor') {
+      this.renderWatercolorStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -436,6 +438,73 @@ export class CanvasEngine {
       this.drawingCtx.moveTo(x, y - sparkleSize * 1.5);
       this.drawingCtx.lineTo(x, y + sparkleSize * 1.5);
       this.drawingCtx.stroke();
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a watercolor effect with soft, blended edges
+   * Creates organic, flowing strokes with transparency and bleeding
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Watercolor base color
+   * @param size - Brush size
+   */
+  private renderWatercolorStroke(points: Point[], color: string, size: number): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.save();
+    
+    // Draw multiple layers with decreasing opacity for soft edges
+    const layers = 3;
+    for (let layer = 0; layer < layers; layer++) {
+      const layerSize = size * (1 + layer * 0.4);
+      const opacity = 0.15 - layer * 0.03;
+      
+      this.drawingCtx.globalAlpha = opacity;
+      this.drawingCtx.strokeStyle = color;
+      this.drawingCtx.lineWidth = layerSize;
+      this.drawingCtx.lineCap = 'round';
+      this.drawingCtx.lineJoin = 'round';
+      
+      this.drawingCtx.beginPath();
+      this.drawingCtx.moveTo(points[0].x, points[0].y);
+      
+      // Draw smooth curves
+      for (let i = 1; i < points.length - 1; i++) {
+        const p0 = points[i];
+        const p1 = points[i + 1];
+        const midX = (p0.x + p1.x) / 2;
+        const midY = (p0.y + p1.y) / 2;
+        this.drawingCtx.quadraticCurveTo(p0.x, p0.y, midX, midY);
+      }
+      
+      const lastPoint = points[points.length - 1];
+      this.drawingCtx.lineTo(lastPoint.x, lastPoint.y);
+      this.drawingCtx.stroke();
+    }
+    
+    // Add subtle texture spots for watercolor effect
+    this.drawingCtx.globalAlpha = 0.08;
+    this.drawingCtx.fillStyle = color;
+    
+    const spotCount = Math.floor(points.length / 4);
+    for (let i = 0; i < spotCount; i++) {
+      const point = points[Math.floor(Math.random() * points.length)];
+      const offsetX = (Math.random() - 0.5) * size * 2;
+      const offsetY = (Math.random() - 0.5) * size * 2;
+      const spotSize = Math.random() * size * 0.8;
+      
+      this.drawingCtx.beginPath();
+      this.drawingCtx.arc(
+        point.x + offsetX,
+        point.y + offsetY,
+        spotSize,
+        0,
+        Math.PI * 2
+      );
+      this.drawingCtx.fill();
     }
 
     this.drawingCtx.restore();
