@@ -139,10 +139,9 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
     
     const point = getCanvasCoordinates(e);
     
-    // If in fill mode, flood fill at click point
+    // If in fill mode, flood fill at click point (stay in fill mode)
     if (isFillMode && engineRef.current) {
       engineRef.current.floodFill(point.x, point.y, configRef.current.color);
-      setIsFillMode(false); // Exit fill mode after filling
       updateUndoRedoState();
       return;
     }

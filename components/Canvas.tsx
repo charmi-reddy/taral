@@ -69,12 +69,15 @@ export default function Canvas({
       {/* Drawing Canvas */}
       <canvas
         ref={drawingCanvasRef}
-        className={`absolute top-0 left-0 w-full h-full ${isFillMode ? 'cursor-pointer' : 'cursor-crosshair'}`}
+        className={`absolute top-0 left-0 w-full h-full ${isFillMode ? 'cursor-cell' : 'cursor-crosshair'}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
-        style={{ touchAction: 'none' }}
+        style={{ 
+          touchAction: 'none',
+          cursor: isFillMode ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\'><path fill=\'black\' stroke=\'white\' stroke-width=\'0.5\' d=\'M12 2L8 6h3v6H8l4 4 4-4h-3V6h3z M6 18h12v2H6z\'/></svg>") 12 20, auto' : 'crosshair'
+        }}
       />
 
       {/* Controls */}
