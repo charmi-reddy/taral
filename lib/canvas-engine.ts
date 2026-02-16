@@ -676,10 +676,10 @@ export class CanvasEngine {
       this.drawingCtx.translate(point.x, point.y);
       this.drawingCtx.rotate(rotation);
       
-      // Draw 5-pointed star
+      // Draw 5-pointed star with 10 points (5 outer, 5 inner)
       this.drawingCtx.beginPath();
-      for (let j = 0; j < 5; j++) {
-        const angle = (j * 4 * Math.PI) / 5 - Math.PI / 2;
+      for (let j = 0; j < 10; j++) {
+        const angle = (j * Math.PI) / 5 - Math.PI / 2;
         const radius = j % 2 === 0 ? starSize : starSize * 0.4;
         const x = Math.cos(angle) * radius;
         const y = Math.sin(angle) * radius;
