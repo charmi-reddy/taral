@@ -138,6 +138,8 @@ export class CanvasEngine {
       this.renderGeometricStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'star') {
       this.renderStarStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'chain') {
+      this.renderChainStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -681,6 +683,58 @@ export class CanvasEngine {
       this.drawingCtx.stroke();
       
       this.drawingCtx.restore();
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a chain link pattern along the stroke
+   * Creates connected oval links like a chain
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Chain color
+   * @param size - Link size
+   */
+  private renderChainStroke(points: Point[], color: string, size: number): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.save();
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = 2;
+    this.drawingCtx.globalAlpha = 0.8;
+    
+    // Draw chain links at intervals
+    const linkSpacing = size * 2;
+    let distance = 0;
+    
+    for (let i = 1; i < points.length; i++) {
+      const p0 = points[i - 1];
+      const p1 = points[i];
+      const dx = p1.x - p0.x;
+      const dy = p1.y - p0.y;
+      const segmentLength = Math.sqrt(dx * dx + dy * dy);
+      
+      distance += segmentLength;
+      
+      if (distance >= linkSpacing) {
+        distance = 0;
+        
+        // Calculate angle for link orientation
+        const angle = Math.atan2(dy, dx);
+        const isVertical = i % 2 === 0;
+        
+        this.drawingCtx.save();
+        this.drawingCtx.translate(p1.x, p1.y);
+        this.drawingCtx.rotate(isVertical ? angle + Math.PI / 2 : angle);
+        
+        // Draw oval link
+        this.drawingCtx.beginPath();
+        this.drawingCtx.ellipse(0, 0, size * 0.8, size * 0.4, 0, 0, Math.PI * 2);
+        this.drawingCtx.stroke();
+        
+        this.drawingCtx.restore();
+      }
     }
 
     this.drawingCtx.restore();
