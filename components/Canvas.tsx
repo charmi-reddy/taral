@@ -77,7 +77,7 @@ export default function Canvas({
         style={{ 
           touchAction: 'none',
           cursor: isFillMode 
-            ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'28\' height=\'28\' viewBox=\'0 0 28 28\'><defs><linearGradient id=\'g\' x1=\'0%25\' y1=\'0%25\' x2=\'0%25\' y2=\'100%25\'><stop offset=\'0%25\' style=\'stop-color:%23a855f7\'/><stop offset=\'100%25\' style=\'stop-color:%23ec4899\'/></linearGradient></defs><g><circle cx=\'14\' cy=\'8\' r=\'6\' fill=\'url(%23g)\' stroke=\'%23fff\' stroke-width=\'1.5\'/><path d=\'M 14 14 Q 10 16, 10 20 L 10 24 L 18 24 L 18 20 Q 18 16, 14 14 Z\' fill=\'url(%23g)\' stroke=\'%23fff\' stroke-width=\'1.5\'/><circle cx=\'14\' cy=\'8\' r=\'2\' fill=\'%23fff\' opacity=\'0.6\'/></g></svg>") 14 24, auto'
+            ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'24\' viewBox=\'0 0 20 24\'><defs><linearGradient id=\'g\' x1=\'0%25\' y1=\'0%25\' x2=\'0%25\' y2=\'100%25\'><stop offset=\'0%25\' style=\'stop-color:%23a855f7\'/><stop offset=\'100%25\' style=\'stop-color:%23ec4899\'/></linearGradient></defs><g><circle cx=\'10\' cy=\'6\' r=\'5\' fill=\'url(%23g)\' stroke=\'%23000\' stroke-width=\'1.5\'/><path d=\'M 10 11 Q 7 13, 7 16 L 7 19 Q 7 20, 8 21 L 10 23 L 12 21 Q 13 20, 13 19 L 13 16 Q 13 13, 10 11 Z\' fill=\'url(%23g)\' stroke=\'%23000\' stroke-width=\'1.5\'/><circle cx=\'10\' cy=\'6\' r=\'1.5\' fill=\'%23fff\' opacity=\'0.7\'/><circle cx=\'10\' cy=\'23\' r=\'1\' fill=\'%23000\'/></g></svg>") 10 23, auto'
             : 'crosshair'
         }}
       />
