@@ -78,6 +78,8 @@ export default function Canvas({
           touchAction: 'none',
           cursor: isFillMode 
             ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'24\' viewBox=\'0 0 20 24\'><defs><linearGradient id=\'g\' x1=\'0%25\' y1=\'0%25\' x2=\'0%25\' y2=\'100%25\'><stop offset=\'0%25\' style=\'stop-color:%23a855f7\'/><stop offset=\'100%25\' style=\'stop-color:%23ec4899\'/></linearGradient></defs><g><circle cx=\'10\' cy=\'6\' r=\'5\' fill=\'url(%23g)\' stroke=\'%23000\' stroke-width=\'1.5\'/><path d=\'M 10 11 Q 7 13, 7 16 L 7 19 Q 7 20, 8 21 L 10 23 L 12 21 Q 13 20, 13 19 L 13 16 Q 13 13, 10 11 Z\' fill=\'url(%23g)\' stroke=\'%23000\' stroke-width=\'1.5\'/><circle cx=\'10\' cy=\'6\' r=\'1.5\' fill=\'%23fff\' opacity=\'0.7\'/><circle cx=\'10\' cy=\'23\' r=\'1\' fill=\'%23000\'/></g></svg>") 10 23, auto'
+            : config.brushType === 'spray'
+            ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\'><g><rect x=\'8\' y=\'2\' width=\'8\' height=\'4\' rx=\'1\' fill=\'%23ef4444\' stroke=\'%23000\' stroke-width=\'1\'/><rect x=\'9\' y=\'6\' width=\'6\' height=\'10\' rx=\'1\' fill=\'%23dc2626\' stroke=\'%23000\' stroke-width=\'1\'/><circle cx=\'12\' cy=\'4\' r=\'1\' fill=\'%23000\'/><line x1=\'12\' y1=\'16\' x2=\'10\' y2=\'20\' stroke=\'%2364748b\' stroke-width=\'1.5\' opacity=\'0.6\'/><line x1=\'12\' y1=\'16\' x2=\'12\' y2=\'21\' stroke=\'%2364748b\' stroke-width=\'1.5\' opacity=\'0.6\'/><line x1=\'12\' y1=\'16\' x2=\'14\' y2=\'20\' stroke=\'%2364748b\' stroke-width=\'1.5\' opacity=\'0.6\'/><circle cx=\'12\' cy=\'21\' r=\'1\' fill=\'%23000\'/></g></svg>") 12 21, auto'
             : 'crosshair'
         }}
       />
