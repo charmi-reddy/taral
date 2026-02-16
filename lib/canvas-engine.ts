@@ -128,6 +128,8 @@ export class CanvasEngine {
       this.renderPencilStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'rainbow') {
       this.renderRainbowStroke(stroke.points, stroke.baseWidth);
+    } else if (stroke.brushType === 'glitter') {
+      this.renderGlitterStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -365,6 +367,74 @@ export class CanvasEngine {
       this.drawingCtx.beginPath();
       this.drawingCtx.moveTo(p0.x, p0.y);
       this.drawingCtx.lineTo(p1.x, p1.y);
+      this.drawingCtx.stroke();
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a glitter effect with sparkly particles
+   * Creates random bright particles with varying sizes and opacity
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Base color for glitter
+   * @param size - Glitter spread size
+   */
+  private renderGlitterStroke(points: Point[], color: string, size: number): void {
+    if (points.length === 0) return;
+
+    this.drawingCtx.save();
+    
+    // Draw base stroke
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = size * 0.5;
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.lineJoin = 'round';
+    this.drawingCtx.globalAlpha = 0.3;
+    
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      this.drawingCtx.lineTo(points[i].x, points[i].y);
+    }
+    this.drawingCtx.stroke();
+    
+    // Add sparkly particles
+    const particleCount = Math.max(10, Math.floor(points.length / 2));
+    const spread = size * 1.5;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const point = points[Math.floor(Math.random() * points.length)];
+      const offsetX = (Math.random() - 0.5) * spread;
+      const offsetY = (Math.random() - 0.5) * spread;
+      
+      // Random bright colors for sparkles
+      const hue = Math.random() * 360;
+      const lightness = 60 + Math.random() * 30; // Bright sparkles
+      this.drawingCtx.fillStyle = `hsl(${hue}, 100%, ${lightness}%)`;
+      this.drawingCtx.globalAlpha = 0.6 + Math.random() * 0.4;
+      
+      // Random sparkle size
+      const sparkleSize = Math.random() * 2 + 1;
+      
+      // Draw star-shaped sparkle
+      const x = point.x + offsetX;
+      const y = point.y + offsetY;
+      
+      this.drawingCtx.beginPath();
+      this.drawingCtx.arc(x, y, sparkleSize, 0, Math.PI * 2);
+      this.drawingCtx.fill();
+      
+      // Add cross for star effect
+      this.drawingCtx.globalAlpha = 0.8;
+      this.drawingCtx.strokeStyle = `hsl(${hue}, 100%, 90%)`;
+      this.drawingCtx.lineWidth = 0.5;
+      this.drawingCtx.beginPath();
+      this.drawingCtx.moveTo(x - sparkleSize * 1.5, y);
+      this.drawingCtx.lineTo(x + sparkleSize * 1.5, y);
+      this.drawingCtx.moveTo(x, y - sparkleSize * 1.5);
+      this.drawingCtx.lineTo(x, y + sparkleSize * 1.5);
       this.drawingCtx.stroke();
     }
 

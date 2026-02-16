@@ -25,6 +25,7 @@ export default function BrushSelector({ value, onChange, disabled }: BrushSelect
         <option value="spray">🎨 Spray Paint</option>
         <option value="pencil">✏️ Pencil</option>
         <option value="rainbow">🌈 Rainbow</option>
+        <option value="glitter">✨ Glitter</option>
         <option value="eraser">🧹 Eraser</option>
       </select>
     </div>
