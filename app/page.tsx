@@ -104,6 +104,16 @@ export default function Home() {
     saveNow();
   }, [saveNow]);
   
+  // Handle getting page data for personality analysis
+  const handleGetPageData = useCallback((pageId: string) => {
+    const page = getPageById(pageId);
+    if (!page) return null;
+    return {
+      id: page.id,
+      strokes: page.strokes,
+    };
+  }, [getPageById]);
+  
   // Sync view navigation activePageId with page manager activePageId
   useEffect(() => {
     if (viewState.activePageId && viewState.activePageId !== activePageId) {
@@ -120,6 +130,7 @@ export default function Home() {
         onNewPage={handleNewPage}
         onDeletePage={handleDeletePage}
         onRenamePage={handleRenamePage}
+        onGetPageData={handleGetPageData}
       />
     );
   }

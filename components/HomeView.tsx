@@ -11,6 +11,7 @@ interface HomeViewProps {
   onNewPage: () => void;
   onDeletePage: (pageId: string) => void;
   onRenamePage: (pageId: string, newName: string) => void;
+  onGetPageData?: (pageId: string) => { id: string; strokes: any[] } | null;
 }
 
 export default function HomeView({
@@ -19,6 +20,7 @@ export default function HomeView({
   onNewPage,
   onDeletePage,
   onRenamePage,
+  onGetPageData,
 }: HomeViewProps) {
   const [editingPageId, setEditingPageId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>('');
@@ -28,7 +30,7 @@ export default function HomeView({
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   
   // Analyze personality when modal opens
-  const handleAnalyzeClick = async () => {
+  const handleAnalyzeClick = async (pageId: string) => {
     setShowPersonalityModal(true);
     setIsAnalyzing(true);
     
@@ -36,14 +38,26 @@ export default function HomeView({
     setTimeout(() => {
       const analyzer = new PersonalityAnalyzer();
       
-      // Convert pages to DoodleData format
-      const doodles: DoodleData[] = pages.map(page => ({
-        id: page.id,
-        strokes: page.strokes || [],
-      }));
+      // Get page data
+      const pageData = onGetPageData ? onGetPageData(pageId) : null;
       
-      // Analyze overall profile
-      const result = analyzer.analyzeOverallProfile(doodles);
+      if (!pageData || !pageData.strokes) {
+        setAnalysisResult({
+          success: false,
+          error: "No drawing data available for this doodle"
+        });
+        setIsAnalyzing(false);
+        return;
+      }
+      
+      // Convert to DoodleData format
+      const doodle: DoodleData = {
+        id: pageData.id,
+        strokes: pageData.strokes,
+      };
+      
+      // Analyze single doodle
+      const result = analyzer.analyzeDoodle(doodle);
       setAnalysisResult(result);
       setIsAnalyzing(false);
     }, 500);
@@ -259,19 +273,6 @@ export default function HomeView({
           <div className="absolute -bottom-3 -left-2 w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         </h2>
         
-        {/* Analyze Personality Button */}
-        {pages.length > 0 && (
-          <div className="mb-6">
-            <button
-              onClick={handleAnalyzeClick}
-              className="px-6 py-3 rounded-xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-            >
-              <span>✨</span>
-              <span>Analyze My Doodle Personality</span>
-            </button>
-          </div>
-        )}
-        
         {/* Grid layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {/* New Page button */}
@@ -356,14 +357,30 @@ export default function HomeView({
                 </div>
               </div>
               
-              {/* Delete button */}
-              <button
-                onClick={(e) => handleDelete(e, page.id)}
-                className="absolute top-3 right-3 w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center shadow-xl font-bold text-xl hover:scale-110 border-2 border-white/50"
-                aria-label="Delete page"
-              >
-                ×
-              </button>
+              {/* Action buttons */}
+              <div className="absolute top-3 right-3 flex gap-2">
+                {/* Analyze button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAnalyzeClick(page.id);
+                  }}
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center shadow-xl hover:scale-110 border-2 border-white/50"
+                  aria-label="Analyze personality"
+                  title="Analyze Personality"
+                >
+                  ✨
+                </button>
+                
+                {/* Delete button */}
+                <button
+                  onClick={(e) => handleDelete(e, page.id)}
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center shadow-xl hover:scale-110 border-2 border-white/50"
+                  aria-label="Delete page"
+                >
+                  ×
+                </button>
+              </div>
             </div>
           ))}
         </div>
