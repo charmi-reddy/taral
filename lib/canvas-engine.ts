@@ -1381,9 +1381,11 @@ export class CanvasEngine {
     // Save canvas state before filling to enable undo
     this.saveCanvasState();
     
-    // Scanline flood fill algorithm - much faster than pixel-by-pixel
+    // Optimized scanline flood fill with performance limits
     const stack: [number, number, number, number][] = []; // [y, xLeft, xRight, direction]
-    const visited = new Uint8Array(physicalWidth * physicalHeight); // Faster than Set for large areas
+    const visited = new Uint8Array(physicalWidth * physicalHeight);
+    let pixelsFilled = 0;
+    const maxPixels = physicalWidth * physicalHeight * 0.8; // Limit to 80% to prevent hangs
     
     const matchesTarget = (x: number, y: number): boolean => {
       if (x < 0 || x >= physicalWidth || y < 0 || y >= physicalHeight) return false;
@@ -1400,6 +1402,7 @@ export class CanvasEngine {
       pixels[pos + 1] = fillG;
       pixels[pos + 2] = fillB;
       pixels[pos + 3] = fillA;
+      pixelsFilled++;
     };
     
     // Fill initial scanline
@@ -1426,11 +1429,11 @@ export class CanvasEngine {
     if (physicalY > 0) stack.push([physicalY - 1, xLeft, xRight, -1]);
     if (physicalY < physicalHeight - 1) stack.push([physicalY + 1, xLeft, xRight, 1]);
     
-    // Process stack with safety limit
+    // Process stack with limits
     let iterations = 0;
-    const maxIterations = physicalWidth * physicalHeight; // Safety limit
+    const maxIterations = 100000; // Safety limit to prevent infinite loops
     
-    while (stack.length > 0 && iterations < maxIterations) {
+    while (stack.length > 0 && iterations < maxIterations && pixelsFilled < maxPixels) {
       iterations++;
       const [y, xLeft, xRight, direction] = stack.pop()!;
       
@@ -1483,8 +1486,14 @@ export class CanvasEngine {
       }
     }
     
-    // Put the modified image data back
-    this.drawingCtx.putImageData(imageData, 0, 0);
+    // If we hit the pixel limit, fill the entire canvas instead
+    if (pixelsFilled >= maxPixels) {
+      this.drawingCtx.fillStyle = fillColor;
+      this.drawingCtx.fillRect(0, 0, width, height);
+    } else {
+      // Put the modified image data back
+      this.drawingCtx.putImageData(imageData, 0, 0);
+    }
     
     // Save the filled state so subsequent operations can undo to this state
     this.saveCanvasState();
