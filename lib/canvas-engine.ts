@@ -1384,8 +1384,6 @@ export class CanvasEngine {
     // Flood fill algorithm with stack
     const stack: [number, number][] = [[physicalX, physicalY]];
     const visited = new Set<number>();
-    let pixelsFilled = 0;
-    const maxPixels = physicalWidth * physicalHeight * 0.5; // If filling more than 50%, fill whole canvas
     
     const matchesTarget = (pos: number): boolean => {
       return pixels[pos] === targetR &&
@@ -1394,7 +1392,7 @@ export class CanvasEngine {
              pixels[pos + 3] === targetA;
     };
     
-    while (stack.length > 0 && pixelsFilled < maxPixels) {
+    while (stack.length > 0) {
       const [px, py] = stack.pop()!;
       
       // Check bounds
@@ -1407,7 +1405,6 @@ export class CanvasEngine {
       if (visited.has(key) || !matchesTarget(pos)) continue;
       
       visited.add(key);
-      pixelsFilled++;
       
       // Fill this pixel
       pixels[pos] = fillR;
@@ -1422,17 +1419,8 @@ export class CanvasEngine {
       stack.push([px, py - 1]);
     }
     
-    // If we filled too many pixels, it's not enclosed - fill whole canvas instead
-    if (pixelsFilled >= maxPixels) {
-      // Note: fill() already calls saveCanvasState(), but we already called it above
-      // Remove the duplicate by directly filling without calling fill()
-      const { width, height } = this.getLogicalDimensions();
-      this.drawingCtx.fillStyle = fillColor;
-      this.drawingCtx.fillRect(0, 0, width, height);
-    } else {
-      // Put the modified image data back
-      this.drawingCtx.putImageData(imageData, 0, 0);
-    }
+    // Put the modified image data back
+    this.drawingCtx.putImageData(imageData, 0, 0);
     
     // Save the filled state so subsequent operations can undo to this state
     this.saveCanvasState();
