@@ -1381,42 +1381,102 @@ export class CanvasEngine {
     // Save canvas state before filling to enable undo
     this.saveCanvasState();
     
-    // Flood fill algorithm with stack
-    const stack: [number, number][] = [[physicalX, physicalY]];
-    const visited = new Set<number>();
+    // Scanline flood fill algorithm - much faster than pixel-by-pixel
+    const stack: [number, number, number, number][] = []; // [y, xLeft, xRight, direction]
+    const visited = new Uint8Array(physicalWidth * physicalHeight); // Faster than Set for large areas
     
-    const matchesTarget = (pos: number): boolean => {
+    const matchesTarget = (x: number, y: number): boolean => {
+      if (x < 0 || x >= physicalWidth || y < 0 || y >= physicalHeight) return false;
+      const pos = (y * physicalWidth + x) * 4;
       return pixels[pos] === targetR &&
              pixels[pos + 1] === targetG &&
              pixels[pos + 2] === targetB &&
              pixels[pos + 3] === targetA;
     };
     
-    while (stack.length > 0) {
-      const [px, py] = stack.pop()!;
-      
-      // Check bounds
-      if (px < 0 || px >= physicalWidth || py < 0 || py >= physicalHeight) continue;
-      
-      const pos = (py * physicalWidth + px) * 4;
-      const key = py * physicalWidth + px;
-      
-      // Skip if already visited or doesn't match target color
-      if (visited.has(key) || !matchesTarget(pos)) continue;
-      
-      visited.add(key);
-      
-      // Fill this pixel
+    const fillPixel = (x: number, y: number): void => {
+      const pos = (y * physicalWidth + x) * 4;
       pixels[pos] = fillR;
       pixels[pos + 1] = fillG;
       pixels[pos + 2] = fillB;
       pixels[pos + 3] = fillA;
+    };
+    
+    // Fill initial scanline
+    let xLeft = physicalX;
+    let xRight = physicalX;
+    
+    // Expand left
+    while (xLeft > 0 && matchesTarget(xLeft - 1, physicalY)) {
+      xLeft--;
+    }
+    
+    // Expand right
+    while (xRight < physicalWidth - 1 && matchesTarget(xRight + 1, physicalY)) {
+      xRight++;
+    }
+    
+    // Fill the initial scanline
+    for (let x = xLeft; x <= xRight; x++) {
+      fillPixel(x, physicalY);
+      visited[physicalY * physicalWidth + x] = 1;
+    }
+    
+    // Add scanlines above and below to stack
+    if (physicalY > 0) stack.push([physicalY - 1, xLeft, xRight, -1]);
+    if (physicalY < physicalHeight - 1) stack.push([physicalY + 1, xLeft, xRight, 1]);
+    
+    // Process stack
+    while (stack.length > 0) {
+      const [y, xLeft, xRight, direction] = stack.pop()!;
       
-      // Add neighbors to stack
-      stack.push([px + 1, py]);
-      stack.push([px - 1, py]);
-      stack.push([px, py + 1]);
-      stack.push([px, py - 1]);
+      let x = xLeft;
+      while (x <= xRight) {
+        // Skip already visited pixels
+        if (visited[y * physicalWidth + x]) {
+          x++;
+          continue;
+        }
+        
+        // Find start of new span
+        if (!matchesTarget(x, y)) {
+          x++;
+          continue;
+        }
+        
+        // Found a span - expand it
+        let spanLeft = x;
+        let spanRight = x;
+        
+        // Expand left
+        while (spanLeft > 0 && matchesTarget(spanLeft - 1, y) && !visited[y * physicalWidth + (spanLeft - 1)]) {
+          spanLeft--;
+        }
+        
+        // Expand right
+        while (spanRight < physicalWidth - 1 && matchesTarget(spanRight + 1, y) && !visited[y * physicalWidth + (spanRight + 1)]) {
+          spanRight++;
+        }
+        
+        // Fill the span
+        for (let sx = spanLeft; sx <= spanRight; sx++) {
+          fillPixel(sx, y);
+          visited[y * physicalWidth + sx] = 1;
+        }
+        
+        // Add adjacent scanlines
+        const nextY = y + direction;
+        if (nextY >= 0 && nextY < physicalHeight) {
+          stack.push([nextY, spanLeft, spanRight, direction]);
+        }
+        
+        const prevY = y - direction;
+        if (prevY >= 0 && prevY < physicalHeight && (spanLeft < xLeft || spanRight > xRight)) {
+          stack.push([prevY, spanLeft, spanRight, -direction]);
+        }
+        
+        x = spanRight + 1;
+      }
     }
     
     // Put the modified image data back
