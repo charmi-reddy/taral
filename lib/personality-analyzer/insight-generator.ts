@@ -8,7 +8,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.averageSpeed !== null && m.averageSpeed > 2.0,
       insight: {
-        text: "Fast, energetic strokes — high creative impulse",
+        text: "Whoa, you draw FAST! Your hand barely touches the screen before zooming to the next idea",
         category: "creativity",
         metric: "averageSpeed"
       }
@@ -16,7 +16,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.averageSpeed !== null && m.averageSpeed < 1.0,
       insight: {
-        text: "Slow, deliberate strokes — thoughtful approach",
+        text: "You take your sweet time with each stroke. Every line gets the attention it deserves",
         category: "control",
         metric: "averageSpeed"
       }
@@ -24,7 +24,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.smoothness > 0.7,
       insight: {
-        text: "Smooth, controlled lines — methodical thinker",
+        text: "Your lines flow like butter. Smooth, controlled, and oddly satisfying to look at",
         category: "control",
         metric: "smoothness"
       }
@@ -32,7 +32,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.smoothness < 0.4,
       insight: {
-        text: "Dynamic, varied strokes — spontaneous style",
+        text: "Zigzags, curves, chaos! Your strokes go wherever they feel like going",
         category: "creativity",
         metric: "smoothness"
       }
@@ -40,7 +40,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.colorDiversity > 5,
       insight: {
-        text: "Colorful palette — expressive personality",
+        text: "Rainbow vibes! You're not afraid to throw every color at the canvas",
         category: "expression",
         metric: "colorDiversity"
       }
@@ -48,7 +48,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.colorDiversity < 3,
       insight: {
-        text: "Focused color choice — minimalist aesthetic",
+        text: "You stick to your favorites. Why mess with a good thing?",
         category: "focus",
         metric: "colorDiversity"
       }
@@ -56,7 +56,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.pressureVariance !== null && m.pressureVariance < 0.3,
       insight: {
-        text: "Consistent pressure — steady and focused",
+        text: "Steady hand alert! Your pressure stays consistent like you're on autopilot",
         category: "focus",
         metric: "pressureVariance"
       }
@@ -64,7 +64,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.pressureVariance !== null && m.pressureVariance > 0.6,
       insight: {
-        text: "Varied pressure — expressive and dynamic",
+        text: "You press hard, then soft, then hard again. Your doodle has FEELINGS",
         category: "expression",
         metric: "pressureVariance"
       }
@@ -72,7 +72,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.brushVariety > 4,
       insight: {
-        text: "Loves experimenting with different tools",
+        text: "Brush collector spotted! You've tried almost every tool in the box",
         category: "experimentation",
         metric: "brushVariety"
       }
@@ -80,7 +80,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.directionChanges > 50,
       insight: {
-        text: "Complex, intricate patterns — detail-oriented",
+        text: "Your hand never stops turning. This doodle went on a JOURNEY",
         category: "detail",
         metric: "directionChanges"
       }
@@ -88,7 +88,7 @@ export class InsightGenerator {
     {
       condition: (m) => m.directionChanges < 20,
       insight: {
-        text: "Simple, flowing lines — elegant simplicity",
+        text: "Straight shooter! Your lines know where they're going and stick to it",
         category: "simplicity",
         metric: "directionChanges"
       }
@@ -102,49 +102,49 @@ export class InsightGenerator {
     condition: (insights: PersonalityInsight[]) => boolean;
   }> = [
     {
-      name: "The Spontaneous Creator",
-      description: "You draw with energy and freedom, letting creativity flow naturally",
-      traits: ["Creative", "Spontaneous", "Expressive"],
+      name: "The Wild Scribbler",
+      description: "You doodle like nobody's watching. Fast, colorful, and totally unfiltered",
+      traits: ["Spontaneous", "Energetic", "Bold"],
       condition: (insights) =>
         insights.some(i => i.category === "creativity") &&
         insights.some(i => i.category === "expression")
     },
     {
-      name: "The Methodical Artist",
-      description: "You approach drawing with precision and careful thought",
-      traits: ["Controlled", "Focused", "Deliberate"],
+      name: "The Perfectionist",
+      description: "Every line matters. You're not done until it looks EXACTLY right",
+      traits: ["Precise", "Patient", "Detail-Focused"],
       condition: (insights) =>
         insights.some(i => i.category === "control") &&
         insights.some(i => i.category === "focus")
     },
     {
-      name: "The Bold Experimenter",
-      description: "You love trying new techniques and pushing boundaries",
-      traits: ["Experimental", "Adventurous", "Diverse"],
+      name: "The Tool Hoarder",
+      description: "Why use one brush when you can use ALL the brushes?",
+      traits: ["Curious", "Adventurous", "Playful"],
       condition: (insights) =>
         insights.some(i => i.category === "experimentation") &&
         insights.length > 4
     },
     {
-      name: "The Focused Minimalist",
-      description: "You believe in the power of simplicity and restraint",
-      traits: ["Minimalist", "Focused", "Refined"],
+      name: "The Minimalist",
+      description: "Less is more. You know exactly what you want and nothing else matters",
+      traits: ["Focused", "Intentional", "Clean"],
       condition: (insights) =>
         insights.some(i => i.category === "focus") &&
         insights.some(i => i.category === "simplicity")
     },
     {
-      name: "The Expressive Storyteller",
-      description: "Your drawings are full of emotion and narrative",
-      traits: ["Expressive", "Colorful", "Dynamic"],
+      name: "The Mood Painter",
+      description: "Your doodles have VIBES. Colors, pressure, emotion - it's all there",
+      traits: ["Expressive", "Emotional", "Vibrant"],
       condition: (insights) =>
         insights.some(i => i.category === "expression") &&
         insights.some(i => i.metric === "colorDiversity")
     },
     {
-      name: "The Steady Hand",
-      description: "You draw with consistency and calm confidence",
-      traits: ["Steady", "Consistent", "Reliable"],
+      name: "The Zen Master",
+      description: "Calm, steady, consistent. Doodling is your meditation",
+      traits: ["Calm", "Balanced", "Grounded"],
       condition: (insights) =>
         insights.some(i => i.category === "focus") &&
         insights.some(i => i.metric === "pressureVariance")
@@ -165,14 +165,14 @@ export class InsightGenerator {
       // Add generic insights based on available data
       if (metrics.totalStrokes > 10) {
         insights.push({
-          text: "Prolific doodler — loves to create",
+          text: "You really went for it! This doodle has layers upon layers",
           category: "creativity",
           metric: "totalStrokes"
         });
       }
       if (metrics.totalPoints > 100) {
         insights.push({
-          text: "Detailed work — patient and thorough",
+          text: "Wow, you didn't skip a single pixel. Dedication level: MAX",
           category: "detail",
           metric: "totalPoints"
         });
@@ -195,9 +195,9 @@ export class InsightGenerator {
 
     // Default type
     return {
-      name: "The Creative Spirit",
-      description: "You have a unique drawing style all your own",
-      traits: ["Creative", "Unique", "Individual"],
+      name: "The Free Spirit",
+      description: "You do your own thing and that's what makes your doodles special",
+      traits: ["Unique", "Original", "You"],
     };
   }
 }
