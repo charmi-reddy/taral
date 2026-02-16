@@ -124,6 +124,8 @@ export class CanvasEngine {
       this.renderPixelStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'spray') {
       this.renderSprayStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'marker') {
+      this.renderMarkerStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -272,6 +274,48 @@ export class CanvasEngine {
         this.drawingCtx.fill();
       }
     }
+  }
+
+  /**
+   * Renders a marker/highlighter effect
+   * Creates semi-transparent, flat strokes that blend when overlapping
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Marker color
+   * @param width - Marker width
+   */
+  private renderMarkerStroke(points: Point[], color: string, width: number): void {
+    if (points.length < 2) return;
+
+    // Save context state
+    this.drawingCtx.save();
+
+    // Semi-transparent for highlighter effect
+    this.drawingCtx.globalAlpha = 0.4;
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = width * 2; // Wider than normal pen
+    this.drawingCtx.lineCap = 'square'; // Flat ends like a marker
+    this.drawingCtx.lineJoin = 'miter';
+
+    this.drawingCtx.beginPath();
+    this.drawingCtx.moveTo(points[0].x, points[0].y);
+
+    // Draw smooth curves
+    for (let i = 1; i < points.length - 1; i++) {
+      const p0 = points[i];
+      const p1 = points[i + 1];
+      const midX = (p0.x + p1.x) / 2;
+      const midY = (p0.y + p1.y) / 2;
+      this.drawingCtx.quadraticCurveTo(p0.x, p0.y, midX, midY);
+    }
+
+    // Draw final segment
+    const lastPoint = points[points.length - 1];
+    this.drawingCtx.lineTo(lastPoint.x, lastPoint.y);
+    this.drawingCtx.stroke();
+
+    // Restore context state
+    this.drawingCtx.restore();
   }
 
   /**
