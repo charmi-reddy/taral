@@ -19,7 +19,7 @@ export default function ThemeToggle({ theme, onThemeChange }: ThemeToggleProps) 
         }`}
         title="Light Theme"
       >
-        ☀️
+        Light
       </button>
       <button
         onClick={() => onThemeChange('dark')}
@@ -30,7 +30,7 @@ export default function ThemeToggle({ theme, onThemeChange }: ThemeToggleProps) 
         }`}
         title="Dark Theme"
       >
-        🌙
+        Dark
       </button>
       <button
         onClick={() => onThemeChange('purple')}
@@ -41,7 +41,7 @@ export default function ThemeToggle({ theme, onThemeChange }: ThemeToggleProps) 
         }`}
         title="Purple Theme"
       >
-        💜
+        Purple
       </button>
     </div>
   );

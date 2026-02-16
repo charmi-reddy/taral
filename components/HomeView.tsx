@@ -221,8 +221,7 @@ export default function HomeView({
         
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 relative inline-block">
           <span className="relative z-10 flex items-center gap-3">
-            <span className="text-3xl">🎨</span>
-            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-pacifico)' }}>
               My Doodles
             </span>
           </span>
@@ -310,7 +309,6 @@ export default function HomeView({
                         </button>
                       </div>
                       <div className="text-xs text-gray-300 mt-1 flex items-center gap-1">
-                        <span>🕐</span>
                         <span>{formatDate(page.lastModifiedAt)}</span>
                       </div>
                     </>
@@ -352,7 +350,6 @@ export default function HomeView({
           {/* Modal */}
           <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 max-w-md w-full animate-scaleIn">
             <div className="text-center">
-              <div className="text-5xl mb-4">🗑️</div>
               <h3 className="text-2xl font-bold text-gray-800 mb-3">Delete Doodle?</h3>
               <p className="text-gray-600 mb-8">
                 Are you sure you want to delete this doodle? This action cannot be undone.

@@ -20,24 +20,24 @@ export default function BrushSelector({ value, onChange, disabled }: BrushSelect
             : 'bg-white text-gray-900 border-gray-300 hover:border-gray-400 focus:border-blue-500 focus:outline-none'
         }`}
       >
-        <option value="ink">✒️ Ink Pen</option>
-        <option value="pixel">🎮 Pixel Pen</option>
-        <option value="spray">🎨 Spray Paint</option>
-        <option value="pencil">✏️ Pencil</option>
-        <option value="rainbow">🌈 Rainbow</option>
-        <option value="glitter">✨ Glitter</option>
-        <option value="watercolor">💧 Watercolor</option>
-        <option value="neon">💡 Neon</option>
-        <option value="geometric">📐 Geometric</option>
-        <option value="star">⭐ Star</option>
-        <option value="chain">⛓️ Chain</option>
-        <option value="wave">🌊 Wave</option>
-        <option value="lightning">⚡ Lightning</option>
-        <option value="dots">⚫ Dots</option>
-        <option value="stitch">🧵 Stitch</option>
-        <option value="fire">🔥 Fire</option>
-        <option value="ice">❄️ Ice</option>
-        <option value="eraser">🧹 Eraser</option>
+        <option value="ink">Ink Pen</option>
+        <option value="pixel">Pixel Pen</option>
+        <option value="spray">Spray Paint</option>
+        <option value="pencil">Pencil</option>
+        <option value="rainbow">Rainbow</option>
+        <option value="glitter">Glitter</option>
+        <option value="watercolor">Watercolor</option>
+        <option value="neon">Neon</option>
+        <option value="geometric">Geometric</option>
+        <option value="star">Star</option>
+        <option value="chain">Chain</option>
+        <option value="wave">Wave</option>
+        <option value="lightning">Lightning</option>
+        <option value="dots">Dots</option>
+        <option value="stitch">Stitch</option>
+        <option value="fire">Fire</option>
+        <option value="ice">Ice</option>
+        <option value="eraser">Eraser</option>
       </select>
     </div>
   );

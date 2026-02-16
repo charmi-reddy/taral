@@ -70,7 +70,6 @@ export default function Controls({
               onClick={onHomeClick}
               className="w-full px-3 py-2 rounded-lg font-bold transition text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center gap-2"
             >
-              <span>🏠</span>
               <span>Home</span>
             </button>
           )}
@@ -81,13 +80,12 @@ export default function Controls({
               onClick={handleSaveClick}
               className="w-full px-3 py-2 rounded-lg font-bold transition text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white flex items-center justify-center gap-2 shadow-md"
             >
-              <span>{showSaved ? '✓' : '💾'}</span>
               <span>{showSaved ? 'Saved!' : 'Save Progress'}</span>
             </button>
           )}
           
           <div className="border-b border-gray-200 pb-2 sm:pb-3 mb-2 sm:mb-3">
-            <h2 className="text-base sm:text-lg font-bold">🎨 Drawing Tools</h2>
+            <h2 className="text-base sm:text-lg font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-pacifico)' }}>Drawing Tools</h2>
           </div>
           
           {/* Undo/Redo buttons */}
@@ -135,7 +133,7 @@ export default function Controls({
       
       {isMinimized && (
         <div className="p-3 flex items-center justify-center">
-          <span className="text-2xl">🎨</span>
+          <span className="text-xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">Tools</span>
         </div>
       )}
     </div>

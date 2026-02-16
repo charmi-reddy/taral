@@ -13,7 +13,7 @@ export default function EraseButton({ onClick, isActive }: EraseButtonProps) {
           : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
       }`}
     >
-      🧹 Erase
+      Erase
     </button>
   );
 }
