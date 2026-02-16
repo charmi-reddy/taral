@@ -103,21 +103,30 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
     }
   }, []);
   
-  // Handle window resize
+  // Handle window resize with debouncing
   useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout;
+    
     const handleResize = () => {
-      if (!engineRef.current) return;
-      
-      try {
-        engineRef.current.resize();
-        engineRef.current.updateBackground(configRef.current.backgroundStyle);
-      } catch (error) {
-        console.error('Error during resize:', error);
-      }
+      // Debounce resize to avoid excessive redraws
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (!engineRef.current) return;
+        
+        try {
+          engineRef.current.resize();
+          engineRef.current.updateBackground(configRef.current.backgroundStyle);
+        } catch (error) {
+          console.error('Error during resize:', error);
+        }
+      }, 150); // Wait 150ms after last resize event
     };
     
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
   }, []);
   
   // Get canvas coordinates from pointer event

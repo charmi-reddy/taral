@@ -1426,8 +1426,12 @@ export class CanvasEngine {
     if (physicalY > 0) stack.push([physicalY - 1, xLeft, xRight, -1]);
     if (physicalY < physicalHeight - 1) stack.push([physicalY + 1, xLeft, xRight, 1]);
     
-    // Process stack
-    while (stack.length > 0) {
+    // Process stack with safety limit
+    let iterations = 0;
+    const maxIterations = physicalWidth * physicalHeight; // Safety limit
+    
+    while (stack.length > 0 && iterations < maxIterations) {
+      iterations++;
       const [y, xLeft, xRight, direction] = stack.pop()!;
       
       let x = xLeft;
