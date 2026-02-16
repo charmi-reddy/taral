@@ -139,6 +139,7 @@ export default function Home() {
           onDeletePage={handleDeletePage}
           onRenamePage={handleRenamePage}
           onGetPageData={handleGetPageData}
+          mode={mode}
         />
       </ThemeProvider>
     );

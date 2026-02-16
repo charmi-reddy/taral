@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { PageMetadata } from '@/lib/page-manager/types';
 import PersonalityAnalysisModal from './PersonalityAnalysisModal';
 import { PersonalityAnalyzer, DoodleData, AnalysisResult } from '@/lib/personality-analyzer';
+import { DrawingMode } from '@/lib/mode-toggle/types';
 
 interface HomeViewProps {
   pages: PageMetadata[];
@@ -12,6 +13,7 @@ interface HomeViewProps {
   onDeletePage: (pageId: string) => void;
   onRenamePage: (pageId: string, newName: string) => void;
   onGetPageData?: (pageId: string) => { id: string; strokes: any[] } | null;
+  mode?: DrawingMode;
 }
 
 export default function HomeView({
@@ -21,6 +23,7 @@ export default function HomeView({
   onDeletePage,
   onRenamePage,
   onGetPageData,
+  mode = 'doodle',
 }: HomeViewProps) {
   const [editingPageId, setEditingPageId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>('');
@@ -165,6 +168,83 @@ export default function HomeView({
     }
   };
   
+  // AI Mode: Simple black background with green text
+  if (mode === 'ai') {
+    return (
+      <div className="min-h-screen bg-black text-green-500 p-4 sm:p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-mono mb-8">DOODLES</h1>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {/* New Page button */}
+            <button
+              onClick={onNewPage}
+              className="aspect-[3/2] border-2 border-green-500 bg-black hover:bg-green-950 transition-colors flex items-center justify-center font-mono text-lg"
+            >
+              + NEW
+            </button>
+            
+            {/* Page cards */}
+            {sortedPages.map((page) => (
+              <div
+                key={page.id}
+                onClick={() => onPageSelect(page.id)}
+                className="aspect-[3/2] border-2 border-green-500 bg-black hover:bg-green-950 cursor-pointer overflow-hidden relative transition-colors"
+              >
+                {page.thumbnail && (
+                  <img
+                    src={page.thumbnail}
+                    alt={page.name}
+                    className="w-full h-full object-cover opacity-50"
+                  />
+                )}
+                
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-90 p-2">
+                  <div className="text-green-500 font-mono text-sm truncate">{page.name}</div>
+                </div>
+                
+                <button
+                  onClick={(e) => handleDelete(e, page.id)}
+                  className="absolute top-2 right-2 w-8 h-8 border border-green-500 bg-black hover:bg-red-900 text-green-500 hover:text-red-500 flex items-center justify-center font-mono"
+                >
+                  X
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Delete Confirmation Modal */}
+        {deleteConfirmPageId && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-80">
+            <div className="bg-black border-2 border-green-500 p-8 max-w-md w-full">
+              <h3 className="text-xl font-mono text-green-500 mb-4">DELETE?</h3>
+              <p className="text-green-500 font-mono mb-8">
+                CONFIRM DELETE
+              </p>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={cancelDelete}
+                  className="flex-1 px-4 py-2 border-2 border-green-500 bg-black text-green-500 font-mono hover:bg-green-950"
+                >
+                  CANCEL
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 px-4 py-2 border-2 border-red-500 bg-black text-red-500 font-mono hover:bg-red-950"
+                >
+                  DELETE
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+  
+  // Doodle Mode: Original colorful design
   return (
     <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       {/* Grid background pattern */}
