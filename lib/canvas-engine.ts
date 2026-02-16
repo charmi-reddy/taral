@@ -144,6 +144,8 @@ export class CanvasEngine {
       this.renderWaveStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'lightning') {
       this.renderLightningStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'dots') {
+      this.renderDotsStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -880,6 +882,51 @@ export class CanvasEngine {
         branchStart.y + Math.sin(angle) * branchLength
       );
       this.drawingCtx.stroke();
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders evenly spaced dots along the stroke
+   * Creates a dotted line pattern
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Dot color
+   * @param size - Dot size
+   */
+  private renderDotsStroke(points: Point[], color: string, size: number): void {
+    if (points.length === 0) return;
+
+    this.drawingCtx.save();
+    this.drawingCtx.fillStyle = color;
+    this.drawingCtx.globalAlpha = 0.9;
+    
+    // Draw dots at regular intervals
+    const dotSpacing = size * 1.5;
+    let distance = 0;
+    
+    // Always draw first dot
+    this.drawingCtx.beginPath();
+    this.drawingCtx.arc(points[0].x, points[0].y, size / 2, 0, Math.PI * 2);
+    this.drawingCtx.fill();
+    
+    for (let i = 1; i < points.length; i++) {
+      const p0 = points[i - 1];
+      const p1 = points[i];
+      const dx = p1.x - p0.x;
+      const dy = p1.y - p0.y;
+      const segmentLength = Math.sqrt(dx * dx + dy * dy);
+      
+      distance += segmentLength;
+      
+      if (distance >= dotSpacing) {
+        distance = 0;
+        
+        this.drawingCtx.beginPath();
+        this.drawingCtx.arc(p1.x, p1.y, size / 2, 0, Math.PI * 2);
+        this.drawingCtx.fill();
+      }
     }
 
     this.drawingCtx.restore();
