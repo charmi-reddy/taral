@@ -140,6 +140,8 @@ export class CanvasEngine {
       this.renderStarStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else if (stroke.brushType === 'chain') {
       this.renderChainStroke(stroke.points, stroke.color, stroke.baseWidth);
+    } else if (stroke.brushType === 'wave') {
+      this.renderWaveStroke(stroke.points, stroke.color, stroke.baseWidth);
     } else {
       this.renderSmoothStroke(stroke.points, stroke.color, stroke.baseWidth, stroke.brushType);
     }
@@ -735,6 +737,67 @@ export class CanvasEngine {
         
         this.drawingCtx.restore();
       }
+    }
+
+    this.drawingCtx.restore();
+  }
+
+  /**
+   * Renders a wavy pattern along the stroke
+   * Creates flowing sine wave curves
+   * 
+   * @param points - Array of points in the stroke
+   * @param color - Wave color
+   * @param size - Wave amplitude
+   */
+  private renderWaveStroke(points: Point[], color: string, size: number): void {
+    if (points.length < 2) return;
+
+    this.drawingCtx.save();
+    this.drawingCtx.strokeStyle = color;
+    this.drawingCtx.lineWidth = size * 0.3;
+    this.drawingCtx.lineCap = 'round';
+    this.drawingCtx.globalAlpha = 0.8;
+    
+    // Draw multiple wave lines for depth
+    const waveCount = 3;
+    for (let wave = 0; wave < waveCount; wave++) {
+      this.drawingCtx.globalAlpha = 0.6 - wave * 0.15;
+      this.drawingCtx.beginPath();
+      
+      for (let i = 0; i < points.length; i++) {
+        const point = points[i];
+        
+        // Calculate perpendicular offset for wave effect
+        let perpX = 0;
+        let perpY = 0;
+        
+        if (i < points.length - 1) {
+          const nextPoint = points[i + 1];
+          const dx = nextPoint.x - point.x;
+          const dy = nextPoint.y - point.y;
+          const length = Math.sqrt(dx * dx + dy * dy);
+          
+          if (length > 0) {
+            // Perpendicular vector
+            perpX = -dy / length;
+            perpY = dx / length;
+          }
+        }
+        
+        // Apply sine wave offset
+        const waveOffset = Math.sin((i / points.length) * Math.PI * 4 + wave * Math.PI / 3) * size * (wave + 1) * 0.5;
+        const x = point.x + perpX * waveOffset;
+        const y = point.y + perpY * waveOffset;
+        
+        if (i === 0) {
+          this.drawingCtx.moveTo(x, y);
+        } else {
+          this.drawingCtx.lineTo(x, y);
+        }
+      }
+      
+      this.drawingCtx.stroke();
     }
 
     this.drawingCtx.restore();
