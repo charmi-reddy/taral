@@ -245,6 +245,8 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
   
   const setBrushType = (brushType: BrushType) => {
     setConfig(prev => ({ ...prev, brushType }));
+    // Exit fill mode when changing brush type
+    setIsFillMode(false);
   };
   
   const setBrushSize = (size: number) => {

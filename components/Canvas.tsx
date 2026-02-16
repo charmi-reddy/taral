@@ -69,14 +69,16 @@ export default function Canvas({
       {/* Drawing Canvas */}
       <canvas
         ref={drawingCanvasRef}
-        className={`absolute top-0 left-0 w-full h-full ${isFillMode ? 'cursor-cell' : 'cursor-crosshair'}`}
+        className="absolute top-0 left-0 w-full h-full"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
         style={{ 
           touchAction: 'none',
-          cursor: isFillMode ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\'><path fill=\'black\' stroke=\'white\' stroke-width=\'0.5\' d=\'M12 2L8 6h3v6H8l4 4 4-4h-3V6h3z M6 18h12v2H6z\'/></svg>") 12 20, auto' : 'crosshair'
+          cursor: isFillMode 
+            ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><g fill=\'%23000\' stroke=\'%23fff\' stroke-width=\'1\'><path d=\'M16 4 L12 8 L12 12 L10 12 L10 16 L8 16 L8 20 L24 20 L24 16 L22 16 L22 12 L20 12 L20 8 Z\'/><rect x=\'6\' y=\'22\' width=\'20\' height=\'4\' rx=\'1\'/><circle cx=\'16\' cy=\'14\' r=\'2\' fill=\'%234ade80\'/></g></svg>") 16 28, auto'
+            : 'crosshair'
         }}
       />
 
