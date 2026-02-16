@@ -670,11 +670,10 @@ export class CanvasEngine {
     for (let i = 0; i < points.length; i += interval) {
       const point = points[i];
       const starSize = size * 0.6;
-      const rotation = (i / points.length) * Math.PI * 2; // Rotate stars along path
+      // Remove rotation - keep all stars upright
       
       this.drawingCtx.save();
       this.drawingCtx.translate(point.x, point.y);
-      this.drawingCtx.rotate(rotation);
       
       // Draw 5-pointed star with 10 points (5 outer, 5 inner)
       this.drawingCtx.beginPath();
