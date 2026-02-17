@@ -22,6 +22,8 @@ interface ControlsProps {
   isFillMode: boolean;
   onHomeClick?: () => void;
   onSave?: () => void;
+  onCreateSticker?: () => void;
+  isCreatingSticker?: boolean;
 }
 
 export default function Controls({
@@ -39,6 +41,8 @@ export default function Controls({
   isFillMode,
   onHomeClick,
   onSave,
+  onCreateSticker,
+  isCreatingSticker = false,
 }: ControlsProps) {
   const [isMinimized, setIsMinimized] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
@@ -81,6 +85,17 @@ export default function Controls({
               className="w-full px-3 py-2 rounded-lg font-bold transition text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white flex items-center justify-center gap-2 shadow-md"
             >
               <span>{showSaved ? 'Saved!' : 'Save Progress'}</span>
+            </button>
+          )}
+          
+          {/* Create Sticker button */}
+          {onCreateSticker && (
+            <button
+              onClick={onCreateSticker}
+              disabled={isCreatingSticker}
+              className="w-full px-3 py-2 rounded-lg font-bold transition text-sm bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span>{isCreatingSticker ? 'Creating...' : '✨ Create Sticker'}</span>
             </button>
           )}
           

@@ -1,8 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { useCanvas } from '@/hooks/useCanvas';
 import Controls from './Controls';
+import StickerPreview from './StickerPreview';
+import { StickerCreationOrchestrator } from '@/lib/sticker-creation/orchestrator';
+import { DownloadManager } from '@/lib/sticker-creation/download-manager';
 import type { Stroke, BackgroundStyle } from '@/lib/types';
+import type { StickerResult } from '@/lib/sticker-creation/types';
 
 interface CanvasProps {
   pageId?: string;
@@ -23,6 +28,11 @@ export default function Canvas({
   onBackgroundChange,
   onSave,
 }: CanvasProps) {
+  const [isCreatingSticker, setIsCreatingSticker] = useState(false);
+  const [stickerResult, setStickerResult] = useState<StickerResult | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const {
     drawingCanvasRef,
     backgroundCanvasRef,
@@ -47,6 +57,45 @@ export default function Canvas({
     onStrokeComplete,
     onBackgroundChange,
   });
+
+  const handleCreateSticker = async () => {
+    if (!drawingCanvasRef.current) return;
+
+    setIsCreatingSticker(true);
+    setError(null);
+
+    try {
+      const orchestrator = new StickerCreationOrchestrator();
+      const result = await orchestrator.createSticker(drawingCanvasRef.current);
+      
+      setStickerResult(result);
+      setShowPreview(true);
+    } catch (err: any) {
+      setError(err.message || 'Failed to create sticker');
+      console.error('Sticker creation error:', err);
+    } finally {
+      setIsCreatingSticker(false);
+    }
+  };
+
+  const handleDownloadPNG = () => {
+    if (!stickerResult) return;
+    
+    const downloadManager = new DownloadManager();
+    downloadManager.download(stickerResult.formats.png, 'png');
+  };
+
+  const handleDownloadWebP = () => {
+    if (!stickerResult?.formats.webp) return;
+    
+    const downloadManager = new DownloadManager();
+    downloadManager.download(stickerResult.formats.webp, 'webp');
+  };
+
+  const handleClosePreview = () => {
+    setShowPreview(false);
+    setStickerResult(null);
+  };
 
   return (
     <div 
@@ -100,6 +149,24 @@ export default function Canvas({
         isFillMode={isFillMode}
         onHomeClick={onHomeClick}
         onSave={onSave}
+        onCreateSticker={handleCreateSticker}
+        isCreatingSticker={isCreatingSticker}
+      />
+
+      {/* Error Message */}
+      {error && (
+        <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg animate-fadeIn">
+          {error}
+        </div>
+      )}
+
+      {/* Sticker Preview Modal */}
+      <StickerPreview
+        isOpen={showPreview}
+        result={stickerResult}
+        onClose={handleClosePreview}
+        onDownloadPNG={handleDownloadPNG}
+        onDownloadWebP={stickerResult?.formats.webp ? handleDownloadWebP : undefined}
       />
     </div>
   );
