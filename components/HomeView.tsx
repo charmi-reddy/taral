@@ -5,6 +5,7 @@ import { PageMetadata } from '@/lib/page-manager/types';
 import PersonalityAnalysisModal from './PersonalityAnalysisModal';
 import { PersonalityAnalyzer, DoodleData, AnalysisResult } from '@/lib/personality-analyzer';
 import { DrawingMode } from '@/lib/mode-toggle/types';
+import MatrixRain from './MatrixRain';
 
 interface HomeViewProps {
   pages: PageMetadata[];
@@ -171,8 +172,11 @@ export default function HomeView({
   // AI Mode: Simple black background with green text
   if (mode === 'ai') {
     return (
-      <div className="min-h-screen bg-black text-green-500 p-4 sm:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-black text-green-500 p-4 sm:p-6 lg:p-8 relative">
+        {/* Matrix rain background */}
+        <MatrixRain />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
           <h1 className="text-4xl font-mono mb-8">DOODLES [READ ONLY]</h1>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

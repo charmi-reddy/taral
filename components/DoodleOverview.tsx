@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { Stroke, BackgroundStyle } from '@/lib/types';
+import MatrixRain from './MatrixRain';
 
 interface DoodleOverviewProps {
   pageId: string;
@@ -220,8 +221,11 @@ export default function DoodleOverview({
   };
 
   return (
-    <div className="min-h-screen bg-black text-green-500 p-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black text-green-500 p-4 relative">
+      {/* Matrix rain background */}
+      <MatrixRain />
+      
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <button
