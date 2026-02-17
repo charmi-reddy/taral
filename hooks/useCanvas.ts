@@ -50,6 +50,9 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
   // Canvas engine ref (doesn't trigger re-renders)
   const engineRef = useRef<CanvasEngine | null>(null);
   
+  // Track the last loaded initial strokes to prevent unnecessary reloads
+  const lastLoadedStrokesRef = useRef<Stroke[] | undefined>(undefined);
+  
   // Drawing state (doesn't trigger re-renders)
   const drawingStateRef = useRef({
     isDrawing: false,
@@ -96,14 +99,22 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
   
   // Load initial strokes when they change
   useEffect(() => {
-    if (!engineRef.current || !initialStrokes) return;
+    if (!engineRef.current) return;
+    
+    // Check if we've already loaded these exact strokes
+    if (lastLoadedStrokesRef.current === initialStrokes) {
+      return; // Same reference, don't reload
+    }
+    
+    // Update the ref to track what we're loading
+    lastLoadedStrokesRef.current = initialStrokes;
     
     // Clear existing strokes first
     engineRef.current.clear();
     engineRef.current.updateBackground(configRef.current.backgroundStyle);
     
     // Load initial strokes if provided
-    if (initialStrokes.length > 0) {
+    if (initialStrokes && initialStrokes.length > 0) {
       initialStrokes.forEach(stroke => {
         engineRef.current?.addStroke(stroke);
         engineRef.current?.renderStroke(stroke);
