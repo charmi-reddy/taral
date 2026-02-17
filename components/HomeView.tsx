@@ -176,7 +176,7 @@ export default function HomeView({
           <h1 className="text-4xl font-mono mb-8">DOODLES [READ ONLY]</h1>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {/* Page cards - NO NEW BUTTON in AI mode */}
+            {/* Page cards - NO NEW BUTTON, NO DELETE in AI mode */}
             {sortedPages.map((page) => (
               <div
                 key={page.id}
@@ -194,44 +194,10 @@ export default function HomeView({
                 <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-90 p-2">
                   <div className="text-green-500 font-mono text-sm truncate">{page.name}</div>
                 </div>
-                
-                <button
-                  onClick={(e) => handleDelete(e, page.id)}
-                  className="absolute top-2 right-2 w-8 h-8 border border-green-500 bg-black hover:bg-red-900 text-green-500 hover:text-red-500 flex items-center justify-center font-mono"
-                >
-                  X
-                </button>
               </div>
             ))}
           </div>
         </div>
-        
-        {/* Delete Confirmation Modal */}
-        {deleteConfirmPageId && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-80">
-            <div className="bg-black border-2 border-green-500 p-8 max-w-md w-full">
-              <h3 className="text-xl font-mono text-green-500 mb-4">DELETE?</h3>
-              <p className="text-green-500 font-mono mb-8">
-                CONFIRM DELETE
-              </p>
-              
-              <div className="flex gap-3">
-                <button
-                  onClick={cancelDelete}
-                  className="flex-1 px-4 py-2 border-2 border-green-500 bg-black text-green-500 font-mono hover:bg-green-950"
-                >
-                  CANCEL
-                </button>
-                <button
-                  onClick={confirmDelete}
-                  className="flex-1 px-4 py-2 border-2 border-red-500 bg-black text-red-500 font-mono hover:bg-red-950"
-                >
-                  DELETE
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
