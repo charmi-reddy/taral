@@ -89,19 +89,28 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
       
       // Render initial background
       engineRef.current.updateBackground(config.backgroundStyle);
-      
-      // Load initial strokes if provided
-      if (initialStrokes && initialStrokes.length > 0) {
-        initialStrokes.forEach(stroke => {
-          engineRef.current?.addStroke(stroke);
-          engineRef.current?.renderStroke(stroke);
-        });
-        updateUndoRedoState();
-      }
     } catch (error) {
       console.error('Failed to initialize canvas engine:', error);
     }
   }, []);
+  
+  // Load initial strokes when they change
+  useEffect(() => {
+    if (!engineRef.current || !initialStrokes) return;
+    
+    // Clear existing strokes first
+    engineRef.current.clear();
+    engineRef.current.updateBackground(configRef.current.backgroundStyle);
+    
+    // Load initial strokes if provided
+    if (initialStrokes.length > 0) {
+      initialStrokes.forEach(stroke => {
+        engineRef.current?.addStroke(stroke);
+        engineRef.current?.renderStroke(stroke);
+      });
+      updateUndoRedoState();
+    }
+  }, [initialStrokes]);
   
   // Handle window resize with debouncing
   useEffect(() => {
