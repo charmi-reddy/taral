@@ -3,6 +3,7 @@
 import { useEffect, useCallback } from 'react';
 import Canvas from '@/components/Canvas';
 import HomeView from '@/components/HomeView';
+import DoodleOverview from '@/components/DoodleOverview';
 import ThemeProvider from '@/components/ThemeProvider';
 import ModeToggleSwitch from '@/components/ModeToggleSwitch';
 import { usePageManager } from '@/hooks/usePageManager';
@@ -145,7 +146,24 @@ export default function Home() {
     );
   }
   
-  // Drawing view
+  // Drawing view - show overview in AI mode, canvas in doodle mode
+  if (mode === 'ai' && activePage) {
+    return (
+      <ThemeProvider mode={mode}>
+        <div className="fixed top-4 right-4 z-50">
+          <ModeToggleSwitch mode={mode} onToggle={toggleMode} disabled={isTransitioning} />
+        </div>
+        <DoodleOverview
+          pageId={activePage.id}
+          pageName={activePage.name}
+          strokes={activePage.strokes}
+          background={activePage.backgroundStyle}
+          onBack={handleHomeClick}
+        />
+      </ThemeProvider>
+    );
+  }
+  
   return (
     <ThemeProvider mode={mode}>
       <div className="fixed top-4 right-4 z-50">
