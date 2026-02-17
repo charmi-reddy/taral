@@ -19,8 +19,11 @@ export default function DoodleOverview({
   onBack,
 }: DoodleOverviewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const hasStrokes = strokes && strokes.length > 0;
 
   useEffect(() => {
+    if (!hasStrokes) return;
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -76,7 +79,7 @@ export default function DoodleOverview({
 
       ctx.stroke();
     });
-  }, [strokes, background]);
+  }, [strokes, background, hasStrokes]);
 
   return (
     <div className="min-h-screen bg-black text-green-500 p-4">
@@ -95,11 +98,17 @@ export default function DoodleOverview({
 
         {/* Canvas Display */}
         <div className="border-2 border-green-500 p-4 mb-6">
-          <canvas
-            ref={canvasRef}
-            className="w-full h-auto bg-white"
-            style={{ maxHeight: '70vh' }}
-          />
+          {hasStrokes ? (
+            <canvas
+              ref={canvasRef}
+              className="w-full h-auto bg-white"
+              style={{ maxHeight: '70vh' }}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-64 bg-black">
+              <p className="text-green-500 font-mono text-2xl">Nothing On Canvas!</p>
+            </div>
+          )}
         </div>
 
         {/* Stats */}
