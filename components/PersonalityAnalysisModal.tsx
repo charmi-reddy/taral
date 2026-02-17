@@ -57,7 +57,7 @@ export default function PersonalityAnalysisModal({
           <div>
             {/* Header */}
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent mb-2" style={{ fontFamily: 'var(--font-pacifico)' }}>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent mb-2" style={{ fontFamily: 'var(--font-dancing-script)' }}>
                 Your Doodle Personality
               </h2>
               <p className="text-gray-600">Based on your drawing patterns</p>

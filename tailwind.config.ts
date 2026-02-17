@@ -13,7 +13,7 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        pacifico: ["var(--font-pacifico)"],
+        pacifico: ["var(--font-dancing-script)"],
       },
     },
   },

@@ -9,7 +9,7 @@ export const DOODLE_THEME: ThemeConfig = {
     border: '#e5e7eb',
   },
   fonts: {
-    header: 'var(--font-pacifico)',
+    header: 'var(--font-dancing-script)',
     body: 'var(--font-geist-sans)',
   },
   effects: {

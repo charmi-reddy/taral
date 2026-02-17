@@ -100,7 +100,7 @@ export default function Controls({
           )}
           
           <div className="border-b border-gray-200 pb-2 sm:pb-3 mb-2 sm:mb-3">
-            <h2 className="text-base sm:text-lg font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-pacifico)' }}>Drawing Tools</h2>
+            <h2 className="text-base sm:text-lg font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-dancing-script)' }}>Drawing Tools</h2>
           </div>
           
           {/* Undo/Redo buttons */}

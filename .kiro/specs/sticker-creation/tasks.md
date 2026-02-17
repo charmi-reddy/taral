@@ -90,8 +90,8 @@ This implementation plan breaks down the sticker creation feature into discrete 
     - Test with noisy/scattered pixels
     - _Requirements: 1.4_
 
-- [ ] 6. Implement Gemini Vision API integration
-  - [ ] 6.1 Create GeminiVisionClient class
+- [x] 6. Implement Gemini Vision API integration
+  - [x] 6.1 Create GeminiVisionClient class
     - Implement analyzeImage method with API call
     - Convert canvas to base64 PNG for API request
     - Use subject detection prompt template
@@ -100,7 +100,7 @@ This implementation plan breaks down the sticker creation feature into discrete 
     - Handle API errors gracefully
     - _Requirements: 1.1, 1.2, 10.3_
   
-  - [ ] 6.2 Create AISubjectDetector class
+  - [x] 6.2 Create AISubjectDetector class
     - Use GeminiVisionClient to get subject information
     - Convert API response to SubjectMask format
     - Handle multiple subjects by selecting largest/most central

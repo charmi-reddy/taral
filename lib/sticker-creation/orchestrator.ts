@@ -1,20 +1,25 @@
 import { StickerResult, StickerCreationError } from './types';
+import { AISubjectDetector } from './ai-subject-detector';
 import { PixelSubjectDetector } from './pixel-subject-detector';
 import { BackgroundRemover } from './background-remover';
 import { SmartCropper } from './smart-cropper';
 import { FormatExporter } from './format-exporter';
 
 export class StickerCreationOrchestrator {
+  private aiDetector: AISubjectDetector;
   private pixelDetector: PixelSubjectDetector;
   private backgroundRemover: BackgroundRemover;
   private cropper: SmartCropper;
   private exporter: FormatExporter;
+  private useAI: boolean;
 
-  constructor() {
+  constructor(useAI: boolean = true) {
+    this.aiDetector = new AISubjectDetector();
     this.pixelDetector = new PixelSubjectDetector();
     this.backgroundRemover = new BackgroundRemover();
     this.cropper = new SmartCropper();
     this.exporter = new FormatExporter();
+    this.useAI = useAI;
   }
 
   /**
@@ -44,8 +49,23 @@ export class StickerCreationOrchestrator {
     const originalDimensions = { width: canvas.width, height: canvas.height };
 
     try {
-      // Step 1: Detect subject (using pixel-based fallback for MVP)
-      const mask = await this.pixelDetector.detectSubject(originalImageData);
+      // Step 1: Detect subject with AI (fallback to pixel-based if AI fails)
+      let mask;
+      let detectionMethod: 'ai' | 'fallback' = 'fallback';
+
+      if (this.useAI) {
+        try {
+          console.log('Attempting AI subject detection...');
+          mask = await this.aiDetector.detectSubject(originalImageData);
+          detectionMethod = 'ai';
+          console.log('AI detection successful');
+        } catch (aiError) {
+          console.warn('AI detection failed, falling back to pixel detection:', aiError);
+          mask = await this.pixelDetector.detectSubject(originalImageData);
+        }
+      } else {
+        mask = await this.pixelDetector.detectSubject(originalImageData);
+      }
 
       // Step 2: Remove background
       const withoutBackground = this.backgroundRemover.removeBackground(originalImageData, mask);

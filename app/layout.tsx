@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Pacifico } from "next/font/google";
+import { Dancing_Script } from "next/font/google";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -13,10 +13,10 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
-const pacifico = Pacifico({
+const dancingScript = Dancing_Script({
   subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-pacifico",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dancing-script",
 });
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${dancingScript.variable} antialiased`}
       >
         {children}
       </body>
