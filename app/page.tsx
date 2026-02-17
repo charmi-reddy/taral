@@ -150,9 +150,6 @@ export default function Home() {
   if (mode === 'ai' && activePage) {
     return (
       <ThemeProvider mode={mode}>
-        <div className="fixed top-4 right-4 z-50">
-          <ModeToggleSwitch mode={mode} onToggle={toggleMode} disabled={isTransitioning} />
-        </div>
         <DoodleOverview
           pageId={activePage.id}
           pageName={activePage.name}
@@ -166,9 +163,6 @@ export default function Home() {
   
   return (
     <ThemeProvider mode={mode}>
-      <div className="fixed top-4 right-4 z-50">
-        <ModeToggleSwitch mode={mode} onToggle={toggleMode} disabled={isTransitioning} />
-      </div>
       <Canvas
         pageId={activePageId || undefined}
         initialStrokes={activePage?.strokes}
