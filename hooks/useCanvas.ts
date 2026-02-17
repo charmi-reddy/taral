@@ -4,6 +4,7 @@ import { StrokeProcessor } from '@/lib/stroke-processor';
 import type { CanvasConfig, Point, BrushType, BackgroundStyle, Stroke } from '@/lib/types';
 
 export interface UseCanvasOptions {
+  pageId?: string;
   initialStrokes?: Stroke[];
   initialBackground?: BackgroundStyle;
   onStrokeComplete?: (strokes: Stroke[]) => void;
@@ -42,7 +43,7 @@ export interface UseCanvasReturn {
 }
 
 export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
-  const { initialStrokes, initialBackground, onStrokeComplete, onBackgroundChange } = options;
+  const { pageId, initialStrokes, initialBackground, onStrokeComplete, onBackgroundChange } = options;
   // Canvas refs
   const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -50,8 +51,8 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
   // Canvas engine ref (doesn't trigger re-renders)
   const engineRef = useRef<CanvasEngine | null>(null);
   
-  // Track the last loaded initial strokes to prevent unnecessary reloads
-  const lastLoadedStrokesRef = useRef<Stroke[] | undefined>(undefined);
+  // Track the last loaded page ID to detect page changes
+  const lastLoadedPageIdRef = useRef<string | undefined>(undefined);
   
   // Drawing state (doesn't trigger re-renders)
   const drawingStateRef = useRef({
@@ -97,17 +98,17 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
     }
   }, []);
   
-  // Load initial strokes when they change
+  // Load initial strokes when page changes
   useEffect(() => {
     if (!engineRef.current) return;
     
-    // Check if we've already loaded these exact strokes
-    if (lastLoadedStrokesRef.current === initialStrokes) {
-      return; // Same reference, don't reload
+    // Check if we're on the same page - if so, don't reload
+    if (lastLoadedPageIdRef.current === pageId && pageId !== undefined) {
+      return; // Same page, don't reload strokes
     }
     
-    // Update the ref to track what we're loading
-    lastLoadedStrokesRef.current = initialStrokes;
+    // Update the ref to track current page
+    lastLoadedPageIdRef.current = pageId;
     
     // Clear existing strokes first
     engineRef.current.clear();
@@ -121,7 +122,7 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
       });
       updateUndoRedoState();
     }
-  }, [initialStrokes]);
+  }, [pageId, initialStrokes]);
   
   // Handle window resize with debouncing
   useEffect(() => {

@@ -52,6 +52,7 @@ export default function Canvas({
     isFillMode,
     config,
   } = useCanvas({
+    pageId,
     initialStrokes,
     initialBackground,
     onStrokeComplete,
