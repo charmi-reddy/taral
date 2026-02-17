@@ -27,15 +27,38 @@ export default function DoodleOverview({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
-    canvas.width = 800;
-    canvas.height = 600;
+    // Calculate bounding box of all strokes
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+
+    strokes.forEach((stroke) => {
+      stroke.points.forEach((point) => {
+        minX = Math.min(minX, point.x);
+        maxX = Math.max(maxX, point.x);
+        minY = Math.min(minY, point.y);
+        maxY = Math.max(maxY, point.y);
+      });
+    });
+
+    // Add padding
+    const padding = 50;
+    minX -= padding;
+    minY -= padding;
+    maxX += padding;
+    maxY += padding;
+
+    // Set canvas size to bounding box
+    const width = maxX - minX;
+    const height = maxY - minY;
+    
+    canvas.width = width;
+    canvas.height = height;
 
     // Clear canvas with white background
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw all strokes
+    // Draw all strokes with offset
     strokes.forEach((stroke) => {
       if (stroke.points.length < 2) return;
 
@@ -45,10 +68,10 @@ export default function DoodleOverview({
       ctx.lineJoin = 'round';
 
       ctx.beginPath();
-      ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+      ctx.moveTo(stroke.points[0].x - minX, stroke.points[0].y - minY);
 
       for (let i = 1; i < stroke.points.length; i++) {
-        ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+        ctx.lineTo(stroke.points[i].x - minX, stroke.points[i].y - minY);
       }
 
       ctx.stroke();

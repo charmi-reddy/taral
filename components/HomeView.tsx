@@ -173,18 +173,10 @@ export default function HomeView({
     return (
       <div className="min-h-screen bg-black text-green-500 p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-mono mb-8">DOODLES</h1>
+          <h1 className="text-4xl font-mono mb-8">DOODLES [READ ONLY]</h1>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {/* New Page button */}
-            <button
-              onClick={onNewPage}
-              className="aspect-[3/2] border-2 border-green-500 bg-black hover:bg-green-950 transition-colors flex items-center justify-center font-mono text-lg"
-            >
-              + NEW
-            </button>
-            
-            {/* Page cards */}
+            {/* Page cards - NO NEW BUTTON in AI mode */}
             {sortedPages.map((page) => (
               <div
                 key={page.id}
