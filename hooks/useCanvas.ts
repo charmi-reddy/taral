@@ -102,9 +102,15 @@ export function useCanvas(options: UseCanvasOptions = {}): UseCanvasReturn {
   useEffect(() => {
     if (!engineRef.current) return;
     
-    // Check if we're on the same page - if so, don't reload
-    if (lastLoadedPageIdRef.current === pageId && pageId !== undefined) {
-      return; // Same page, don't reload strokes
+    // Only skip reload if we're on the same page AND initialStrokes hasn't changed
+    // This allows reloading when navigating back to a page with updated strokes
+    const isSamePage = lastLoadedPageIdRef.current === pageId && pageId !== undefined;
+    const currentStrokeCount = engineRef.current.getStrokes().length;
+    const newStrokeCount = initialStrokes?.length || 0;
+    
+    // Skip reload only if same page and stroke count matches
+    if (isSamePage && currentStrokeCount === newStrokeCount) {
+      return;
     }
     
     // Update the ref to track current page
