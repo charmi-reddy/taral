@@ -1384,8 +1384,8 @@ export class CanvasEngine {
     const stack: [number, number, number, number][] = []; // [y, xLeft, xRight, direction]
     const visited = new Uint8Array(physicalWidth * physicalHeight);
     let pixelsFilled = 0;
-    const maxPixels = physicalWidth * physicalHeight * 0.8; // Limit to 80% to prevent hangs
-    const colorTolerance = 10; // Tolerance for color matching (0-255)
+    const maxPixels = physicalWidth * physicalHeight * 0.5; // Limit to 50% to prevent filling entire canvas
+    const colorTolerance = 3; // Very strict tolerance for color matching (0-255)
     
     const matchesTarget = (x: number, y: number): boolean => {
       if (x < 0 || x >= physicalWidth || y < 0 || y >= physicalHeight) return false;
@@ -1493,14 +1493,10 @@ export class CanvasEngine {
       }
     }
     
-    // If we hit the pixel limit, fill the entire canvas instead
-    if (pixelsFilled >= maxPixels) {
-      this.drawingCtx.fillStyle = fillColor;
-      this.drawingCtx.fillRect(0, 0, width, height);
-    } else {
-      // Put the modified image data back
-      this.drawingCtx.putImageData(imageData, 0, 0);
-    }
+    // If we hit the pixel limit, just use what we filled (don't fill entire canvas)
+    // This prevents accidentally filling the whole canvas when clicking on a large area
+    // Put the modified image data back
+    this.drawingCtx.putImageData(imageData, 0, 0);
     
     // Save the filled state so subsequent operations can undo to this state
     this.saveCanvasState();
