@@ -1385,14 +1385,22 @@ export class CanvasEngine {
     const visited = new Uint8Array(physicalWidth * physicalHeight);
     let pixelsFilled = 0;
     const maxPixels = physicalWidth * physicalHeight * 0.8; // Limit to 80% to prevent hangs
+    const colorTolerance = 10; // Tolerance for color matching (0-255)
     
     const matchesTarget = (x: number, y: number): boolean => {
       if (x < 0 || x >= physicalWidth || y < 0 || y >= physicalHeight) return false;
       const pos = (y * physicalWidth + x) * 4;
-      return pixels[pos] === targetR &&
-             pixels[pos + 1] === targetG &&
-             pixels[pos + 2] === targetB &&
-             pixels[pos + 3] === targetA;
+      
+      // Check if pixel matches target color within tolerance
+      const rDiff = Math.abs(pixels[pos] - targetR);
+      const gDiff = Math.abs(pixels[pos + 1] - targetG);
+      const bDiff = Math.abs(pixels[pos + 2] - targetB);
+      const aDiff = Math.abs(pixels[pos + 3] - targetA);
+      
+      return rDiff <= colorTolerance &&
+             gDiff <= colorTolerance &&
+             bDiff <= colorTolerance &&
+             aDiff <= colorTolerance;
     };
     
     const fillPixel = (x: number, y: number): void => {
